@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="npno/npno.vcxproj" Id="80961015-eaaf-4f40-a307-a9ba8555c30e" />
+</Solution>

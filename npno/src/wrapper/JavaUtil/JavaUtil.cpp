@@ -1,0 +1,26 @@
+#include "JavaUtil.h"
+
+std::string JavaUtil::FixString(const std::string& string)
+{
+    size_t count = 0;
+
+    for (const char c : string)
+    {
+        if (c == '§')
+        {
+            ++count;
+        }
+    }
+
+    return string + std::string(count, ' ');
+}
+
+std::string JavaUtil::JStringToString(const jstring javaString)
+{
+    return std::string(Jvm::env->GetStringUTFChars(javaString, nullptr));
+}
+
+jstring JavaUtil::StringToJString(const std::string& string)
+{
+    return Jvm::env->NewStringUTF(string.c_str());
+}
