@@ -12,6 +12,10 @@ public:
 
 	virtual void Init() override;
 
+	[[nodiscard]] std::string GetCustomNameTag() const;
+
 private:
 	inline static std::once_flag entityPlayerSPOflag;
+
+	inline static jmethodID getCustomNameTagMethodID{ nullptr };
 };

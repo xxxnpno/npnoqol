@@ -129,6 +129,12 @@
     <ClInclude Include="src\module\util\MinecraftCode\MinecraftCode.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="src\wrapper\sdk\net\minecraft\scoreboard\Scoreboard\Scoreboard.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="src\wrapper\sdk\net\minecraft\scoreboard\ScorePlayerTeam\ScorePlayerTeam.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Base\Base.cpp">
@@ -207,6 +213,12 @@
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="src\module\hypixel\BlitzSurvivalGames\BlitzSurvivalGames.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\wrapper\sdk\net\minecraft\scoreboard\Scoreboard\Scoreboard.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\wrapper\sdk\net\minecraft\scoreboard\ScorePlayerTeam\ScorePlayerTeam.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>

@@ -13,12 +13,17 @@ namespace hypixel
 
 		~BlitzSurvivalGames() override;
 
+		auto SanityCheck() const -> bool override;
+
 		auto Update() -> void override;
 
 	private:
 		auto UpdateTabList() const -> void;
+		auto UpdateNameTags() const -> void;
 
-		auto FormatName(const std::unique_ptr<EntityPlayer>& player) const -> std::string;
+		auto FormatTabName(const std::unique_ptr<EntityPlayer>& player) const -> std::string;
+
+		auto FormatNametag(const std::unique_ptr<EntityPlayer>& player) const -> std::pair<std::string, std::string>;
 
 		auto GetHpColor(const float hp) const -> std::string_view;
 	};

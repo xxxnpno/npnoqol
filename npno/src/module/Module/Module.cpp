@@ -11,7 +11,7 @@ Module::Module(const bool enable)
 
 Module::~Module() = default;
 
-bool Module::SanityCheck() const
+auto Module::SanityCheck() const -> bool
 {
 	return this->mc->GetTheWorld()->GetInstance() and this->mc->GetThePlayer()->GetInstance();
 }

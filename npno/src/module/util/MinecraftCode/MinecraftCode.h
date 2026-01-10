@@ -8,7 +8,6 @@ class MinecraftCode final
 public:
     enum class Code : I8
     {
-        NWORD,
         BLACK,
         DARK_BLUE,
         DARK_GREEN,

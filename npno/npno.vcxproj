@@ -54,6 +54,8 @@
     <ClInclude Include="src\wrapper\sdk\net\minecraft\entity\Entity\Entity.h" />
     <ClInclude Include="src\wrapper\sdk\net\minecraft\entity\player\EntityPlayer\EntityPlayer.h" />
     <ClInclude Include="src\wrapper\sdk\net\minecraft\potion\PotionEffect\PotionEffect.h" />
+    <ClInclude Include="src\wrapper\sdk\net\minecraft\scoreboard\Scoreboard\Scoreboard.h" />
+    <ClInclude Include="src\wrapper\sdk\net\minecraft\scoreboard\ScorePlayerTeam\ScorePlayerTeam.h" />
     <ClInclude Include="src\wrapper\sdk\net\minecraft\util\ChatComponentText\ChatComponentText.h" />
     <ClInclude Include="src\wrapper\sdk\net\minecraft\util\IChatComponent\IChatComponent.h" />
     <ClInclude Include="src\wrapper\sdk\net\minecraft\world\World\World.h" />
@@ -82,6 +84,8 @@
     <ClCompile Include="src\wrapper\sdk\net\minecraft\entity\Entity\Entity.cpp" />
     <ClCompile Include="src\wrapper\sdk\net\minecraft\entity\player\EntityPlayer\EntityPlayer.cpp" />
     <ClCompile Include="src\wrapper\sdk\net\minecraft\potion\PotionEffect\PotionEffect.cpp" />
+    <ClCompile Include="src\wrapper\sdk\net\minecraft\scoreboard\Scoreboard\Scoreboard.cpp" />
+    <ClCompile Include="src\wrapper\sdk\net\minecraft\scoreboard\ScorePlayerTeam\ScorePlayerTeam.cpp" />
     <ClCompile Include="src\wrapper\sdk\net\minecraft\util\ChatComponentText\ChatComponentText.cpp" />
     <ClCompile Include="src\wrapper\sdk\net\minecraft\util\IChatComponent\IChatComponent.cpp" />
     <ClCompile Include="src\wrapper\sdk\net\minecraft\world\World\World.cpp" />

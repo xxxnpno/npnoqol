@@ -12,9 +12,14 @@ void WorldClient::Init()
 {
     std::call_once(this->worldClientOflag, [this]
         {
-            getPlayerEntityByNameMethodID = Jvm::env->GetMethodID(this->javaClass, "getPlayerEntityByName", "(Ljava/lang/String;)Lnet/minecraft/entity/player/EntityPlayer;"
-            );
+            getScoreboardMethodID = Jvm::env->GetMethodID(this->javaClass, "getScoreboard", "()Lnet/minecraft/scoreboard/Scoreboard;");
+            getPlayerEntityByNameMethodID = Jvm::env->GetMethodID(this->javaClass, "getPlayerEntityByName", "(Ljava/lang/String;)Lnet/minecraft/entity/player/EntityPlayer;");
         });
+}
+
+std::unique_ptr<Scoreboard> WorldClient::GetScoreboard() const 
+{
+    return std::make_unique<Scoreboard>(Jvm::env->NewGlobalRef(Jvm::env->CallObjectMethod(this->instance, getScoreboardMethodID)));
 }
 
 std::unique_ptr<EntityPlayer> WorldClient::GetPlayerEntityByName(const std::string& name) const

@@ -18,6 +18,11 @@ void EntityPlayer::Init()
 {
 	std::call_once(this->entityPlayerSPOflag, [this]
 		{
-
+            getCustomNameTagMethodID = Jvm::env->GetMethodID(this->javaClass, "getCustomNameTag", "()Ljava/lang/String;");
 		});
+}
+
+std::string EntityPlayer::GetCustomNameTag() const
+{
+    return JavaUtil::JStringToString(static_cast<jstring>(Jvm::env->CallObjectMethod(this->instance, getCustomNameTagMethodID)));
 }

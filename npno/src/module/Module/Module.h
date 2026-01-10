@@ -16,7 +16,7 @@ public:
 
 	virtual void Update() = 0;
 
-	virtual bool SanityCheck() const;
+	virtual auto SanityCheck() const -> bool;
 
 	virtual bool IsEnable() const final;
 
