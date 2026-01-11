@@ -13,18 +13,18 @@ hypixel::HypixelStatsModule::~HypixelStatsModule() = default;
 auto hypixel::HypixelStatsModule::SanityCheck() const -> bool
 {
     return
-        this->mc->GetThePlayer() and
-        this->mc->GetTheWorld() and
-        this->mc->GetIngameGUI() and
-        this->mc->GetTheWorld()->GetScoreboard() and
-        this->mc->GetThePlayer()->GetSendQueue();
+        mc->GetThePlayer()->GetInstance() and
+        mc->GetTheWorld()->GetInstance() and
+        mc->GetIngameGUI()->GetInstance() and
+        mc->GetTheWorld()->GetScoreboard()->GetInstance() and
+        mc->GetThePlayer()->GetSendQueue()->GetInstance();
 }
 
 auto hypixel::HypixelStatsModule::UpdateTabList() -> void
 {
-    const std::unique_ptr<EntityPlayerSP> thePlayer{ this->mc->GetThePlayer() };
-    const std::unique_ptr<WorldClient> theWorld{ this->mc->GetTheWorld() };
-    const std::unique_ptr<GuiIngame> ingameGUI{ this->mc->GetIngameGUI() };
+    const std::unique_ptr<EntityPlayerSP> thePlayer{ mc->GetThePlayer() };
+    const std::unique_ptr<WorldClient> theWorld{ mc->GetTheWorld() };
+    const std::unique_ptr<GuiIngame> ingameGUI{ mc->GetIngameGUI() };
 
     const std::vector<std::unique_ptr<NetworkPlayerInfo>> playerInfoMap{ thePlayer->GetSendQueue()->GetPlayerInfoMap() };
 

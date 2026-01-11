@@ -147,6 +147,9 @@
     <ClInclude Include="ext\httplib\httplib.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="src\module\hypixel\HypixelStatsModule\HypixelStatsModule.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
     <ClInclude Include="ext\openssl\__DECC_INCLUDE_EPILOGUE.H">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
@@ -579,9 +582,6 @@
     <ClInclude Include="ext\openssl\x509v3err.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="src\module\hypixel\HypixelStatsModule\HypixelStatsModule.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Base\Base.cpp">
@@ -677,10 +677,10 @@
     <ClCompile Include="src\module\util\HypixelRank\HypixelRank.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="ext\openssl\applink.c">
+    <ClCompile Include="src\module\hypixel\HypixelStatsModule\HypixelStatsModule.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="src\module\hypixel\HypixelStatsModule\HypixelStatsModule.cpp">
+    <ClCompile Include="ext\openssl\applink.c">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>

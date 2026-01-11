@@ -21,7 +21,7 @@ public:
 	virtual bool IsEnable() const final;
 
 protected:
-	std::unique_ptr<Minecraft> mc;
+	inline static std::unique_ptr<Minecraft> mc{ nullptr };
 
 private:
 	bool enable;

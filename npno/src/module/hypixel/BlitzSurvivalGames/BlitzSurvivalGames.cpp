@@ -17,52 +17,55 @@ hypixel::BlitzSurvivalGames::~BlitzSurvivalGames() = default;
 auto hypixel::BlitzSurvivalGames::Update() -> void
 {
     this->UpdateTabList();
-    this->UpdateNameTags();
+    //this->UpdateNameTags();
 }
 
 auto hypixel::BlitzSurvivalGames::GetPlayerData(const std::string& playerName) -> Player
 {
-    if (this->playerCache.find(playerName) != this->playerCache.end())
+    auto it = playerCache.find(playerName);
+    if (it != playerCache.end())
     {
-        return this->playerCache[playerName];
+        return it->second;
     }
 
-    nlohmann::json jsonResponse = HypixelAPI::GetPlayerStats(playerName);
-    Player playerData;
-
-    if (HypixelAPI::IsNicked(jsonResponse))
-    {
-        playerData.rank = std::format("{}{}{}", MinecraftCode::codeToString.at(MinecraftCode::Code::RED), "[NICK]", MinecraftCode::codeToString.at(MinecraftCode::Code::WHITE));
-        playerData.pre = "";
-        playerData.kdr = "";
-        this->playerCache[playerName] = playerData;
-
-        return playerData;
-    }
-
-    playerData.rank = HypixelRank::GetRankPrefix(jsonResponse);
+    Player playerData{};
 
     try
     {
-        nlohmann::json hg = jsonResponse["player"]["stats"]["HungerGames"];
+        nlohmann::json jsonResponse = HypixelAPI::GetPlayerStats(playerName);
+        if (HypixelAPI::IsNicked(jsonResponse))
+        {
+            playerData.rank = std::format(
+                "{}{}{}",
+                MinecraftCode::codeToString.at(MinecraftCode::Code::RED),
+                "[NICK]",
+                MinecraftCode::codeToString.at(MinecraftCode::Code::WHITE)
+            );
+            playerData.prefix = "";
+            playerData.suffix = "";
+            playerCache[playerName] = playerData;
 
-        int wins = 0;
-        wins += hg["wins"].get<int>();
-        wins += hg["wins_teams"].get<int>();
-        playerData.pre = std::format("{}", wins);
+            return playerData;
+        }
 
-        int kills = hg["kills"].get<int>();
-        int deaths = hg["deaths"].get<int>();
-        playerData.kdr = std::format("{:.1f}", static_cast<float>(kills) / max(1, deaths));
+        playerData.rank = HypixelRank::GetRankPrefix(jsonResponse);
+        
+        const auto& hg = jsonResponse["player"]["stats"]["HungerGames"];
+
+        I32 wins = hg.value("wins", 0) + hg.value("wins_teams", 0);
+        I32 kills = hg.value("kills", 0);
+        I32 deaths = hg.value("deaths", 0);
+
+        playerData.prefix = std::format("{}", wins);
+        playerData.suffix = std::format("{:.1f}", static_cast<float>(kills) / max(1, deaths));
+
+        playerCache[playerName] = playerData;
+        return playerData;
     }
     catch (...)
     {
-        playerData.pre = "";
-        playerData.kdr = "";
+        return playerData;
     }
-
-    this->playerCache[playerName] = playerData;
-    return playerData;
 }
 
 auto hypixel::BlitzSurvivalGames::FormatTabName(const std::unique_ptr<EntityPlayer>& player) -> std::string
@@ -70,11 +73,11 @@ auto hypixel::BlitzSurvivalGames::FormatTabName(const std::unique_ptr<EntityPlay
     const Player playerData = this->GetPlayerData(player->GetName());
 
     return std::format(" {}{} {} {} {}{:.1f} {}{}",
-        this->GetWinsColor(playerData.pre), playerData.pre,
+        this->GetWinsColor(playerData.prefix), playerData.prefix,
         playerData.rank,
         player->GetName(),
         this->GetHpColor(player->GetHealth()), player->GetHealth(),
-        this->GetKDRColor(playerData.kdr), playerData.kdr);
+        this->GetKDRColor(playerData.suffix), playerData.suffix);
 }
 
 auto hypixel::BlitzSurvivalGames::FormatNametag(const std::unique_ptr<EntityPlayer>& player) -> std::pair<std::string, std::string>
@@ -84,12 +87,12 @@ auto hypixel::BlitzSurvivalGames::FormatNametag(const std::unique_ptr<EntityPlay
     std::pair<std::string, std::string> nametag;
 
     nametag.first = std::format("{}{} {}",
-        this->GetWinsColor(playerData.pre), playerData.pre,
+        this->GetWinsColor(playerData.prefix), playerData.prefix,
         playerData.rank);
 
     nametag.second = std::format(" {}{:.1f} {}{}",
         this->GetHpColor(player->GetHealth()), player->GetHealth(),
-        this->GetKDRColor(playerData.kdr), playerData.kdr);
+        this->GetKDRColor(playerData.suffix), playerData.suffix);
 
     JavaUtil::FixString(nametag.first);
     JavaUtil::FixString(nametag.second);

@@ -21,9 +21,9 @@ namespace hypixel
     protected:
         struct Player
         {
-            std::string pre;
+            std::string prefix;
             std::string rank;
-            std::string kdr;
+            std::string suffix;
         };
 
         mutable std::unordered_map<std::string, Player> playerCache;

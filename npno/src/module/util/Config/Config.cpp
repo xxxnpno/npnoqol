@@ -1,18 +1,36 @@
 #include "Config.h"
 
+#include <print>
 #include <fstream>
 
 #include <nlohmann/json.hpp>
 
 std::string Config::GetHypixelAPIKey()
 {
-    std::string apiKey;
-
     std::ifstream file("config.json");
-    nlohmann::json json;
-    file >> json;
+    if (!file.is_open())
+    {
+        std::ofstream outFile("config.json");
+        nlohmann::json defaultConfig = {
+            {"api", {
+                {"hypixel", ""}
+            }}
+        };
+        outFile << defaultConfig.dump(4);
+        outFile.close();
+        return "";
+    }
 
-    apiKey = json["api"]["hypixel"].get<std::string>();
+    std::string key;
+    try
+    {
+        nlohmann::json json = nlohmann::json::parse(file);
+        key = json["api"]["hypixel"].get<std::string>();
+    }
+    catch (...)
+    {
+        return "";
+    }
 
-    return apiKey;
+    return key;
 }
