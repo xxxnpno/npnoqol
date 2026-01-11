@@ -1,6 +1,8 @@
 #pragma once
-#include <string_view>
+
+#include <string>
 #include <map>
+
 #include <npno/Loader.hpp>
 
 class MinecraftCode final
@@ -32,7 +34,7 @@ public:
         RESET
     };
 
-    inline static std::map<Code, std::string_view> codeToString =
+    inline static const std::map<Code, std::string> codeToString =
     {
         {Code::BLACK, "§0"},
         {Code::DARK_BLUE, "§1"},

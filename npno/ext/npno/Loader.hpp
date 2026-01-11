@@ -1,8 +1,19 @@
 #pragma once
 
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
+
+#include <winsock2.h>
+#include <windows.h>
+#include <ws2tcpip.h>
+
+#define CPPHTTPLIB_OPENSSL_SUPPORT
+
+#include <httplib/httplib.h>
+
 #include <memory>
 #include <thread>
-#include <windows.h>
 
 namespace npno 
 {
@@ -31,6 +42,7 @@ namespace npno
 
             {
                 const std::unique_ptr<Base> base = std::make_unique<Base>();
+                base->Run();
             }
 
             if (outputBuffer)

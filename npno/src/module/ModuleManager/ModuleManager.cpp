@@ -1,9 +1,11 @@
 #include "ModuleManager.h"
 
+#include "../hypixel/Test/Test.h"
 #include "../hypixel/BlitzSurvivalGames/BlitzSurvivalGames.h"
 
 ModuleManager::ModuleManager()
 {
+	this->RegisterModule<hypixel::Test>();
 	this->RegisterModule<hypixel::BlitzSurvivalGames>();
 }
 

@@ -1,78 +1,18 @@
 #include "BlitzSurvivalGames.h"
 
+#include "../../util/HypixelRank/HypixelRank.h"
+#include "../../util/api/HypixelAPI/HypixelAPI.h"
+#include "../../util/MinecraftCode/MinecraftCode.h"
+
+#include <cmath>
+
 hypixel::BlitzSurvivalGames::BlitzSurvivalGames()
-    : Module{ true }
+    : HypixelStatsModule{ true }
 {
 
 }
 
 hypixel::BlitzSurvivalGames::~BlitzSurvivalGames() = default;
-
-auto hypixel::BlitzSurvivalGames::SanityCheck() const -> bool
-{
-    if (!this->mc->GetTheWorld() or !this->mc->GetTheWorld()->GetInstance())
-    {
-        return false;
-    }
-
-    if (!this->mc->GetThePlayer() or !this->mc->GetThePlayer()->GetInstance())
-    {
-        return false;
-    }
-
-    if (!this->mc->GetIngameGUI() or !this->mc->GetIngameGUI()->GetInstance())
-    {
-        return false;
-    }
-
-    const std::unique_ptr<EntityPlayerSP> thePlayer{ this->mc->GetThePlayer() };
-    if (!thePlayer->GetSendQueue() or !thePlayer->GetSendQueue()->GetInstance())
-    {
-        return false;
-    }
-
-    const std::unique_ptr<WorldClient> theWorld{ this->mc->GetTheWorld() };
-    if (!theWorld->GetScoreboard() or !theWorld->GetScoreboard()->GetInstance())
-    {
-        return false;
-    }
-
-    const std::unique_ptr<NetHandlerPlayClient> sendQueue = thePlayer->GetSendQueue();
-
-    const std::vector<std::unique_ptr<NetworkPlayerInfo>> playerInfoMap{ sendQueue->GetPlayerInfoMap() };
-    for (std::size_t i{ 0 }; i < playerInfoMap.size(); ++i)
-    {
-        if (!playerInfoMap[i] or !playerInfoMap[i]->GetInstance())
-        {
-            return false;
-        }
-
-        if (!playerInfoMap[i]->GetGameProfile() or !playerInfoMap[i]->GetGameProfile()->GetInstance())
-        {
-            return false;
-        }
-    }
-
-    const std::vector<std::unique_ptr<EntityPlayer>>& playerEntities = theWorld->GetPlayerEntities();
-    for (const std::unique_ptr<EntityPlayer>& player : playerEntities)
-    {
-        if (!player or !player->GetInstance())
-        {
-            return false;
-        }
-    }
-
-    const std::vector<std::unique_ptr<ScorePlayerTeam>>& teams = theWorld->GetScoreboard()->GetTeams();
-    for (const std::unique_ptr<ScorePlayerTeam>& team : teams)
-    {
-        if (!team or !team->GetInstance())
-        {
-            return false;
-        }
-    }
-
-    return true;
-}
 
 auto hypixel::BlitzSurvivalGames::Update() -> void
 {
@@ -80,82 +20,115 @@ auto hypixel::BlitzSurvivalGames::Update() -> void
     this->UpdateNameTags();
 }
 
-auto hypixel::BlitzSurvivalGames::UpdateTabList() const -> void
+auto hypixel::BlitzSurvivalGames::GetPlayerData(const std::string& playerName) -> Player
 {
-    const std::unique_ptr<EntityPlayerSP> thePlayer{ this->mc->GetThePlayer() };
-    const std::unique_ptr<WorldClient> theWorld{ this->mc->GetTheWorld() };
-    const std::unique_ptr<GuiIngame> ingameGUI{ this->mc->GetIngameGUI() };
-
-    const std::unique_ptr<NetHandlerPlayClient> sendQueue = thePlayer->GetSendQueue();
-
-    const std::vector<std::unique_ptr<NetworkPlayerInfo>> playerInfoMap{ sendQueue->GetPlayerInfoMap() };
-
-    for (std::size_t i{ 0 }; i < playerInfoMap.size(); ++i)
+    if (this->playerCache.find(playerName) != this->playerCache.end())
     {
-        const std::unique_ptr<EntityPlayer> player{ theWorld->GetPlayerEntityByName(playerInfoMap[i]->GetGameProfile()->GetName()) };
-
-        playerInfoMap[i]->SetDisplayName(std::make_unique<ChatComponentText>(this->FormatTabName(player)));
-    }
-}
-
-auto hypixel::BlitzSurvivalGames::UpdateNameTags() const -> void
-{
-    const std::unique_ptr<WorldClient> theWorld{ this->mc->GetTheWorld() };
-
-    std::vector<std::string> playerNames;
-    for (const std::unique_ptr<EntityPlayer>& player : theWorld->GetPlayerEntities())
-    {
-        playerNames.push_back(player->GetName());
+        return this->playerCache[playerName];
     }
 
-    for (const std::unique_ptr<ScorePlayerTeam>& team : theWorld->GetScoreboard()->GetTeams())
+    nlohmann::json jsonResponse = HypixelAPI::GetPlayerStats(playerName);
+    Player playerData;
+
+    if (HypixelAPI::IsNicked(jsonResponse))
     {
-        bool hasAtLeastOnePlayer = false;
+        playerData.rank = std::format("{}{}{}", MinecraftCode::codeToString.at(MinecraftCode::Code::RED), "[NICK]", MinecraftCode::codeToString.at(MinecraftCode::Code::WHITE));
+        playerData.pre = "";
+        playerData.kdr = "";
+        this->playerCache[playerName] = playerData;
 
-        for (const std::string& member : team->GetMembershipCollection())
-        {
-            if (std::find(playerNames.begin(), playerNames.end(), member) != playerNames.end())
-            {
-                hasAtLeastOnePlayer = true;
-                break;
-            }
-        }
-
-        if (hasAtLeastOnePlayer)
-        {
-            for (const std::string& member : team->GetMembershipCollection())
-            {
-                const std::pair<std::string, std::string> nametag = this->FormatNametag(theWorld->GetPlayerEntityByName(member));
-                team->SetNamePrefix(nametag.first);
-                team->SetNameSuffix(nametag.second);
-            }
-        }
+        return playerData;
     }
+
+    playerData.rank = HypixelRank::GetRankPrefix(jsonResponse);
+
+    try
+    {
+        nlohmann::json hg = jsonResponse["player"]["stats"]["HungerGames"];
+
+        int wins = 0;
+        wins += hg["wins"].get<int>();
+        wins += hg["wins_teams"].get<int>();
+        playerData.pre = std::format("{}", wins);
+
+        int kills = hg["kills"].get<int>();
+        int deaths = hg["deaths"].get<int>();
+        playerData.kdr = std::format("{:.1f}", static_cast<float>(kills) / max(1, deaths));
+    }
+    catch (...)
+    {
+        playerData.pre = "";
+        playerData.kdr = "";
+    }
+
+    this->playerCache[playerName] = playerData;
+    return playerData;
 }
 
-auto hypixel::BlitzSurvivalGames::FormatTabName(const std::unique_ptr<EntityPlayer>& player) const -> std::string
+auto hypixel::BlitzSurvivalGames::FormatTabName(const std::unique_ptr<EntityPlayer>& player) -> std::string
 {
-    return std::format(" {} {}{:.1f}", player->GetName(), this->GetHpColor(player->GetHealth()), player->GetHealth());
+    const Player playerData = this->GetPlayerData(player->GetName());
+
+    return std::format(" {}{} {} {} {}{:.1f} {}{}",
+        this->GetWinsColor(playerData.pre), playerData.pre,
+        playerData.rank,
+        player->GetName(),
+        this->GetHpColor(player->GetHealth()), player->GetHealth(),
+        this->GetKDRColor(playerData.kdr), playerData.kdr);
 }
 
-auto hypixel::BlitzSurvivalGames::FormatNametag(const std::unique_ptr<EntityPlayer>& player) const -> std::pair<std::string, std::string>
+auto hypixel::BlitzSurvivalGames::FormatNametag(const std::unique_ptr<EntityPlayer>& player) -> std::pair<std::string, std::string>
 {
-	std::pair<std::string, std::string> nametag;
+    const Player playerData = this->GetPlayerData(player->GetName());
 
-    nametag.first = std::format("");
-	nametag.second = std::format(" {}{:.1f}", this->GetHpColor(player->GetHealth()), player->GetHealth());
+    std::pair<std::string, std::string> nametag;
 
-	JavaUtil::FixString(nametag.first);
-	JavaUtil::FixString(nametag.second);
+    nametag.first = std::format("{}{} {}",
+        this->GetWinsColor(playerData.pre), playerData.pre,
+        playerData.rank);
+
+    nametag.second = std::format(" {}{:.1f} {}{}",
+        this->GetHpColor(player->GetHealth()), player->GetHealth(),
+        this->GetKDRColor(playerData.kdr), playerData.kdr);
+
+    JavaUtil::FixString(nametag.first);
+    JavaUtil::FixString(nametag.second);
 
     return nametag;
 }
 
-auto hypixel::BlitzSurvivalGames::GetHpColor(const float hp) const -> std::string_view
+auto hypixel::BlitzSurvivalGames::GetHpColor(const float hp) const -> std::string
 {
-    if (hp >= 20.0f) return MinecraftCode::codeToString[MinecraftCode::Code::DARK_GREEN];
-    if (hp >= 10.0f) return MinecraftCode::codeToString[MinecraftCode::Code::GREEN];
-    if (hp >= 5.0f)  return MinecraftCode::codeToString[MinecraftCode::Code::YELLOW];
+    if (hp >= 20.0f) return MinecraftCode::codeToString.at(MinecraftCode::Code::DARK_GREEN);
+    if (hp >= 10.0f) return MinecraftCode::codeToString.at(MinecraftCode::Code::GREEN);
+    if (hp >= 5.0f)  return MinecraftCode::codeToString.at(MinecraftCode::Code::YELLOW);
+    return MinecraftCode::codeToString.at(MinecraftCode::Code::RED);
+}
 
-    return MinecraftCode::codeToString[MinecraftCode::Code::RED];
+auto hypixel::BlitzSurvivalGames::GetWinsColor(const std::string& wins) const -> std::string
+{
+    if (wins.empty()) return MinecraftCode::codeToString.at(MinecraftCode::Code::WHITE);
+
+    int winsValue = std::stoi(wins);
+
+    if (winsValue >= 2500) return std::format("{}{}", MinecraftCode::codeToString.at(MinecraftCode::Code::BOLD), MinecraftCode::codeToString.at(MinecraftCode::Code::DARK_RED));
+    if (winsValue >= 1000) return MinecraftCode::codeToString.at(MinecraftCode::Code::RED);
+    if (winsValue >= 500)  return MinecraftCode::codeToString.at(MinecraftCode::Code::GOLD);
+    if (winsValue >= 200)  return MinecraftCode::codeToString.at(MinecraftCode::Code::DARK_GREEN);
+    if (winsValue >= 100)  return MinecraftCode::codeToString.at(MinecraftCode::Code::GREEN);
+    return MinecraftCode::codeToString.at(MinecraftCode::Code::GRAY);
+}
+
+auto hypixel::BlitzSurvivalGames::GetKDRColor(const std::string& kdr) const -> std::string
+{
+    if (kdr.empty()) return MinecraftCode::codeToString.at(MinecraftCode::Code::WHITE);
+
+    float kdrValue = std::stof(kdr);
+
+    if (kdrValue >= 10.0f) return std::format("{}{}", MinecraftCode::codeToString.at(MinecraftCode::Code::BOLD), MinecraftCode::codeToString.at(MinecraftCode::Code::DARK_RED));
+    if (kdrValue >= 5.0f)  return MinecraftCode::codeToString.at(MinecraftCode::Code::RED);
+    if (kdrValue >= 3.0f)  return MinecraftCode::codeToString.at(MinecraftCode::Code::GOLD);
+    if (kdrValue >= 2.0f)  return MinecraftCode::codeToString.at(MinecraftCode::Code::DARK_GREEN);
+    if (kdrValue >= 1.0f)  return MinecraftCode::codeToString.at(MinecraftCode::Code::GREEN);
+    return MinecraftCode::codeToString.at(MinecraftCode::Code::GRAY);
 }

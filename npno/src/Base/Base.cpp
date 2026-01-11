@@ -12,8 +12,6 @@ Base::Base()
     {
         this->moduleManager = std::make_unique<ModuleManager>();
     }
-
-    this->Run();
 }
 
 Base::~Base() = default;
