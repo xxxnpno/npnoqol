@@ -1,7 +1,7 @@
 #include "ModuleManager.h"
 
 #include "../hypixel/HypixelStatsModule/HypixelStatsModule.h"
-#include "../api/HypixelAPI/HypixelAPI.h"
+#include "../util/api/HypixelAPI/HypixelAPI.h"
 
 #include "../cheat/CameraNoClip/CameraNoClip.h"
 
@@ -28,11 +28,11 @@ void ModuleManager::Update() const
 {
 	for (const std::unique_ptr<Module>& module : this->modules)
 	{
-		if (auto* hypixelModule = dynamic_cast<HypixelStatsModule*>(module.get()))
+		if (auto* hypixelModule = dynamic_cast<hypixel::HypixelStatsModule*>(module.get()))
 		{
 			if (hypixelModule->GetGamemode() != HypixelGamemode::Gamemode::ALL)
 			{
-				hypixelModule->SetEnable(hypixelModule->GetGamemode() == HypixelAPI::GetCurrentGamemode())
+				hypixelModule->SetEnable(hypixelModule->GetGamemode() == HypixelAPI::GetCurrentGamemode());
 			}
 
 			if (!hypixelModule->IsEnable())

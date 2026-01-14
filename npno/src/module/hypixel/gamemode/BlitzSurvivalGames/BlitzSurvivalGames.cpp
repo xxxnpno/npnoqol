@@ -1,8 +1,8 @@
 #include "BlitzSurvivalGames.h"
 
-#include "../../util/HypixelRank/HypixelRank.h"
-#include "../../util/api/HypixelAPI/HypixelAPI.h"
-#include "../../util/MinecraftCode/MinecraftCode.h"
+#include "../../../util/HypixelRank/HypixelRank.h"
+#include "../../../util/api/HypixelAPI/HypixelAPI.h"
+#include "../../../util/MinecraftCode/MinecraftCode.h"
 
 #include <cmath>
 
@@ -55,9 +55,9 @@ auto hypixel::BlitzSurvivalGames::GetPlayerData(const std::string& playerName) -
         
         const auto& hg = jsonResponse["player"]["stats"]["HungerGames"];
 
-        I32 wins = hg.value("wins", 0) + hg.value("wins_teams", 0);
-        I32 kills = hg.value("kills", 0);
-        I32 deaths = hg.value("deaths", 0);
+        const I32 wins = hg.value("wins", 0) + hg.value("wins_teams", 0);
+        const I32 kills = hg.value("kills", 0);
+        const I32 deaths = hg.value("deaths", 0);
 
         playerData.prefix = std::format("{}", wins);
         playerData.suffix = std::format("{:.1f}", static_cast<float>(kills) / max(1, deaths));
@@ -92,7 +92,7 @@ auto hypixel::BlitzSurvivalGames::FormatNametag(const std::unique_ptr<EntityPlay
     std::pair<std::string, std::string> nametag;
 
     nametag.first = std::format("{} ",
-        MinecraftCode::codeToString.ad(MinecraftCode::Code::WHITE));
+        MinecraftCode::codeToString.at(MinecraftCode::Code::WHITE));
 
     nametag.second = std::format(" {}{:.1f}",
         this->GetHpColor(health), health);

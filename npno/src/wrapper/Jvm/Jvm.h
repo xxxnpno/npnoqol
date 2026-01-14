@@ -3,6 +3,7 @@
 #include <print>
 #include <string>
 #include <unordered_map>
+#include <functional>
 
 #include <jni/jni.h>
 #include <jni/jvmti.h>

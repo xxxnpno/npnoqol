@@ -9,6 +9,8 @@
 #include <unordered_map>
 #include <memory>
 
+#include <nlohmann/json.hpp>
+
 namespace hypixel
 {
     class HypixelStatsModule : public Module
@@ -20,7 +22,7 @@ namespace hypixel
 
         auto SanityCheck() const -> bool override;
 
-        auto GetGamemode() const -> HypixelGamemode:Gamemode;
+        auto GetGamemode() const -> HypixelGamemode::Gamemode;
 
         auto ClearCache() -> void;
 
@@ -35,12 +37,12 @@ namespace hypixel
         auto UpdateTabList() -> void;
         auto UpdateNameTags() -> void;
 
-        virtual auto GetPlayerData(const std::string& playerName) -> Player = 0;
+        virtual auto GetPlayerData(const std::string& playerName) -> Player { return { "", "", "" }; };
 
-        virtual auto FormatTabName(const std::unique_ptr<EntityPlayer>& player) -> std::string = 0;
-        virtual auto FormatNametag(const std::unique_ptr<EntityPlayer>& player) -> std::pair<std::string, std::string> = 0;
+        virtual auto FormatTabName(const std::unique_ptr<EntityPlayer>& player) -> std::string { return ""; };
+        virtual auto FormatNametag(const std::unique_ptr<EntityPlayer>& player) -> std::pair<std::string, std::string> { return { "", "" }; };
 
-        virtual auto GetHpColor(const float hp) const -> std::string = 0;
+        virtual auto GetHpColor(const float hp) const -> std::string { return ""; };
 
         mutable std::unordered_map<std::string, Player> playerCache;
 

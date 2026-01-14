@@ -19,7 +19,7 @@ cheat::CameraNoClip::CameraNoClip()
 
 cheat::CameraNoClip::~CameraNoClip() = default;
 
-cheat::CameraNoClip::Update()
+auto cheat::CameraNoClip::Update() -> void
 {
 
 }

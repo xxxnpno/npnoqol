@@ -41,7 +41,7 @@ auto HypixelAPI::GetPlayerStats(const std::string& playerName) -> nlohmann::json
     try
     {
         const std::string res = Network::Get(std::format("/player?key={}&name={}", apiKey, playerName));
-        const nlohmann::json jsonResponse = nlohmann::json::parse(res->body, nullptr, false);
+        const nlohmann::json jsonResponse = nlohmann::json::parse(res, nullptr, false);
 
         return jsonResponse;
     }
@@ -51,15 +51,15 @@ auto HypixelAPI::GetPlayerStats(const std::string& playerName) -> nlohmann::json
     }
 }
 
-auto AddNickPlayer(const std::string& playerName) -> void
+auto HypixelAPI::AddNickPlayer(const std::string& playerName) -> void
 {
-    Nick player;
+    Nick player{};
     player.warned = false;
 
-    nickList.add({playerName, player});
+    nickList.insert({ playerName, player });
 }
 
-auto GetNickList() const -> std::map<std::string, Nick>
+auto HypixelAPI::GetNickList() -> std::map<std::string, Nick>
 {
     return nickList;
 }
@@ -69,12 +69,12 @@ auto HypixelAPI::AddAutoGGLine(const std::string& line) -> void
     autoGGLines.push_back(line);
 }
 
-auto HypixelAPI::GetAutoGGLines() const -> std::vector<std::string>
+auto HypixelAPI::GetAutoGGLines() -> std::vector<std::string>
 {
     return autoGGLines;
 }
 
-auto HypixelAPI::GetCurrentGamemode() const -> HypixelGamemode::Gamemode
+auto HypixelAPI::GetCurrentGamemode() -> HypixelGamemode::Gamemode
 {
     return currentGamemode;
 }

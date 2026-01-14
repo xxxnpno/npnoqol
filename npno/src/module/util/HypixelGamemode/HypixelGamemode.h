@@ -11,15 +11,15 @@ public:
     enum class Gamemode : I8
     {
         ALL,
-        
+
         LOBBY,
 
         BLITZSURVIVALGAMES
-    }
+    };
 
-    inline static const std::map<std::string, Gamemode> stringToGamemode = 
+    inline static const std::map<std::string, Gamemode> stringToGamemode =
     {
         {"LOBBY", Gamemode::LOBBY},
         {"SURVIVAL_GAMES", Gamemode::BLITZSURVIVALGAMES}
-    }
-}
+    };
+};

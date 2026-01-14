@@ -1,8 +1,9 @@
 #include "HypixelStatsModule.h"
 
-#include "../../api/HypixelAPI/HypixelAPI.h"
+#include "../../util/api/HypixelAPI/HypixelAPI.h"
 
 #include <algorithm>
+
 
 hypixel::HypixelStatsModule::HypixelStatsModule(const bool enable, const HypixelGamemode::Gamemode gamemode, const std::string& autoGGLine)
     : Module{ enable }

@@ -1,7 +1,7 @@
 #include "NickManager.h"
 
-#include "../../util/api/HypixelAPI/HypixelAPI.h"
-#include "../../util/api/MinecraftCode/MinecraftCode.h"
+#include "../../../util/api/HypixelAPI/HypixelAPI.h"
+#include "../../../util/MinecraftCode/MinecraftCode.h"
 
 hypixel::NickManager::NickManager()
     : HypixelStatsModule{ true, HypixelGamemode::Gamemode::ALL }
@@ -11,19 +11,19 @@ hypixel::NickManager::NickManager()
 
 hypixel::NickManager::~NickManager() = default;
 
-auto hypixel::NickManager::Update()
+auto hypixel::NickManager::Update() -> void
 {
-    for (const auto& [k, v] : HypixelAPI::GetNickList())
+    for (auto& [name, player] : HypixelAPI::GetNickList())
     {
-        if (!v.warned)
+        if (!player.warned)
         {
-            v.warned = true;
-            this->Warn(k);
+            player.warned = true;
+            this->Warn(name);
         }
     }
 }
 
 auto hypixel::NickManager::Warn(const std::string& name) -> void
 {
-    mc->GetThePlayer()->AddChatMessage(std::make_unique<IChatComponent>(std::format("{}{} is nicked!") MinecraftCode::codeToString.at(MinecraftCode::Code::RED), name));
+    mc->GetThePlayer()->AddChatMessage(std::make_unique<ChatComponentText>(std::format("{}{} is nicked!", MinecraftCode::codeToString.at(MinecraftCode::Code::AQUA), name)));
 }

@@ -3,7 +3,7 @@
 #include "../Network/Network.h"
 #include "../../Config/Config.h"
 #include "../../HypixelRank/HypixelRank.h"
-#include "../HypixelGamemode/HypixelGamemode.h"
+#include "../../HypixelGamemode/HypixelGamemode.h"
 
 #include <string>
 #include <vector>
@@ -17,8 +17,8 @@ public:
 	struct Nick
 	{
 		bool warned;
-	}
-
+	};
+	
 	static auto CheckKey() -> bool;
 
 	static auto IsNicked(const nlohmann::json& json) -> bool;
@@ -26,12 +26,12 @@ public:
 	static auto GetPlayerStats(const std::string& playerName) -> nlohmann::json;
 
 	static auto AddNickPlayer(const std::string& playerName) -> void;
-	static auto GetNickList() const -> std::map<std::string, Nick>;
+	static auto GetNickList() -> std::map<std::string, Nick>;
 
 	static auto AddAutoGGLine(const std::string& line) -> void;
-	static auto GetAutoGGLines() const -> std::vector<std::string>
+	static auto GetAutoGGLines() -> std::vector<std::string>;
 
-	static auto GetCurrentGamemode() const -> HypixelGamemode::Gamemode;
+	static auto GetCurrentGamemode() -> HypixelGamemode::Gamemode;
     static auto SetCurrentGamemode(const HypixelGamemode::Gamemode gamemode) -> void;
 
 private:

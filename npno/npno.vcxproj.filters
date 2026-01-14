@@ -51,9 +51,6 @@
     <ClInclude Include="src\Base\Base.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="src\module\hypixel\Test\Test.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
     <ClInclude Include="src\module\Module\Module.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
@@ -123,9 +120,6 @@
     <ClInclude Include="src\wrapper\sdk\net\minecraft\client\gui\GuiPlayerTabOverlay\GuiPlayerTabOverlay.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="src\module\hypixel\BlitzSurvivalGames\BlitzSurvivalGames.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
     <ClInclude Include="src\module\util\MinecraftCode\MinecraftCode.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
@@ -147,15 +141,30 @@
     <ClInclude Include="src\module\hypixel\HypixelStatsModule\HypixelStatsModule.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="src\module\util\api\Network\Network.h">
+    <ClInclude Include="src\module\cheat\CameraNoClip\CameraNoClip.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="src\module\hypixel\all\AutoGG\AutoGG.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="src\module\hypixel\all\CurrentGamemode\CurrentGamemode.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="src\module\hypixel\all\NickManager\NickManager.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="src\module\hypixel\gamemode\BlitzSurvivalGames\BlitzSurvivalGames.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="src\module\util\HypixelGamemode\HypixelGamemode.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="src\module\util\Network\Network.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Base\Base.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="src\module\hypixel\Test\Test.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="src\module\Module\Module.cpp">
@@ -227,9 +236,6 @@
     <ClCompile Include="src\wrapper\sdk\net\minecraft\client\gui\GuiPlayerTabOverlay\GuiPlayerTabOverlay.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="src\module\hypixel\BlitzSurvivalGames\BlitzSurvivalGames.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
     <ClCompile Include="src\wrapper\sdk\net\minecraft\scoreboard\Scoreboard\Scoreboard.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
@@ -248,7 +254,22 @@
     <ClCompile Include="src\module\hypixel\HypixelStatsModule\HypixelStatsModule.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="src\module\util\api\Network\Network.cpp">
+    <ClCompile Include="src\module\cheat\CameraNoClip\CameraNoClip.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\module\hypixel\all\AutoGG\AutoGG.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\module\hypixel\all\CurrentGamemode\CurrentGamemode.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\module\hypixel\all\NickManager\NickManager.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\module\hypixel\gamemode\BlitzSurvivalGames\BlitzSurvivalGames.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\module\util\Network\Network.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>

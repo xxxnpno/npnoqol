@@ -1,6 +1,7 @@
 #include "CurrentGamemode.h"
 
-#include "../../util/HypixelGamemode/HypixelGamemode.h"
+#include "../../../util/HypixelGamemode/HypixelGamemode.h"
+#include "../../../util/api/HypixelAPI/HypixelAPI.h"
 
 hypixel::CurrentGamemode::CurrentGamemode()
     : HypixelStatsModule{ true, HypixelGamemode::Gamemode::ALL }
@@ -29,7 +30,8 @@ auto hypixel::CurrentGamemode::Update() -> void
 auto hypixel::CurrentGamemode::AddChatMessagehook(jthread thread) const -> void
 {
     jobject instance{ nullptr };
-    Jvm::jvmti->GetLocalObject(thread, 1, &instance);
+    Jvm::jvmti->GetLocalObject(thread, 0, 1, &instance);
+
 
     const std::unique_ptr<IChatComponent> chatComponent = std::make_unique<IChatComponent>(instance);
     const std::string text = chatComponent->GetFormattedText();
@@ -40,9 +42,7 @@ auto hypixel::CurrentGamemode::AddChatMessagehook(jthread thread) const -> void
 
         if (json.contains("mode"))
         {
-            HypixelStatsModule::SetCurrentGamemode(
-                HypixelGamemode::stringToGamemode.at(json["mode"].get<std::string>())
-            );
+            HypixelAPI::SetCurrentGamemode(HypixelGamemode::stringToGamemode.at(json["mode"].get<std::string>()));
         }
     }
 }

@@ -2,15 +2,18 @@
 
 #include "../../HypixelStatsModule/HypixelStatsModule.h"
 
-class NickManager final : public HypixelStatsModule
+namespace hypixel
 {
-public:
-    NickManager();
+    class NickManager final : public HypixelStatsModule
+    {
+    public:
+        NickManager();
 
-    ~NickManager() override();
+        ~NickManager() override;
 
-    auto Update() -> void override;
+        auto Update() -> void override;
 
-private:
-    auto Warn(const std::string& name) -> void;
+    private:
+        auto Warn(const std::string& name) -> void;
+    };
 }

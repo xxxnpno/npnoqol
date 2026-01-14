@@ -1,7 +1,7 @@
 #include "AutoGG.h"
 
-#include "../../util/api/HypixelAPI/HypixelAPI.h"
-#include "../../util/HypixelGamemode/HypixelGamemode.h"
+#include "../../../util/api/HypixelAPI/HypixelAPI.h"
+#include "../../../util/HypixelGamemode/HypixelGamemode.h"
 
 #include <random>
 #include <cctype>
@@ -33,13 +33,13 @@ auto hypixel::AutoGG::Update() -> void
 auto hypixel::AutoGG::AddChatMessagehook(jthread thread) const -> void
 {
     jobject instance{ nullptr };
-    Jvm::jvmti->GetLocalObject(thread, 1, &instance);
+    Jvm::jvmti->GetLocalObject(thread, 0, 1, &instance);
 
     const std::unique_ptr<IChatComponent> chatComponent = std::make_unique<IChatComponent>(instance);
     const std::string text = chatComponent->GetFormattedText();
 
     bool sendMessage = false;
-    for (const std::strin& line : HypixelAPI::GetAutoGGLines())
+    for (const std::string& line : HypixelAPI::GetAutoGGLines())
     {
         if (text.find(line) != std::string::npos)
         {
@@ -50,7 +50,7 @@ auto hypixel::AutoGG::AddChatMessagehook(jthread thread) const -> void
 
     if (sendMessage)
     {
-        mc->GetThePlayer()->SendChatMessage(this->RandomCase("good game"))
+        mc->GetThePlayer()->SendChatMessage(this->RandomCase("good game"));
     }
 }
 

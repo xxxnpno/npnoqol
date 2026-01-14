@@ -34,7 +34,7 @@ std::string Network::Get(const std::string& endpoint)
             return "";
         }
 
-        if (connect(sock, res->ai_addr, res->ai_addrlen) != 0) 
+        if (connect(sock, res->ai_addr, (int)res->ai_addrlen) != 0) 
         {
             closesocket(sock);
             freeaddrinfo(res);

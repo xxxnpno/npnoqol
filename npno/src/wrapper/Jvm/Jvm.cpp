@@ -55,9 +55,9 @@ static void JNICALL MethodEntry(jvmtiEnv* jvmti, JNIEnv* env, jthread thread, jm
 
     if (cSig and mName and mSig)
     {
-        for (auto& Hook : Jvm::Hooks)
+        for (auto& hook : Jvm::hooks)
         {
-            if (hook.cls == cSig and hook.name == mName and hook.sig = mSig)
+            if (hook.cls == cSig and hook.name == mName and hook.sig == mSig)
             {
                 hook.callback(thread);
                 break;
@@ -70,7 +70,7 @@ static void JNICALL MethodEntry(jvmtiEnv* jvmti, JNIEnv* env, jthread thread, jm
     if (cSig) jvmti->Deallocate((unsigned char*)cSig);
 }
 
-void Jvm::PlaceHook(const std::strin& cls, const std::string& name, const std::strin& sig, std::function<void(jthread)> cb)
+void Jvm::PlaceHook(const std::string& cls, const std::string& name, const std::string& sig, std::function<void(jthread)> cb)
 {
     hooks.push_back({ cls, name, sig, cb});
 
