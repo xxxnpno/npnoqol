@@ -7,7 +7,7 @@
 #include <cmath>
 
 hypixel::BlitzSurvivalGames::BlitzSurvivalGames()
-    : HypixelStatsModule{ true }
+    : HypixelStatsModule{ true , HypixelGamemode::Gamemode::SKYBLITZSURVIVALGAMESWARS }
 {
 
 }

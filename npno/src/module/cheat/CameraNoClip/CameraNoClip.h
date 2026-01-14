@@ -14,6 +14,6 @@ namespace cheat
 		auto Update() -> void override;
 
     private:
-        auto CameraNoClipHook(jthread thread) const -> void;
+        auto RayTraceBlocksHook(jthread thread) const -> void;
 	};
 }

@@ -11,7 +11,7 @@ cheat::CameraNoClip::CameraNoClip()
         {
             if (this->IsEnable())
             {
-                this->CameraNoClipHook(thread);
+                this->RayTraceBlocksHook(thread);
             }
         }
     );
@@ -24,7 +24,7 @@ cheat::CameraNoClip::Update()
 
 }
 
-auto cheat::CameraNoClip::CameraNoClipHook(jthread thread) const -> void
+auto cheat::CameraNoClip::RayTraceBlocksHook(jthread thread) const -> void
 {
     jvmtiFrameInfo frames[2];
     jint count{ 0 };

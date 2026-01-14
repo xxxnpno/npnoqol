@@ -2,8 +2,9 @@
 
 #include <algorithm>
 
-hypixel::HypixelStatsModule::HypixelStatsModule(const bool enable)
+hypixel::HypixelStatsModule::HypixelStatsModule(const bool enable, const HypixelGamemode::Gamemode gamemode)
     : Module{ enable }
+    , gamemode{ gamemode }
 {
 
 }
@@ -18,6 +19,21 @@ auto hypixel::HypixelStatsModule::SanityCheck() const -> bool
         mc->GetIngameGUI()->GetInstance() and
         mc->GetTheWorld()->GetScoreboard()->GetInstance() and
         mc->GetThePlayer()->GetSendQueue()->GetInstance();
+}
+
+auto hypixel::HypixelStatsModule::GetGamemode() const -> HypixelGamemode::Gamemode
+{
+    return this->gamemode;
+}
+
+auto hypixel::HypixelStatsModule::GetCurrentGamemode() const -> HypixelGamemode::Gamemode
+{
+    return currentGamemode;
+}
+
+auto hypixel::HypixelStatsModule::SetCurrentGamemode(const HypixelGamemode::Gamemode gamemode) -> void
+{
+    currentGamemode = gamemode;
 }
 
 auto hypixel::HypixelStatsModule::UpdateTabList() -> void
@@ -62,12 +78,10 @@ auto hypixel::HypixelStatsModule::UpdateNameTags() -> void
             for (const std::string& member : team->GetMembershipCollection())
             {
                 const std::unique_ptr<EntityPlayer> playerEntity{ theWorld->GetPlayerEntityByName(member) };
-                if (playerEntity)
-                {
-                    const std::pair<std::string, std::string> nametag = this->FormatNametag(playerEntity);
-                    team->SetNamePrefix(nametag.first);
-                    team->SetNameSuffix(nametag.second);
-                }
+                
+                const std::pair<std::string, std::string> nametag = this->FormatNametag(playerEntity);
+                team->SetNamePrefix(nametag.first);
+                team->SetNameSuffix(nametag.second);
             }
         }
     }

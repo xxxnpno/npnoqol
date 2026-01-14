@@ -2,6 +2,8 @@
 
 #include "../../Module/Module.h"
 
+#include "../../util/HypixelGamemode/HypixelGamemode.h"
+
 #include <string>
 #include <utility>
 #include <unordered_map>
@@ -12,11 +14,16 @@ namespace hypixel
     class HypixelStatsModule : public Module
     {
     public:
-        explicit HypixelStatsModule(const bool enable = true);
+        explicit HypixelStatsModule(const bool enable = true, const HypixelGamemode::Gamemode gamemode);
 
         virtual ~HypixelStatsModule();
 
         auto SanityCheck() const -> bool override;
+
+        auto GetGamemode() const -> HypixelGamemode:Gamemode;
+
+        static auto GetCurrentGamemode() const -> HypixelGamemode::Gamemode;
+        static auto SetCurrentGamemode(const HypixelGamemode::Gamemode gamemode) -> void;
 
     protected:
         struct Player
@@ -25,8 +32,6 @@ namespace hypixel
             std::string rank;
             std::string suffix;
         };
-
-        mutable std::unordered_map<std::string, Player> playerCache;
 
         auto UpdateTabList() -> void;
         auto UpdateNameTags() -> void;
@@ -37,5 +42,12 @@ namespace hypixel
         virtual auto FormatNametag(const std::unique_ptr<EntityPlayer>& player) -> std::pair<std::string, std::string> = 0;
 
         virtual auto GetHpColor(const float hp) const -> std::string = 0;
+
+        mutable std::unordered_map<std::string, Player> playerCache;
+
+        HypixelGamemode::Gamemode gamemode;
     };
+
+    private:
+        inline static HypixelGamemode::Gamemode currentGamemode{ HypixelGamemode::Gamemode::LOBBY };
 }

@@ -1,15 +1,19 @@
 #include "ModuleManager.h"
 
+#include "../hypixel/HypixelStatsModule/HypixelStatsModule.h"
+
 #include "../cheat/CameraNoClip/CameraNoClip.h"
 
-#include "../hypixel/Test/Test.h"
-#include "../hypixel/BlitzSurvivalGames/BlitzSurvivalGames.h"
+#include "../hypixel/all/CurrentGamemode/CurrentGamemode.h"
+
+#include "../hypixel/gamemode/BlitzSurvivalGames/BlitzSurvivalGames.h"
 
 ModuleManager::ModuleManager()
 {
 	this->RegisterModule<cheat::CameraNoClip>();
 	
-	this->RegisterModule<hypixel::Test>();
+	this->RegisterModule<hypixel::CurrentGamemode>();
+
 	this->RegisterModule<hypixel::BlitzSurvivalGames>();
 }
 
@@ -19,6 +23,14 @@ void ModuleManager::Update() const
 {
 	for (const std::unique_ptr<Module>& module : this->modules)
 	{
+		if (auto* hypixelModule = dynamic_cast<HypixelStatsModule*>(module.get()))
+		{
+			if (hypixelModule->GetGamemode() != HypixelGamemode::Gamemode::ALL)
+			{
+				hypixelModule->SetEnable(hypixelModule->GetGamemode() == HypixelStatsModule::GetCurrentGamemode())
+			}
+		}
+		
 		if (module->IsEnable() && module->SanityCheck())
 		{
 			module->Update();
