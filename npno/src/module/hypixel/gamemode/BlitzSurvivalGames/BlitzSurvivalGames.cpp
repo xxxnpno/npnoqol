@@ -7,7 +7,10 @@
 #include <cmath>
 
 hypixel::BlitzSurvivalGames::BlitzSurvivalGames()
-    : HypixelStatsModule{ true , HypixelGamemode::Gamemode::SKYBLITZSURVIVALGAMESWARS }
+    : HypixelStatsModule{ 
+        false, 
+        HypixelGamemode::Gamemode::BLITZSURVIVALGAMES,
+        "Winner - " }
 {
 
 }

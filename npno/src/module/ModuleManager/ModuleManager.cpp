@@ -1,10 +1,13 @@
 #include "ModuleManager.h"
 
 #include "../hypixel/HypixelStatsModule/HypixelStatsModule.h"
+#include "../api/HypixelAPI/HypixelAPI.h"
 
 #include "../cheat/CameraNoClip/CameraNoClip.h"
 
+#include "../hypixel/all/AutoGG/AutoGG.h"
 #include "../hypixel/all/CurrentGamemode/CurrentGamemode.h"
+#include "../hypixel/all/NickManager/NickManager.h"
 
 #include "../hypixel/gamemode/BlitzSurvivalGames/BlitzSurvivalGames.h"
 
@@ -12,7 +15,9 @@ ModuleManager::ModuleManager()
 {
 	this->RegisterModule<cheat::CameraNoClip>();
 	
+	this->RegisterModule<hypixel::AutoGG>();
 	this->RegisterModule<hypixel::CurrentGamemode>();
+	this->RegisterModule<hypixel::NickManager>();
 
 	this->RegisterModule<hypixel::BlitzSurvivalGames>();
 }
@@ -27,7 +32,12 @@ void ModuleManager::Update() const
 		{
 			if (hypixelModule->GetGamemode() != HypixelGamemode::Gamemode::ALL)
 			{
-				hypixelModule->SetEnable(hypixelModule->GetGamemode() == HypixelStatsModule::GetCurrentGamemode())
+				hypixelModule->SetEnable(hypixelModule->GetGamemode() == HypixelAPI::GetCurrentGamemode())
+			}
+
+			if (!hypixelModule->IsEnable())
+			{
+				hypixelModule->ClearCache();
 			}
 		}
 		

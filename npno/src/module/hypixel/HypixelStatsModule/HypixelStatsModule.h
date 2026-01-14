@@ -14,7 +14,7 @@ namespace hypixel
     class HypixelStatsModule : public Module
     {
     public:
-        explicit HypixelStatsModule(const bool enable = true, const HypixelGamemode::Gamemode gamemode);
+        explicit HypixelStatsModule(const bool enable = true, const HypixelGamemode::Gamemode gamemode =  HypixelGamemode::Gamemode::ALL, const std::string& autoGGLine = "idontwantittoprocsoiputarandomstring");
 
         virtual ~HypixelStatsModule();
 
@@ -22,8 +22,7 @@ namespace hypixel
 
         auto GetGamemode() const -> HypixelGamemode:Gamemode;
 
-        static auto GetCurrentGamemode() const -> HypixelGamemode::Gamemode;
-        static auto SetCurrentGamemode(const HypixelGamemode::Gamemode gamemode) -> void;
+        auto ClearCache() -> void;
 
     protected:
         struct Player
@@ -47,7 +46,4 @@ namespace hypixel
 
         HypixelGamemode::Gamemode gamemode;
     };
-
-    private:
-        inline static HypixelGamemode::Gamemode currentGamemode{ HypixelGamemode::Gamemode::LOBBY };
 }

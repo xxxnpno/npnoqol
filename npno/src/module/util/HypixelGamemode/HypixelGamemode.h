@@ -14,7 +14,7 @@ public:
         
         LOBBY,
 
-        SKYBLITZSURVIVALGAMESWARS
+        BLITZSURVIVALGAMES
     }
 
     inline static const std::map<std::string, Gamemode> stringToGamemode = 

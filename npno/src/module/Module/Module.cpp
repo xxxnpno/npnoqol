@@ -29,4 +29,4 @@ bool Module::IsEnable() const
 void Module::SetEnable(const bool state)
 {
 	this->enable = state;
-} 
+}

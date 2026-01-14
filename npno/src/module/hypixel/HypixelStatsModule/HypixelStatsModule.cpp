@@ -1,12 +1,14 @@
 #include "HypixelStatsModule.h"
 
+#include "../../api/HypixelAPI/HypixelAPI.h"
+
 #include <algorithm>
 
-hypixel::HypixelStatsModule::HypixelStatsModule(const bool enable, const HypixelGamemode::Gamemode gamemode)
+hypixel::HypixelStatsModule::HypixelStatsModule(const bool enable, const HypixelGamemode::Gamemode gamemode, const std::string& autoGGLine)
     : Module{ enable }
     , gamemode{ gamemode }
 {
-
+    HypixelAPI::AddAutoGGLine(autoGGLine);
 }
 
 hypixel::HypixelStatsModule::~HypixelStatsModule() = default;
@@ -26,14 +28,9 @@ auto hypixel::HypixelStatsModule::GetGamemode() const -> HypixelGamemode::Gamemo
     return this->gamemode;
 }
 
-auto hypixel::HypixelStatsModule::GetCurrentGamemode() const -> HypixelGamemode::Gamemode
+auto hypixel::HypixelStatsModule::ClearCache() -> void
 {
-    return currentGamemode;
-}
-
-auto hypixel::HypixelStatsModule::SetCurrentGamemode(const HypixelGamemode::Gamemode gamemode) -> void
-{
-    currentGamemode = gamemode;
+    this->playerCache.clear();
 }
 
 auto hypixel::HypixelStatsModule::UpdateTabList() -> void
