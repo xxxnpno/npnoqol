@@ -1,17 +1,14 @@
 #include "HypixelAPI.h"
-#include <print>
+
+#include "../Network/Network.h"
 
 auto HypixelAPI::CheckKey() -> bool
 {
     try
     {
-        httplib::Result res = cli.Get(std::format("/v2/key?key={}", apiKey));
-        if (!res or res->status != 200)
-        {
-            return false;
-        }
+        const std::string res = Network::Get(std::format("{}/v2/key?key={}",url, apiKey));
+        const nlohmann::json jsonResponse = nlohmann::json::parse(res, nullptr, false);
 
-        nlohmann::json jsonResponse = nlohmann::json::parse(res->body, nullptr, false);
         if (jsonResponse["cause"] == "Invalid API key")
         {
             return false;
@@ -46,13 +43,9 @@ auto HypixelAPI::GetPlayerStats(const std::string& playerName) -> nlohmann::json
 {
     try
     {
-        httplib::Result res = cli.Get(std::format("/player?key={}&name={}", apiKey, playerName));
-        if (!res or res->status != 200)
-        {
-            return nlohmann::json{};
-        }
+        const std::string res = Network::Get(std::format("{}/player?key={}&name={}", url, apiKey, playerName));
+        const nlohmann::json jsonResponse = nlohmann::json::parse(res, nullptr, false);
 
-        nlohmann::json jsonResponse = nlohmann::json::parse(res->body, nullptr, false);
         return jsonResponse;
     }
     catch (...)

@@ -28,7 +28,7 @@ auto hypixel::HypixelStatsModule::UpdateTabList() -> void
 
     const std::vector<std::unique_ptr<NetworkPlayerInfo>> playerInfoMap{ thePlayer->GetSendQueue()->GetPlayerInfoMap() };
 
-    for (size_t i{ 0 }; i < playerInfoMap.size(); ++i)
+    for (Size i{ 0 }; i < playerInfoMap.size(); ++i)
     {
         playerInfoMap[i]->SetDisplayName(std::make_unique<ChatComponentText>(this->FormatTabName(theWorld->GetPlayerEntityByName(playerInfoMap[i]->GetGameProfile()->GetName()))));
     }
@@ -62,12 +62,10 @@ auto hypixel::HypixelStatsModule::UpdateNameTags() -> void
             for (const std::string& member : team->GetMembershipCollection())
             {
                 const std::unique_ptr<EntityPlayer> playerEntity{ theWorld->GetPlayerEntityByName(member) };
-                if (playerEntity)
-                {
-                    const std::pair<std::string, std::string> nametag = this->FormatNametag(playerEntity);
-                    team->SetNamePrefix(nametag.first);
-                    team->SetNameSuffix(nametag.second);
-                }
+
+                const std::pair<std::string, std::string> nametag = this->FormatNametag(playerEntity);
+                team->SetNamePrefix(nametag.first);
+                team->SetNameSuffix(nametag.second);
             }
         }
     }
