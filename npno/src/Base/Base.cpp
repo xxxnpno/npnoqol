@@ -14,7 +14,10 @@ Base::Base()
     }
 }
 
-Base::~Base() = default;
+Base::~Base()
+{
+    Jvm::ShutDown();
+}
 
 void Base::Run()
 {

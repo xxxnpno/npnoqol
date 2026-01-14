@@ -22,6 +22,7 @@ void EntityLivingBase::Init()
 		{
 			getHealthMethodID = Jvm::env->GetMethodID(this->javaClass, "getHealth", "()F");
 			getMaxHealthMethodID = Jvm::env->GetMethodID(this->javaClass, "getMaxHealth", "()F");
+			getAbsorptionAmountMethodID = Jvm::env->GetMethodID(this->javaClass, " getAbsorptionAmount", "()F");
 			getActivePotionEffectsMethodID = Jvm::env->GetMethodID(this->javaClass, "getActivePotionEffects", "()Ljava/util/Collection;");
 		});
 }
@@ -34,6 +35,11 @@ float EntityLivingBase::GetHealth() const
 float EntityLivingBase::GetMaxHealth() const
 {
 	return static_cast<float>(Jvm::env->CallFloatMethod(this->instance, getMaxHealthMethodID));
+}
+
+float EntityLivingBase::GetAbsorptionAmount() const
+{
+	return static_cast<float>(Jvm::env->CallFloatMethod(this->instance, getAbsorptionAmountMethodID));
 }
 
 std::vector<std::unique_ptr<PotionEffect>> EntityLivingBase::GetActivePotionEffects() const

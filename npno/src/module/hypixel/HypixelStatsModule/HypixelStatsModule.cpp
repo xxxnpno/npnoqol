@@ -28,7 +28,7 @@ auto hypixel::HypixelStatsModule::UpdateTabList() -> void
 
     const std::vector<std::unique_ptr<NetworkPlayerInfo>> playerInfoMap{ thePlayer->GetSendQueue()->GetPlayerInfoMap() };
 
-    for (size_t i{ 0 }; i < playerInfoMap.size(); ++i)
+    for (Size i{ 0 }; i < playerInfoMap.size(); ++i)
     {
         playerInfoMap[i]->SetDisplayName(std::make_unique<ChatComponentText>(this->FormatTabName(theWorld->GetPlayerEntityByName(playerInfoMap[i]->GetGameProfile()->GetName()))));
     }

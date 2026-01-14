@@ -2,10 +2,10 @@
 
 #include "../../Config/Config.h"
 #include "../../HypixelRank/HypixelRank.h"
+#include "../Network/Network.h"
 
 #include <string>
 
-#include <npno/Loader.hpp>
 #include <nlohmann/json.hpp>
 
 class HypixelAPI final
@@ -17,7 +17,5 @@ public:
 
 	static auto GetPlayerStats(const std::string& playerName) -> nlohmann::json;
 private:
-	inline static httplib::Client cli{ "https://api.hypixel.net" };
-
 	inline static std::string apiKey{ Config::GetHypixelAPIKey()};
 };

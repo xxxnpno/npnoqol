@@ -16,6 +16,7 @@ public:
 
 	[[nodiscard]] virtual float GetHealth() const final;
 	[[nodiscard]] virtual float GetMaxHealth() const final;
+	[[nodiscard]] virtual float GetAbsorptionAmount() const final;
 
 	[[nodiscard]] virtual std::vector<std::unique_ptr<PotionEffect>> GetActivePotionEffects() const final;
 
@@ -24,5 +25,6 @@ private:
 
 	inline static jmethodID getHealthMethodID{ nullptr };
 	inline static jmethodID getMaxHealthMethodID{ nullptr };
+	inline static jmethodID getAbsorptionAmountMethodID{ nullptr };
 	inline static jmethodID getActivePotionEffectsMethodID{ nullptr };
 };

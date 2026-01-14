@@ -1,10 +1,14 @@
 #include "ModuleManager.h"
 
+#include "../cheat/CameraNoClip/CameraNoClip.h"
+
 #include "../hypixel/Test/Test.h"
 #include "../hypixel/BlitzSurvivalGames/BlitzSurvivalGames.h"
 
 ModuleManager::ModuleManager()
 {
+	this->RegisterModule<cheat::CameraNoClip>();
+	
 	this->RegisterModule<hypixel::Test>();
 	this->RegisterModule<hypixel::BlitzSurvivalGames>();
 }
