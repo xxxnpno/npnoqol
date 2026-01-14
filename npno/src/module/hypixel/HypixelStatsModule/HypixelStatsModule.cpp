@@ -1,11 +1,14 @@
 #include "HypixelStatsModule.h"
 
+#include "../../api/HypixelAPI/HypixelAPI.h"
+
 #include <algorithm>
 
-hypixel::HypixelStatsModule::HypixelStatsModule(const bool enable)
+hypixel::HypixelStatsModule::HypixelStatsModule(const bool enable, const HypixelGamemode::Gamemode gamemode, const std::string& autoGGLine)
     : Module{ enable }
+    , gamemode{ gamemode }
 {
-
+    HypixelAPI::AddAutoGGLine(autoGGLine);
 }
 
 hypixel::HypixelStatsModule::~HypixelStatsModule() = default;
@@ -18,6 +21,16 @@ auto hypixel::HypixelStatsModule::SanityCheck() const -> bool
         mc->GetIngameGUI()->GetInstance() and
         mc->GetTheWorld()->GetScoreboard()->GetInstance() and
         mc->GetThePlayer()->GetSendQueue()->GetInstance();
+}
+
+auto hypixel::HypixelStatsModule::GetGamemode() const -> HypixelGamemode::Gamemode
+{
+    return this->gamemode;
+}
+
+auto hypixel::HypixelStatsModule::ClearCache() -> void
+{
+    this->playerCache.clear();
 }
 
 auto hypixel::HypixelStatsModule::UpdateTabList() -> void
@@ -62,7 +75,7 @@ auto hypixel::HypixelStatsModule::UpdateNameTags() -> void
             for (const std::string& member : team->GetMembershipCollection())
             {
                 const std::unique_ptr<EntityPlayer> playerEntity{ theWorld->GetPlayerEntityByName(member) };
-
+                
                 const std::pair<std::string, std::string> nametag = this->FormatNametag(playerEntity);
                 team->SetNamePrefix(nametag.first);
                 team->SetNameSuffix(nametag.second);

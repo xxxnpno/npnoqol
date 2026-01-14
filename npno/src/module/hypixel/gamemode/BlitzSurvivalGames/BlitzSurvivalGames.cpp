@@ -7,7 +7,10 @@
 #include <cmath>
 
 hypixel::BlitzSurvivalGames::BlitzSurvivalGames()
-    : HypixelStatsModule{ true }
+    : HypixelStatsModule{ 
+        false, 
+        HypixelGamemode::Gamemode::BLITZSURVIVALGAMES,
+        "Winner - " }
 {
 
 }
@@ -17,7 +20,7 @@ hypixel::BlitzSurvivalGames::~BlitzSurvivalGames() = default;
 auto hypixel::BlitzSurvivalGames::Update() -> void
 {
     this->UpdateTabList();
-    //this->UpdateNameTags();
+    this->UpdateNameTags();
 }
 
 auto hypixel::BlitzSurvivalGames::GetPlayerData(const std::string& playerName) -> Player
@@ -71,28 +74,28 @@ auto hypixel::BlitzSurvivalGames::GetPlayerData(const std::string& playerName) -
 auto hypixel::BlitzSurvivalGames::FormatTabName(const std::unique_ptr<EntityPlayer>& player) -> std::string
 {
     const Player playerData = this->GetPlayerData(player->GetName());
+    const float health = player->GetHealth() + player->GetAbsorptionAmount();
 
     return std::format(" {}{} {} {} {}{:.1f} {}{}",
         this->GetWinsColor(playerData.prefix), playerData.prefix,
         playerData.rank,
         player->GetName(),
-        this->GetHpColor(player->GetHealth()), player->GetHealth(),
+        this->GetHpColor(health), health,
         this->GetKDRColor(playerData.suffix), playerData.suffix);
 }
 
 auto hypixel::BlitzSurvivalGames::FormatNametag(const std::unique_ptr<EntityPlayer>& player) -> std::pair<std::string, std::string>
 {
     const Player playerData = this->GetPlayerData(player->GetName());
+    const float health = player->GetHealth() + player->GetAbsorptionAmount();
 
     std::pair<std::string, std::string> nametag;
 
-    nametag.first = std::format("{}{} {}",
-        this->GetWinsColor(playerData.prefix), playerData.prefix,
-        playerData.rank);
+    nametag.first = std::format("{} ",
+        MinecraftCode::codeToString.ad(MinecraftCode::Code::WHITE));
 
-    nametag.second = std::format(" {}{:.1f} {}{}",
-        this->GetHpColor(player->GetHealth()), player->GetHealth(),
-        this->GetKDRColor(playerData.suffix), playerData.suffix);
+    nametag.second = std::format(" {}{:.1f}",
+        this->GetHpColor(health), health);
 
     JavaUtil::FixString(nametag.first);
     JavaUtil::FixString(nametag.second);

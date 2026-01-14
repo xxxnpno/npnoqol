@@ -25,3 +25,8 @@ bool Module::IsEnable() const
 {
 	return this->enable;
 }
+
+void Module::SetEnable(const bool state)
+{
+	this->enable = state;
+}

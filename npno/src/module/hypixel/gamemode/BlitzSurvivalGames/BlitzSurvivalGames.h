@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../HypixelStatsModule/HypixelStatsModule.h"
+#include "../../HypixelStatsModule/HypixelStatsModule.h"
 
 namespace hypixel
 {

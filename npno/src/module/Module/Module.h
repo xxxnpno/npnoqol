@@ -19,6 +19,7 @@ public:
 	virtual auto SanityCheck() const -> bool;
 
 	virtual bool IsEnable() const final;
+	virtual void SetEnable(const bool state) final;
 
 protected:
 	inline static std::unique_ptr<Minecraft> mc{ nullptr };
