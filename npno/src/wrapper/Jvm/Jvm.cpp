@@ -72,8 +72,6 @@ static void JNICALL MethodEntry(jvmtiEnv* jvmti, JNIEnv* env, jthread thread, jm
 
 void Jvm::PlaceHook(const std::string& cls, const std::string& name, const std::string& sig, std::function<void(jthread)> cb)
 {
-    hooks.push_back({ cls, name, sig, cb});
-
     static std::once_flag jvmtiFlag;
     std::call_once(jvmtiFlag, []
     {
@@ -88,6 +86,8 @@ void Jvm::PlaceHook(const std::string& cls, const std::string& name, const std::
         jvmti->SetEventCallbacks(&callbacks, sizeof(callbacks));
         jvmti->SetEventNotificationMode(JVMTI_ENABLE, JVMTI_EVENT_METHOD_ENTRY, nullptr);
     });
+
+    hooks.push_back({cls, name, sig, cb});
 }
 
 void Jvm::GetLoadedClasses()
