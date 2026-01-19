@@ -1,12 +1,23 @@
-#WORKING ON:
-    - getting args of hooked methods via just in time compiler and force returning them (allows creating new commands by intercepting Entity::addChatMessage, onWorldLoad for modules destructors & rayTraceBlocks for CameraNoClip jvmti->GetStackTrace needed by trivial)
+## Work in Progress
 
-#Features
+### Current Development
+- Hooking method arguments via **Just-In-Time compilation** and forcing their return values  
+  - enables creation of new commands by intercepting `addChatMessage`
+  - creation of CameraNoClip module by force return `rayTraceBlocks` if called by `orientCamera`, requires `jvmti->GetStackTrace` for trivial stack inspection
 
-- Hypixel
-    - Nick Alert
-    - Auto GG (only for BlitzSurvivalGames tight now)
+## Features
 
-- BlitzSurvivalGames
-    Tab: [<wins>] <rank> <name> <hp>
-    Nametag: <name> <hp>
+### Hypixel
+- **Nick Alert**
+- **Auto GG**  
+  *(Currently supported only for Blitz Survival Games)*
+
+### Blitz Survival Games
+- **Tab List Format** 
+```
+[<wins>] <rank> <name> <hp>
+```
+- **Nametag Format**
+```
+<name> <hp>
+```
