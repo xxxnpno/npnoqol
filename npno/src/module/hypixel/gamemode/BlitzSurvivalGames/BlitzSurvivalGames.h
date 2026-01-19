@@ -16,6 +16,8 @@ namespace hypixel
     private:
         auto GetPlayerData(const std::string& playerName) -> Player override;
 
+        auto LoadPlayersData(const std::vector<std::string>& playerNames) -> void override;
+
         auto FormatTabName(const std::unique_ptr<EntityPlayer>& player) -> std::string override;
         auto FormatNametag(const std::unique_ptr<EntityPlayer>& player) -> std::pair<std::string, std::string> override;
 

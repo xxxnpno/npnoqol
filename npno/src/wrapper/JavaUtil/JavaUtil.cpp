@@ -17,7 +17,14 @@ std::string JavaUtil::FixString(const std::string& string)
 
 std::string JavaUtil::JStringToString(const jstring javaString)
 {
-    return std::string(Jvm::env->GetStringUTFChars(javaString, nullptr));
+    if (!javaString) return "";
+    
+    const char* chars = Jvm::env->GetStringUTFChars(javaString, nullptr);
+    std::string result(chars);
+
+    Jvm::env->ReleaseStringUTFChars(javaString, chars);
+
+    return result;
 }
 
 jstring JavaUtil::StringToJString(const std::string& string)

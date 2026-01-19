@@ -31,7 +31,6 @@
     <ClInclude Include="ext\nlohmann\json_fwd.hpp" />
     <ClInclude Include="ext\npno\Loader.hpp" />
     <ClInclude Include="src\Base\Base.h" />
-    <ClInclude Include="src\module\cheat\CameraNoClip\CameraNoClip.h" />
     <ClInclude Include="src\module\hypixel\all\AutoGG\AutoGG.h" />
     <ClInclude Include="src\module\hypixel\all\CurrentGamemode\CurrentGamemode.h" />
     <ClInclude Include="src\module\hypixel\all\NickManager\NickManager.h" />
@@ -39,6 +38,7 @@
     <ClInclude Include="src\module\hypixel\HypixelStatsModule\HypixelStatsModule.h" />
     <ClInclude Include="src\module\ModuleManager\ModuleManager.h" />
     <ClInclude Include="src\module\Module\Module.h" />
+    <ClInclude Include="src\module\util\Chat\Chat.h" />
     <ClInclude Include="src\module\util\Config\Config.h" />
     <ClInclude Include="src\module\util\api\HypixelAPI\HypixelAPI.h" />
     <ClInclude Include="src\module\util\HypixelGamemode\HypixelGamemode.h" />
@@ -51,6 +51,7 @@
     <ClInclude Include="src\wrapper\sdk\com\mojang\authlib\GameProfile\GameProfile.h" />
     <ClInclude Include="src\wrapper\sdk\java\util\Collection\Collection.h" />
     <ClInclude Include="src\wrapper\sdk\java\util\List\List.h" />
+    <ClInclude Include="src\wrapper\sdk\java\util\UUID\UUID.h" />
     <ClInclude Include="src\wrapper\sdk\net\minecraft\client\entity\EntityPlayerSP\EntityPlayerSP.h" />
     <ClInclude Include="src\wrapper\sdk\net\minecraft\client\gui\GuiIngame\GuiIngame.h" />
     <ClInclude Include="src\wrapper\sdk\net\minecraft\client\gui\GuiNewChat\GuiNewChat.h" />
@@ -71,7 +72,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Base\Base.cpp" />
-    <ClCompile Include="src\module\cheat\CameraNoClip\CameraNoClip.cpp" />
     <ClCompile Include="src\module\hypixel\all\AutoGG\AutoGG.cpp" />
     <ClCompile Include="src\module\hypixel\all\CurrentGamemode\CurrentGamemode.cpp" />
     <ClCompile Include="src\module\hypixel\all\NickManager\NickManager.cpp" />
@@ -79,6 +79,7 @@
     <ClCompile Include="src\module\hypixel\HypixelStatsModule\HypixelStatsModule.cpp" />
     <ClCompile Include="src\module\ModuleManager\ModuleManager.cpp" />
     <ClCompile Include="src\module\Module\Module.cpp" />
+    <ClCompile Include="src\module\util\Chat\Chat.cpp" />
     <ClCompile Include="src\module\util\Config\Config.cpp" />
     <ClCompile Include="src\module\util\api\HypixelAPI\HypixelAPI.cpp" />
     <ClCompile Include="src\module\util\HypixelRank\HypixelRank.cpp" />
@@ -89,6 +90,7 @@
     <ClCompile Include="src\wrapper\sdk\com\mojang\authlib\GameProfile\GameProfile.cpp" />
     <ClCompile Include="src\wrapper\sdk\java\util\Collection\Collection.cpp" />
     <ClCompile Include="src\wrapper\sdk\java\util\List\List.cpp" />
+    <ClCompile Include="src\wrapper\sdk\java\util\UUID\UUID.cpp" />
     <ClCompile Include="src\wrapper\sdk\net\minecraft\client\entity\EntityPlayerSP\EntityPlayerSP.cpp" />
     <ClCompile Include="src\wrapper\sdk\net\minecraft\client\gui\GuiIngame\GuiIngame.cpp" />
     <ClCompile Include="src\wrapper\sdk\net\minecraft\client\gui\GuiNewChat\GuiNewChat.cpp" />
@@ -108,6 +110,8 @@
     <ClCompile Include="src\wrapper\sdk\net\minecraft\world\World\World.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
+    <VcpkgTriplet Condition="'$(Platform)'=='Win32'">x86-windows-static</VcpkgTriplet>
+    <VcpkgTriplet Condition="'$(Platform)'=='x64'">x64-windows-static</VcpkgTriplet>
     <VCProjectVersion>18.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
     <ProjectGuid>{80961015-eaaf-4f40-a307-a9ba8555c30e}</ProjectGuid>
@@ -211,13 +215,13 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(ProjectDir)ext\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>$(ProjectDir)ext\jni\jvm.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(ProjectDir)ext\jni\jvm.lib;Wldap32.lib;Crypt32.lib;Ws2_32.lib;iphlpapi.lib;secur32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <DelayLoadDLLs>%(DelayLoadDLLs)</DelayLoadDLLs>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
@@ -235,13 +239,13 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(ProjectDir)ext\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>$(ProjectDir)ext\jni\jvm.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(ProjectDir)ext\jni\jvm.lib;Wldap32.lib;Crypt32.lib;Ws2_32.lib;iphlpapi.lib;secur32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <DelayLoadDLLs>%(DelayLoadDLLs)</DelayLoadDLLs>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>

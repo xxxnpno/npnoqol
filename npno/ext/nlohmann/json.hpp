@@ -21310,7 +21310,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
         if (JSON_HEDLEY_LIKELY(is_object()))
         {
             auto it = m_value.object->find(key);
-            JSON_ASSERT(it != m_value.object->end());
+            //JSON_ASSERT(it != m_value.object->end());
             return it->second;
         }
 

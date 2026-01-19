@@ -2,6 +2,8 @@
 
 #include "../../src/wrapper/sdk/net/minecraft/client/Minecraft/Minecraft.h"
 
+#include "../util/Chat/Chat.h"
+
 #include <print>
 #include <memory>
 

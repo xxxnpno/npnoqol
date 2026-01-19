@@ -16,16 +16,18 @@ public:
 	[[nodiscard]] bool AddPlayerToTeam(const std::string& playerName, const std::string& teamName) const;
 
 	[[nodiscard]] std::unique_ptr<ScorePlayerTeam> GetTeam(const std::string& teamName) const;
+	[[nodiscard]] std::unique_ptr<ScorePlayerTeam> GetPlayersTeam(const std::string& playerName) const;
 	[[nodiscard]] std::unique_ptr<ScorePlayerTeam> CreateTeam(const std::string& teamName) const;
 
 	[[nodiscard]] std::vector<std::unique_ptr<ScorePlayerTeam>> GetTeams() const;
 
 	void RemoveTeam(const std::unique_ptr<ScorePlayerTeam>& team) const;
-	void RemovePlayerFromTeam(const std::string& playerName) const;
+	void RemovePlayerFromTeam(const std::string& playerName, const std::unique_ptr<ScorePlayerTeam>& team) const;
 
 private:
 	inline static jmethodID addPlayerToTeamMethodID{ nullptr };
 	inline static jmethodID getTeamMethodID{ nullptr };
+	inline static jmethodID getPlayersTeamMethodID{ nullptr };
 	inline static jmethodID createTeamMethodID{ nullptr };
 	inline static jmethodID getTeamsMethodID{ nullptr };
 	inline static jmethodID removeTeamMethodID{ nullptr };

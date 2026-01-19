@@ -1,17 +1,23 @@
 #include "HypixelAPI.h"
 
+#include <print>
+
 auto HypixelAPI::CheckKey() -> bool
 {
     try
     {
         const std::string res = Network::Get(std::format("/v2/key?key={}", apiKey));
-        const nlohmann::json jsonResponse = nlohmann::json::parse(res, nullptr, false);
-        if (jsonResponse["cause"] == "Invalid API key")
+		if (nlohmann::json::accept(res))
         {
-            return false;
+            const nlohmann::json jsonResponse = nlohmann::json::parse(res, nullptr, false);
+            if (jsonResponse["cause"] == "Invalid API key")
+            {
+                return false;
+            }
+            return true;
         }
+        return false;
 
-        return true;
     }
     catch (...)
     {
@@ -23,17 +29,17 @@ auto HypixelAPI::IsNicked(const nlohmann::json& json) -> bool
 {
     try
     {
-        if (json["player"].is_null())
+        if (json.contains("player") and json["player"].is_null())
         {
             return true;
         }
-
-        return false;
     }
-    catch(...)
+    catch (...)
     {
         return false;
     }
+
+    return false;
 }
 
 auto HypixelAPI::GetPlayerStats(const std::string& playerName) -> nlohmann::json
@@ -41,9 +47,13 @@ auto HypixelAPI::GetPlayerStats(const std::string& playerName) -> nlohmann::json
     try
     {
         const std::string res = Network::Get(std::format("/player?key={}&name={}", apiKey, playerName));
-        const nlohmann::json jsonResponse = nlohmann::json::parse(res, nullptr, false);
+        if (nlohmann::json::accept(res))
+        {
+            const nlohmann::json jsonResponse = nlohmann::json::parse(res, nullptr, false);
 
-        return jsonResponse;
+            return jsonResponse;
+        }
+        return nlohmann::json{};
     }
     catch (...)
     {
@@ -59,7 +69,7 @@ auto HypixelAPI::AddNickPlayer(const std::string& playerName) -> void
     nickList.insert({ playerName, player });
 }
 
-auto HypixelAPI::GetNickList() -> std::map<std::string, Nick>
+auto HypixelAPI::GetNickList() -> std::map<std::string, Nick>&
 {
     return nickList;
 }
@@ -82,4 +92,14 @@ auto HypixelAPI::GetCurrentGamemode() -> HypixelGamemode::Gamemode
 auto HypixelAPI::SetCurrentGamemode(const HypixelGamemode::Gamemode gamemode) -> void
 {
     currentGamemode = gamemode;
+}
+
+auto HypixelAPI::GetCurrentMode() -> std::string
+{
+    return currentMode;
+}
+
+auto HypixelAPI::SetCurrentMode(const std::string& mode) -> void
+{
+    currentMode = mode;
 }

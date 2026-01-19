@@ -19,6 +19,7 @@ void Entity::Init()
 	std::call_once(this->oflag, [this]
 		{
 			isInvisibleMethodID = Jvm::env->GetMethodID(this->javaClass, "isInvisible", "()Z");
+			getUniqueIDMethodID = Jvm::env->GetMethodID(this->javaClass, "getUniqueID", "()Ljava/util/UUID;");
 			getNameMethodID = Jvm::env->GetMethodID(this->javaClass, "getName", "()Ljava/lang/String;");
 			addChatMessageMethodID = Jvm::env->GetMethodID(this->javaClass, "addChatMessage", "(Lnet/minecraft/util/IChatComponent;)V");
 		});
@@ -27,6 +28,11 @@ void Entity::Init()
 bool Entity::IsInvisible() const
 {
 	return Jvm::env->CallBooleanMethod(this->instance, isInvisibleMethodID);
+}
+
+std::unique_ptr<UUID_J> Entity::GetUniqueID() const
+{
+	return std::make_unique<UUID_J>(Jvm::env->NewGlobalRef(Jvm::env->CallObjectMethod(this->instance, getUniqueIDMethodID)));
 }
 
 std::string Entity::GetName() const

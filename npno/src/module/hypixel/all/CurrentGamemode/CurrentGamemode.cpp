@@ -6,43 +6,46 @@
 hypixel::CurrentGamemode::CurrentGamemode()
     : HypixelStatsModule{ true, HypixelGamemode::Gamemode::ALL }
 {
-    Jvm::PlaceHook(
-        "Lnet/minecraft/entity/Entity;",
-        "addChatMessage",
-        "(Lnet/minecraft/util/IChatComponent;)V",
-        [this] (jthread thread)
-        {
-            if (this->IsEnable())
-            {
-                this->AddChatMessagehook(thread);
-            }
-        }
-    );
+    
 }
 
 hypixel::CurrentGamemode::~CurrentGamemode() = default;
 
 auto hypixel::CurrentGamemode::Update() -> void
 {
-
-}
-
-auto hypixel::CurrentGamemode::AddChatMessagehook(jthread thread) const -> void
-{
-    jobject instance{ nullptr };
-    Jvm::jvmti->GetLocalObject(thread, 0, 1, &instance);
-
-
-    const std::unique_ptr<IChatComponent> chatComponent = std::make_unique<IChatComponent>(instance);
-    const std::string text = chatComponent->GetFormattedText();
-
-    if (nlohmann::json::accept(text))
+    for (const std::string& line : Chat::GetNewLines())
     {
-        const auto json = nlohmann::json::parse(text);
+        std::string jsonPart = ExtractJson(line);
+        if (jsonPart.empty()) continue;
 
-        if (json.contains("mode"))
+        if (nlohmann::json::accept(jsonPart))
         {
-            HypixelAPI::SetCurrentGamemode(HypixelGamemode::stringToGamemode.at(json["mode"].get<std::string>()));
+            const auto json = nlohmann::json::parse(jsonPart);
+
+            if (json.contains("gametype"))
+            {
+                HypixelGamemode::Gamemode gamemode = HypixelGamemode::stringToGamemode.at(json["gametype"].get<std::string>());
+                HypixelAPI::SetCurrentGamemode(gamemode);
+            }
+
+            if (json.contains("mode"))
+            {
+				HypixelAPI::SetCurrentMode(json["mode"].get<std::string>());
+            }
+            else
+            {
+                HypixelAPI::SetCurrentMode("unknown");
+            }
         }
     }
+}
+
+auto hypixel::CurrentGamemode::ExtractJson(const std::string& line) -> std::string
+{
+    auto pos = line.find('{');
+    if (pos != std::string::npos) 
+    {
+        return line.substr(pos);
+    }
+    return "";
 }

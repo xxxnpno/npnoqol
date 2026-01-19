@@ -22,7 +22,7 @@ void EntityLivingBase::Init()
 		{
 			getHealthMethodID = Jvm::env->GetMethodID(this->javaClass, "getHealth", "()F");
 			getMaxHealthMethodID = Jvm::env->GetMethodID(this->javaClass, "getMaxHealth", "()F");
-			getAbsorptionAmountMethodID = Jvm::env->GetMethodID(this->javaClass, " getAbsorptionAmount", "()F");
+			getAbsorptionAmountMethodID = Jvm::env->GetMethodID(this->javaClass, "getAbsorptionAmount", "()F");
 			getActivePotionEffectsMethodID = Jvm::env->GetMethodID(this->javaClass, "getActivePotionEffects", "()Ljava/util/Collection;");
 		});
 }

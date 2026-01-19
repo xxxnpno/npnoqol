@@ -9,49 +9,27 @@
 hypixel::AutoGG::AutoGG()
     : HypixelStatsModule{ true, HypixelGamemode::Gamemode::ALL }
 {
-    Jvm::PlaceHook(
-        "Lnet/minecraft/entity/Entity;",
-        "addChatMessage",
-        "(Lnet/minecraft/util/IChatComponent;)V",
-        [this] (jthread thread)
-        {
-            if (this->IsEnable())
-            {
-                this->AddChatMessagehook(thread);
-            }
-        }
-    );
+    
 }
 
 hypixel::AutoGG::~AutoGG() = default;
 
 auto hypixel::AutoGG::Update() -> void
 {
+	const std::vector<std::string> newLines = Chat::GetNewLines();
 
-}
-
-auto hypixel::AutoGG::AddChatMessagehook(jthread thread) const -> void
-{
-    jobject instance{ nullptr };
-    Jvm::jvmti->GetLocalObject(thread, 0, 1, &instance);
-
-    const std::unique_ptr<IChatComponent> chatComponent = std::make_unique<IChatComponent>(instance);
-    const std::string text = chatComponent->GetFormattedText();
-
-    bool sendMessage = false;
-    for (const std::string& line : HypixelAPI::GetAutoGGLines())
+    for(const std::string& line : newLines)
     {
-        if (text.find(line) != std::string::npos)
+        for (const std::string& autoGGLine : HypixelAPI::GetAutoGGLines())
         {
-            sendMessage = true;
-            break;
+            if (line.find(autoGGLine) != std::string::npos and this->SentByServer(line))
+            {
+                const std::string randomizedMessage = std::format("{}{}", "/ac", this->RandomCase("good game"));
+                mc->GetThePlayer()->SendChatMessage(randomizedMessage);
+                return;
+            }
         }
-    }
-
-    if (sendMessage)
-    {
-        mc->GetThePlayer()->SendChatMessage(this->RandomCase("good game"));
-    }
+	}
 }
 
 auto hypixel::AutoGG::RandomCase(const std::string& message) const -> std::string
@@ -74,4 +52,17 @@ auto hypixel::AutoGG::RandomCase(const std::string& message) const -> std::strin
     }
     
     return result;
+}
+
+auto hypixel::AutoGG::SentByServer(const std::string& line) const -> bool
+{
+    I32 count = 0;
+    for (const char c : line)
+    {
+        if (c == ':') 
+        {
+            count++;
+        }
+    }
+    return count;
 }

@@ -1614,13 +1614,13 @@ struct JNIEnv_ {
         return functions->GetStringUTFLength(this,str);
     }
     const char* GetStringUTFChars(jstring str, jboolean *isCopy) {
-        return functions->GetStringUTFChars(this,str,isCopy);
+         return functions->GetStringUTFChars(this,str,isCopy);
     }
     void ReleaseStringUTFChars(jstring str, const char* chars) {
         functions->ReleaseStringUTFChars(this,str,chars);
     }
 
-    jsize GetArrayLength(jarray array) {
+    jsize GetArrayLength(jarray array) {    
         return functions->GetArrayLength(this,array);
     }
 

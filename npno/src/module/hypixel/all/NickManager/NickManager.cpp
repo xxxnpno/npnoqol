@@ -25,5 +25,5 @@ auto hypixel::NickManager::Update() -> void
 
 auto hypixel::NickManager::Warn(const std::string& name) -> void
 {
-    mc->GetThePlayer()->AddChatMessage(std::make_unique<ChatComponentText>(std::format("{}{} is nicked!", MinecraftCode::codeToString.at(MinecraftCode::Code::AQUA), name)));
+    mc->GetThePlayer()->AddChatMessage(std::make_unique<ChatComponentText>(std::format("{}{} {}is nicked", MinecraftCode::codeToString.at(MinecraftCode::Code::DARK_AQUA), name, MinecraftCode::codeToString.at(MinecraftCode::Code::AQUA))));
 }

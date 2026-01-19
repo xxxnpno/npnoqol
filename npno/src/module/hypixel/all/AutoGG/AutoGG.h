@@ -14,8 +14,8 @@ namespace hypixel
         auto Update() -> void override;
 
     private:
-        auto AddChatMessagehook(jthread thread) const -> void;
-
         auto RandomCase(const std::string& message) const -> std::string;
+
+		auto SentByServer(const std::string& line) const -> bool;
     };
 }

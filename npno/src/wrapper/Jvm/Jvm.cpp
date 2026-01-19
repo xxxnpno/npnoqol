@@ -28,8 +28,7 @@ bool Jvm::Init()
 
 void Jvm::ShutDown()
 {
-    Jvm::jvmti->SetEventNotificationMode(JVMTI_DISABLE, JVMTI_EVENT_METHOD_ENTRY, nullptr);
-    Jvm::hooks.clear();
+
 }
 
 jclass Jvm::GetClass(const std::string& name)
@@ -40,54 +39,6 @@ jclass Jvm::GetClass(const std::string& name)
     }
 
     return nullptr;
-}
-
-static void JNICALL MethodEntry(jvmtiEnv* jvmti, JNIEnv* env, jthread thread, jmethodID method)
-{
-    char* mName{ nullptr };
-    char* mSig{ nullptr };
-    char* cSig{ nullptr };
-
-    jclass declaring;
-    jvmti->GetMethodDeclaringClass(method, &declaring);
-    jvmti->GetClassSignature(declaring, &cSig, nullptr);
-    jvmti->GetMethodName(method, &mName, &mSig, nullptr);
-
-    if (cSig and mName and mSig)
-    {
-        for (auto& hook : Jvm::hooks)
-        {
-            if (hook.cls == cSig and hook.name == mName and hook.sig == mSig)
-            {
-                hook.callback(thread);
-                break;
-            }
-        }
-    }
-
-    if (mName) jvmti->Deallocate((unsigned char*)mName);
-    if (mSig) jvmti->Deallocate((unsigned char*)mSig);
-    if (cSig) jvmti->Deallocate((unsigned char*)cSig);
-}
-
-void Jvm::PlaceHook(const std::string& cls, const std::string& name, const std::string& sig, std::function<void(jthread)> cb)
-{
-    static std::once_flag jvmtiFlag;
-    std::call_once(jvmtiFlag, []
-    {
-        jvmtiCapabilities caps{};
-        caps.can_generate_method_entry_events = 1;
-        caps.can_access_local_variables = 1;
-        caps.can_force_early_return = 1;
-        jvmti->AddCapabilities(&caps);
-
-        jvmtiEventCallbacks callbacks{};
-        callbacks.MethodEntry = &MethodEntry;
-        jvmti->SetEventCallbacks(&callbacks, sizeof(callbacks));
-        jvmti->SetEventNotificationMode(JVMTI_ENABLE, JVMTI_EVENT_METHOD_ENTRY, nullptr);
-    });
-
-    hooks.push_back({cls, name, sig, cb});
 }
 
 void Jvm::GetLoadedClasses()

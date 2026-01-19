@@ -16,10 +16,11 @@ void Scoreboard::Init()
         {
             addPlayerToTeamMethodID = Jvm::env->GetMethodID(this->javaClass, "addPlayerToTeam", "(Ljava/lang/String;Ljava/lang/String;)Z");
             getTeamMethodID = Jvm::env->GetMethodID(this->javaClass, "getTeam", "(Ljava/lang/String;)Lnet/minecraft/scoreboard/ScorePlayerTeam;");
+            getPlayersTeamMethodID = Jvm::env->GetMethodID(this->javaClass, "getPlayersTeam", "(Ljava/lang/String;)Lnet/minecraft/scoreboard/ScorePlayerTeam;");
             createTeamMethodID = Jvm::env->GetMethodID(this->javaClass, "createTeam", "(Ljava/lang/String;)Lnet/minecraft/scoreboard/ScorePlayerTeam;");
 			getTeamsMethodID = Jvm::env->GetMethodID(this->javaClass, "getTeams", "()Ljava/util/Collection;");
             removeTeamMethodID = Jvm::env->GetMethodID(this->javaClass, "removeTeam", "(Lnet/minecraft/scoreboard/ScorePlayerTeam;)V");
-            removePlayerFromTeamMethodID = Jvm::env->GetMethodID(this->javaClass, "removePlayerFromTeam", "(Ljava/lang/String;)V");
+            removePlayerFromTeamMethodID = Jvm::env->GetMethodID(this->javaClass, "removePlayerFromTeam", "(Ljava/lang/String;Lnet/minecraft/scoreboard/ScorePlayerTeam;)V");
         });
 }
 
@@ -31,6 +32,11 @@ bool Scoreboard::AddPlayerToTeam(const std::string& playerName, const std::strin
 std::unique_ptr<ScorePlayerTeam> Scoreboard::GetTeam(const std::string& teamName) const 
 {
     return std::make_unique<ScorePlayerTeam>(Jvm::env->NewGlobalRef(Jvm::env->CallObjectMethod(this->instance, getTeamMethodID, JavaUtil::StringToJString(teamName))));
+}
+
+std::unique_ptr<ScorePlayerTeam> Scoreboard::GetPlayersTeam(const std::string& playerName) const
+{
+    return std::make_unique<ScorePlayerTeam>(Jvm::env->NewGlobalRef(Jvm::env->CallObjectMethod(this->instance, getPlayersTeamMethodID, JavaUtil::StringToJString(playerName))));
 }
 
 std::unique_ptr<ScorePlayerTeam> Scoreboard::CreateTeam(const std::string& teamName) const 
@@ -61,7 +67,7 @@ void Scoreboard::RemoveTeam(const std::unique_ptr<ScorePlayerTeam>& team) const
     Jvm::env->CallVoidMethod(this->instance, removeTeamMethodID, team->GetInstance());
 }
 
-void Scoreboard::RemovePlayerFromTeam(const std::string& playerName) const 
+void Scoreboard::RemovePlayerFromTeam(const std::string& playerName, const std::unique_ptr<ScorePlayerTeam>& team) const
 {
-    Jvm::env->CallVoidMethod(this->instance, removePlayerFromTeamMethodID, JavaUtil::StringToJString(playerName));
+    Jvm::env->CallVoidMethod(this->instance, removePlayerFromTeamMethodID, JavaUtil::StringToJString(playerName), team->GetInstance());
 }

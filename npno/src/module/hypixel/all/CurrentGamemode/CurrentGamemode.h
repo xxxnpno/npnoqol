@@ -14,6 +14,6 @@ namespace hypixel
         auto Update() -> void override;
 
     private:
-        auto AddChatMessagehook(jthread thread) const -> void;
+        auto ExtractJson(const std::string& line) -> std::string;
     };
 }
