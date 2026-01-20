@@ -16,12 +16,12 @@ public:
 
 	virtual ~Module();
 
-	virtual void Update() = 0;
+	virtual auto Update() = 0 -> void;
 
 	virtual auto SanityCheck() const -> bool;
 
-	virtual bool IsEnable() const final;
-	virtual void SetEnable(const bool state) final;
+	virtual auto IsEnable() const -> bool final;
+	virtual auto SetEnable(const bool state) -> void final;
 
 protected:
 	inline static std::unique_ptr<Minecraft> mc{ nullptr };

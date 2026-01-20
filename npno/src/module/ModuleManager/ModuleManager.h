@@ -14,11 +14,11 @@ public:
 
 	~ModuleManager();
 
-	void Update() const;
+	auto Update() const -> void;
 
 private:
 	template<typename M>
-	void RegisterModule();
+	auto RegisterModule() -> void;
 
 	std::vector<std::unique_ptr<Module>> modules;
 

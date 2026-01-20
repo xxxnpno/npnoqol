@@ -30,9 +30,10 @@ namespace hypixel
     protected:
         struct Player
         {
-            std::string prefix;
-            std::string rank;
-            std::string suffix;
+            std::string prefix = "";
+            std::string rank = "";
+            std::string suffix = "";
+            
             bool isNick = false;
             bool error = false;
         };
@@ -42,14 +43,18 @@ namespace hypixel
 
         auto IsBot(const std::unique_ptr<EntityPlayer>& player) -> bool;
 
-        virtual auto GetPlayerData(const std::string& playerName) -> Player { return { "", "", "", false, false }; };
+        virtual auto GetPlayerData(const std::string& playerName) -> Player;
 
         virtual auto LoadPlayersData(const std::vector<std::string>& playerNames) -> void {};
+
+        virtual auto IsEveryoneLoaded() const -> bool;
 
         virtual auto FormatTabName(const std::unique_ptr<EntityPlayer>& player) -> std::string { return ""; };
         virtual auto FormatNametag(const std::unique_ptr<EntityPlayer>& player) -> std::pair<std::string, std::string> { return { "", "" }; };
 
-        virtual auto GetHpColor(const float hp) const -> std::string { return ""; };
+        virtual auto GetHpColor(const float hp) const -> std::string;
+
+        virtual auto HandleMode() -> void {};
 
         mutable std::unordered_map<std::string, Player> playerCache;
 

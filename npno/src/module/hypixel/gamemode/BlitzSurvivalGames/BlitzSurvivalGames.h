@@ -14,16 +14,23 @@ namespace hypixel
         auto Update() -> void override;
 
     private:
-        auto GetPlayerData(const std::string& playerName) -> Player override;
+        enum class Mode
+        {
+            SOLO,
+            TEAMS,
+            LOBBY
+        }
 
         auto LoadPlayersData(const std::vector<std::string>& playerNames) -> void override;
+
+        auto HandleMode() -> void override;
 
         auto FormatTabName(const std::unique_ptr<EntityPlayer>& player) -> std::string override;
         auto FormatNametag(const std::unique_ptr<EntityPlayer>& player) -> std::pair<std::string, std::string> override;
 
-        auto GetHpColor(const float hp) const -> std::string override;
-
         auto GetWinsColor(const std::string& wins) const -> std::string;
         auto GetKDRColor(const std::string& kdr) const -> std::string;
+
+        Mode mode;
     };
 }

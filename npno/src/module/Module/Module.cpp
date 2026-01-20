@@ -10,7 +10,7 @@ Module::Module(const bool enable)
 		{
 			mc = std::make_unique<Minecraft>();
 
-			std::println("[INFO] Minecraft instance acquired: {}", static_cast<void*>(this->mc->GetInstance()));
+			std::println("[INFO] Minecraft instance acquired: {}", static_cast<void*>(mc->GetInstance()));
 		});
 }
 
@@ -21,12 +21,12 @@ auto Module::SanityCheck() const -> bool
 	return mc->GetTheWorld()->GetInstance() and mc->GetThePlayer()->GetInstance();
 }
 
-bool Module::IsEnable() const
+auto Module::IsEnable() const -> bool
 {
 	return this->enable;
 }
 
-void Module::SetEnable(const bool state)
+auto Module::SetEnable(const bool state) -> void
 {
 	this->enable = state;
 }

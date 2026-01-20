@@ -60,7 +60,7 @@ auto hypixel::HypixelStatsModule::UpdateTabList() -> void
 
 auto hypixel::HypixelStatsModule::UpdateNameTags() -> void
 {
-    const std::unique_ptr<WorldClient>& theWorld{ this->mc->GetTheWorld() };
+    const std::unique_ptr<WorldClient>& theWorld{ mc->GetTheWorld() };
     const std::unique_ptr<Scoreboard>& scoreboard{ theWorld->GetScoreboard() };
 
     static std::vector<std::string> teamPool;
@@ -80,10 +80,7 @@ auto hypixel::HypixelStatsModule::UpdateNameTags() -> void
 
     for (const std::unique_ptr<EntityPlayer>& player : theWorld->GetPlayerEntities())
     {   
-        if (this->IsBot(player))
-        {
-            continue;
-        }
+        if (this->IsBot(player)) continue;
         
         if (teamIndex >= teamPool.size()) break;
 
@@ -115,4 +112,54 @@ auto hypixel::HypixelStatsModule::UpdateNameTags() -> void
 auto hypixel::HypixelStatsModule::IsBot(const std::unique_ptr<EntityPlayer>& player) -> bool
 {
     return player->GetUniqueID()->Version() == 2;
+}
+
+auto hypixel::HypixelStatsModule::IsEveryoneLoaded() const -> bool
+{
+    const std::unique_ptr<WorldClient>& theWorld{ mc->GetTheWorld() };
+    std::vector<std::string> playerNames;
+
+    for (const std::unique_ptr<EntityPlayer>& player : theWorld->GetPlayerEntities())
+    {
+        if (!this->IsBot(player) and this->playerCache.find(player->GetName()) == this->playerCache.end())
+        {
+            playerNames.push_back(player->GetName());
+        }
+    }
+
+    if (!playerNames.empty())
+    {
+        this->LoadPlayersData(playerNames);
+    }
+
+    bool allLoaded = true;
+    for (const std::unique_ptr<EntityPlayer>& player : theWorld->GetPlayerEntities())
+    {
+        if (!this->IsBot(player) and this->playerCache.find(player->GetName()) == this->playerCache.end())
+        {
+            allLoaded = false;
+            break;
+        }
+    }
+}
+
+auto hypixel::HypixelStatsModule::GetPlayerData(const std::string& playerName) -> Player
+{
+    if (auto it = this->playerCache.find(playerName); it != this->playerCache.end())
+    {
+        return it->second;
+    }
+
+    Player playerData{};
+    playerData.error = true;
+
+    return playerData;
+}
+
+auto hypixel::HypixelStatsModule::GetHpColor(const float hp) const -> std::string
+{
+    if (hp >= 20.0f) return MinecraftCode::codeToString.at(MinecraftCode::Code::DARK_GREEN);
+    if (hp >= 10.0f) return MinecraftCode::codeToString.at(MinecraftCode::Code::GREEN);
+    if (hp >= 5.0f)  return MinecraftCode::codeToString.at(MinecraftCode::Code::YELLOW);
+    return MinecraftCode::codeToString.at(MinecraftCode::Code::RED);
 }

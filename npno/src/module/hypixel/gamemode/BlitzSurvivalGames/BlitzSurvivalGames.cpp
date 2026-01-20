@@ -15,45 +15,16 @@ hypixel::BlitzSurvivalGames::BlitzSurvivalGames()
         HypixelGamemode::Gamemode::BLITZSURVIVALGAMES,
         "Winner - " }
 {
-
+    this->mode = LOBBY;
 }
 
 hypixel::BlitzSurvivalGames::~BlitzSurvivalGames() = default;
 
 auto hypixel::BlitzSurvivalGames::Update() -> void
 {
-    if (HypixelAPI::GetCurrentMode() == "unknown")
-    {
-        return;
-    }
+    this->HandleMode();
 
-    const std::unique_ptr<WorldClient>& theWorld{ mc->GetTheWorld() };
-    std::vector<std::string> playerNames;
-
-    for (const std::unique_ptr<EntityPlayer>& player : theWorld->GetPlayerEntities())
-    {
-        if (!this->IsBot(player) and playerCache.find(player->GetName()) == playerCache.end())
-        {
-            playerNames.push_back(player->GetName());
-        }
-    }
-
-    if (!playerNames.empty())
-    {
-        this->LoadPlayersData(playerNames);
-    }
-
-    bool allLoaded = true;
-    for (const std::unique_ptr<EntityPlayer>& player : theWorld->GetPlayerEntities())
-    {
-        if (!this->IsBot(player) and playerCache.find(player->GetName()) == playerCache.end())
-        {
-            allLoaded = false;
-            break;
-        }
-    }
-
-    if (allLoaded)
+    if (this->IsEveryoneLoaded())
     {
         this->UpdateTabList();
     }
@@ -63,40 +34,16 @@ auto hypixel::BlitzSurvivalGames::Update() -> void
 
 auto hypixel::BlitzSurvivalGames::LoadPlayersData(const std::vector<std::string>& playerNames) -> void
 {
-    std::vector<std::string> endpoints;
-    endpoints.reserve(playerNames.size());
-
-    for (const auto& name : playerNames)
-    {
-        endpoints.push_back(std::format("&name={}", name));
-    }
-
-    std::vector<std::string> responses = Network::GetBatch(endpoints);
+    const std::vector<nlohmann::json>& responses = Network::GetBatchPlayerStats(playerNames);
 
     for (size_t i = 0; i < playerNames.size(); ++i)
     {
         const std::string& playerName = playerNames[i];
-        const std::string& response = responses[i];
-
-        Player playerData{};
-        playerData.prefix = "";
-        playerData.rank = "";
-        playerData.suffix = "";
-        playerData.isNick = false;
-        playerData.error = false;
-
-        if (response.empty())
-        {
-            playerData.error = true;
-            playerCache[playerName] = playerData;
-            continue;
-        }
+        const nlohmann::json& response = responses[i];
 
         try
         {
-            const auto jsonResponse = nlohmann::json::parse(response);
-
-            if (HypixelAPI::IsNicked(jsonResponse))
+            if (HypixelAPI::IsNicked(response))
             {
                 playerData.prefix = std::format("{}[NICK]{}",
                     MinecraftCode::codeToString.at(MinecraftCode::Code::RED),
@@ -106,13 +53,13 @@ auto hypixel::BlitzSurvivalGames::LoadPlayersData(const std::vector<std::string>
 
                 HypixelAPI::AddNickPlayer(playerName);
 
-                playerCache[playerName] = playerData;
+                this->playerCache[playerName] = playerData;
                 continue;
             }
 
-            playerData.rank = HypixelRank::GetRankPrefix(jsonResponse);
+            playerData.rank = HypixelRank::GetRankPrefix(response);
 
-            const auto& hg = jsonResponse["player"]["stats"]["HungerGames"];
+            const auto& hg = response["player"]["stats"]["HungerGames"];
 
             const I32 wins = hg.value("wins", 0) + hg.value("wins_teams", 0);
             const I32 kills = hg.value("kills", 0);
@@ -121,26 +68,32 @@ auto hypixel::BlitzSurvivalGames::LoadPlayersData(const std::vector<std::string>
             playerData.prefix = std::to_string(wins);
             playerData.suffix = std::format("{:.1f}", static_cast<float>(kills) / max(1, deaths));
 
-            playerCache[playerName] = playerData;
+            this->playerCache[playerName] = playerData;
         }
         catch (...)
         {
             playerData.error = true;
-            playerCache[playerName] = playerData;
+            this->playerCache[playerName] = playerData;
         }
     }
 }
 
-auto hypixel::BlitzSurvivalGames::GetPlayerData(const std::string& playerName) -> Player
+auto hypixel::BlitzSurvivalGames::HandleMode() -> void
 {
-    if (auto it = playerCache.find(playerName); it != playerCache.end())
-    {
-        return it->second;
-    }
+    const std::string currentMode = HypixelAPI::GetCurrentMode();
 
-    Player playerData{};
-    playerData.error = true;
-    return playerData;
+    switch (currentMode)
+    {
+    case "solo_normal":
+        this->mode = SOLO
+        break;
+    case "teams_normal":
+        this->mode = TEAMS
+        break;
+    default:
+        this->mode = LOBBY;
+        return;
+    }
 }
 
 auto hypixel::BlitzSurvivalGames::FormatTabName(const std::unique_ptr<EntityPlayer>& player) -> std::string
@@ -201,14 +154,6 @@ auto hypixel::BlitzSurvivalGames::FormatNametag(const std::unique_ptr<EntityPlay
     JavaUtil::FixString(nametag.second);
 
     return nametag;
-}
-
-auto hypixel::BlitzSurvivalGames::GetHpColor(const float hp) const -> std::string
-{
-    if (hp >= 20.0f) return MinecraftCode::codeToString.at(MinecraftCode::Code::DARK_GREEN);
-    if (hp >= 10.0f) return MinecraftCode::codeToString.at(MinecraftCode::Code::GREEN);
-    if (hp >= 5.0f)  return MinecraftCode::codeToString.at(MinecraftCode::Code::YELLOW);
-    return MinecraftCode::codeToString.at(MinecraftCode::Code::RED);
 }
 
 auto hypixel::BlitzSurvivalGames::GetWinsColor(const std::string& wins) const -> std::string

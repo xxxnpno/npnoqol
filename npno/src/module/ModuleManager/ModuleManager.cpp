@@ -22,7 +22,7 @@ ModuleManager::ModuleManager()
 
 ModuleManager::~ModuleManager() = default;
 
-void ModuleManager::Update() const
+auto ModuleManager::Update() const -> void
 {
 	chat->Update();
 	
@@ -49,7 +49,7 @@ void ModuleManager::Update() const
 }
 
 template<typename M>
-void ModuleManager::RegisterModule()
+auto ModuleManager::RegisterModule() -> void
 {
 	modules.emplace_back(std::make_unique<M>());
 }

@@ -6,6 +6,7 @@
 #include <thread>
 
 #include <curl/curl.h>
+#include <nlohmann/json.hpp>
 
 auto Network::WriteCallback(void* contents, size_t size, size_t nmemb, void* userp) -> size_t
 {
@@ -17,7 +18,7 @@ auto Network::WriteCallback(void* contents, size_t size, size_t nmemb, void* use
 
 auto Network::Get(const std::string& endpoint) -> std::string
 {
-    const std::string url = std::format("{}{}{}", Network::url, Config::GetHypixelAPIKey(), endpoint);
+    const std::string url = std::format("{}{}", Network::url, endpoint);
 
     CURL* curl = curl_easy_init();
 
@@ -40,22 +41,22 @@ auto Network::Get(const std::string& endpoint) -> std::string
     return response;
 }
 
-auto Network::GetBatch(const std::vector<std::string>& endpoints) -> std::vector<std::string>
+auto Network::GetBatchPlayerStats(const std::vector<std::string>& players) -> std::vector<nlohmann::json>
 {
     std::vector<std::future<std::string>> futures;
-    futures.reserve(endpoints.size());
+    futures.reserve(players.size());
 
-    for (const auto& endpoint : endpoints)
+    for (const auto& player : players)
     {
-        futures.push_back(std::async(std::launch::async, [endpoint]()
+        futures.push_back(std::async(std::launch::async, [player]()
             {
                 try
                 {
-                    return Get(endpoint);
+                    return HypixelAPI::GetPlayerStats(player);
                 }
                 catch (...)
                 {
-                    return std::string{};
+                    return {};
                 }
             }));
     }
