@@ -15,7 +15,7 @@ hypixel::BlitzSurvivalGames::BlitzSurvivalGames()
         HypixelGamemode::Gamemode::BLITZSURVIVALGAMES,
         "Winner - " }
 {
-    this->mode = LOBBY;
+    this->mode = Mode::LOBBY;
 }
 
 hypixel::BlitzSurvivalGames::~BlitzSurvivalGames() = default;
@@ -85,13 +85,13 @@ auto hypixel::BlitzSurvivalGames::HandleMode() -> void
     switch (currentMode)
     {
     case "solo_normal":
-        this->mode = SOLO
+        this->mode = Mode::SOLO
         break;
     case "teams_normal":
-        this->mode = TEAMS
+        this->mode = Mode::TEAMS
         break;
     default:
-        this->mode = LOBBY;
+        this->mode = Mode::LOBBY;
         return;
     }
 }
