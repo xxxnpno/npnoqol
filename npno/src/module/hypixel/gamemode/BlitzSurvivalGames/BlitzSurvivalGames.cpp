@@ -35,6 +35,7 @@ auto hypixel::BlitzSurvivalGames::Update() -> void
 auto hypixel::BlitzSurvivalGames::LoadPlayersData(const std::vector<std::string>& playerNames) -> void
 {
     const std::vector<nlohmann::json>& responses = Network::GetBatchPlayerStats(playerNames);
+    Player playerData{};
 
     for (size_t i = 0; i < playerNames.size(); ++i)
     {
@@ -82,17 +83,17 @@ auto hypixel::BlitzSurvivalGames::HandleMode() -> void
 {
     const std::string currentMode = HypixelAPI::GetCurrentMode();
 
-    switch (currentMode)
+    if (currentMode == "solo_normal")
     {
-    case "solo_normal":
-        this->mode = Mode::SOLO
-        break;
-    case "teams_normal":
-        this->mode = Mode::TEAMS
-        break;
-    default:
+        this->mode = Mode::SOLO;
+    }
+    else if (currentMode == "teams_normal")
+    {
+        this->mode = Mode::TEAMS;
+    }
+    else
+    {
         this->mode = Mode::LOBBY;
-        return;
     }
 }
 

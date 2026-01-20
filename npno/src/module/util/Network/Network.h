@@ -4,6 +4,8 @@
 #include <vector>
 #include <future>
 
+#include <nlohmann/json.hpp>
+
 class Network final
 {
 public:

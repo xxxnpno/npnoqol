@@ -1,6 +1,7 @@
 #include "Network.h"
 
 #include "../Config/Config.h"
+#include "../api/HypixelAPI/HypixelAPI.h"
 
 #include <print>
 #include <thread>
@@ -43,7 +44,7 @@ auto Network::Get(const std::string& endpoint) -> std::string
 
 auto Network::GetBatchPlayerStats(const std::vector<std::string>& players) -> std::vector<nlohmann::json>
 {
-    std::vector<std::future<std::string>> futures;
+    std::vector<std::future<nlohmann::json>> futures;
     futures.reserve(players.size());
 
     for (const auto& player : players)
@@ -56,12 +57,12 @@ auto Network::GetBatchPlayerStats(const std::vector<std::string>& players) -> st
                 }
                 catch (...)
                 {
-                    return {};
+                    return nlohmann::json{};
                 }
             }));
     }
 
-    std::vector<std::string> results;
+    std::vector<nlohmann::json> results;
     results.reserve(futures.size());
 
     for (auto& future : futures)

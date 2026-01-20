@@ -114,7 +114,7 @@ auto hypixel::HypixelStatsModule::IsBot(const std::unique_ptr<EntityPlayer>& pla
     return player->GetUniqueID()->Version() == 2;
 }
 
-auto hypixel::HypixelStatsModule::IsEveryoneLoaded() const -> bool
+auto hypixel::HypixelStatsModule::IsEveryoneLoaded() -> bool
 {
     const std::unique_ptr<WorldClient>& theWorld{ mc->GetTheWorld() };
     std::vector<std::string> playerNames;
@@ -132,15 +132,16 @@ auto hypixel::HypixelStatsModule::IsEveryoneLoaded() const -> bool
         this->LoadPlayersData(playerNames);
     }
 
-    bool allLoaded = true;
     for (const std::unique_ptr<EntityPlayer>& player : theWorld->GetPlayerEntities())
     {
         if (!this->IsBot(player) and this->playerCache.find(player->GetName()) == this->playerCache.end())
         {
-            allLoaded = false;
+			return true;
             break;
         }
     }
+
+    return false;
 }
 
 auto hypixel::HypixelStatsModule::GetPlayerData(const std::string& playerName) -> Player

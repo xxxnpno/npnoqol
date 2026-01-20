@@ -16,7 +16,7 @@ public:
 
 	virtual ~Module();
 
-	virtual auto Update() = 0 -> void;
+	virtual void Update() = 0;
 
 	virtual auto SanityCheck() const -> bool;
 

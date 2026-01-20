@@ -20,7 +20,7 @@ namespace hypixel
             TEAMS,
             WAITING,
             LOBBY
-        }
+        };
 
         auto LoadPlayersData(const std::vector<std::string>& playerNames) -> void override;
 

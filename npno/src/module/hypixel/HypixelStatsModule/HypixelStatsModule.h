@@ -47,7 +47,7 @@ namespace hypixel
 
         virtual auto LoadPlayersData(const std::vector<std::string>& playerNames) -> void {};
 
-        virtual auto IsEveryoneLoaded() const -> bool;
+        virtual auto IsEveryoneLoaded() -> bool;
 
         virtual auto FormatTabName(const std::unique_ptr<EntityPlayer>& player) -> std::string { return ""; };
         virtual auto FormatNametag(const std::unique_ptr<EntityPlayer>& player) -> std::pair<std::string, std::string> { return { "", "" }; };
