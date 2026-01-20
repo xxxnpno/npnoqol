@@ -47,7 +47,7 @@ auto Network::GetBatchPlayerStats(const std::vector<std::string>& players) -> st
     std::vector<std::future<nlohmann::json>> futures;
     futures.reserve(players.size());
 
-    for (const auto& player : players)
+    for (const std::string& player : players)
     {
         futures.push_back(std::async(std::launch::async, [player]()
             {

@@ -16,5 +16,5 @@ public:
 private:
     static auto WriteCallback(void* contents, size_t size, size_t nmemb, void* userp) -> size_t;
 
-    inline static std::string url = "https://api.hypixel.net/";
+    inline static std::string url = "https://api.hypixel.net";
 };

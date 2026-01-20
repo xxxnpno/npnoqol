@@ -35,12 +35,12 @@ auto hypixel::BlitzSurvivalGames::Update() -> void
 auto hypixel::BlitzSurvivalGames::LoadPlayersData(const std::vector<std::string>& playerNames) -> void
 {
     const std::vector<nlohmann::json>& responses = Network::GetBatchPlayerStats(playerNames);
-    Player playerData{};
 
-    for (size_t i = 0; i < playerNames.size(); ++i)
+    for (Size i = 0; i < playerNames.size(); ++i)
     {
         const std::string& playerName = playerNames[i];
         const nlohmann::json& response = responses[i];
+        Player playerData{};
 
         try
         {

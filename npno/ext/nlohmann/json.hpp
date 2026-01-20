@@ -21328,7 +21328,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
     template<typename T>
     const_reference operator[](T* key) const
     {
-        return operator[](typename object_t::key_type(key));
+         return operator[](typename object_t::key_type(key));
     }
 
     /// @brief access specified object element
