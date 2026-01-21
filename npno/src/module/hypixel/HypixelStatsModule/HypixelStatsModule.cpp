@@ -121,24 +121,27 @@ auto hypixel::HypixelStatsModule::IsEveryoneLoaded() -> bool
 
     for (const std::unique_ptr<EntityPlayer>& player : theWorld->GetPlayerEntities())
     {
-        if (!this->IsBot(player) and this->playerCache.find(player->GetName()) == this->playerCache.end())
+        if (this->IsBot(player))
         {
-            playerNames.push_back(player->GetName());
+            continue;
+        }
+
+        const std::string& playerName = player->GetName();
+        auto it = this->playerCache.find(playerName);
+
+        if (it == this->playerCache.end() or it->second.error)
+        {
+            if (it != this->playerCache.end() && it->second.error)
+            {
+                this->playerCache.erase(it);
+            }
+            playerNames.push_back(playerName);
         }
     }
 
     if (!playerNames.empty())
     {
         this->LoadPlayersData(playerNames);
-    }
-
-    for (const std::unique_ptr<EntityPlayer>& player : theWorld->GetPlayerEntities())
-    {
-        if (!this->IsBot(player) and this->playerCache.find(player->GetName()) == this->playerCache.end())
-        {
-			return true;
-            break;
-        }
     }
 
     return false;

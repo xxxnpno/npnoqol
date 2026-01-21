@@ -24,11 +24,11 @@ auto hypixel::BlitzSurvivalGames::Update() -> void
 {
     this->HandleMode();
 
-    if (this->IsEveryoneLoaded())
-    {
-        this->UpdateTabList();
-    }
+    if (this->mode == Mode::LOBBY)  return;
 
+    this->IsEveryoneLoaded();
+
+    this->UpdateTabList();
     this->UpdateNameTags();
 }
 
@@ -122,15 +122,16 @@ auto hypixel::BlitzSurvivalGames::FormatTabName(const std::unique_ptr<EntityPlay
             health
         );
     }
-    
-	const std::string rank = playerData.rank.empty() ? "" : playerData.rank;
-    return std::format(" {}[{}] {} {} {}{:.1f} | {}{}",
+
+    const std::string rankSection = playerData.rank.empty() ? "" : (playerData.rank + " ");
+    return std::format(" {}[{}] {}{} {}{:.1f} {}; {}{}",
         this->GetWinsColor(playerData.prefix),
         playerData.prefix,
-        rank,
+        rankSection,
         player->GetName(),
         this->GetHpColor(health),
         health,
+        MinecraftCode::codeToString.at(MinecraftCode::Code::AQUA),
         this->GetKDRColor(playerData.suffix),
         playerData.suffix
     );

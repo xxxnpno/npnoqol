@@ -5,6 +5,7 @@
 
 #include <print>
 #include <thread>
+#include <chrono>
 
 #include <curl/curl.h>
 #include <nlohmann/json.hpp>
@@ -17,29 +18,34 @@ auto Network::WriteCallback(void* contents, size_t size, size_t nmemb, void* use
     return totalSize;
 }
 
-auto Network::Get(const std::string& endpoint) -> std::string
+auto Network::Get(const std::string& endpoint, int maxRetries) -> std::string
 {
     const std::string url = std::format("{}{}", Network::url, endpoint);
 
-    CURL* curl = curl_easy_init();
-
-    std::string response;
-
-    curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-    curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
-    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
-    curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
-
-    CURLcode res = curl_easy_perform(curl);
-    if (res != CURLE_OK)
+    for (I32 attempt = 0; attempt < maxRetries; ++attempt)
     {
+        CURL* curl = curl_easy_init();
+        std::string response;
+
+        curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+        curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
+
+        CURLcode res = curl_easy_perform(curl);
         curl_easy_cleanup(curl);
-        throw std::runtime_error(curl_easy_strerror(res));
+
+        if (res == CURLE_OK)
+        {
+            return response;
+        }
+
+        if (attempt < maxRetries - 1)
+        {
+            I32 delayMs = BASE_DELAY_MS * (1 << attempt);
+            std::this_thread::sleep_for(std::chrono::milliseconds(delayMs));
+        }
     }
-
-    curl_easy_cleanup(curl);
-
-    return response;
 }
 
 auto Network::GetBatchPlayerStats(const std::vector<std::string>& players) -> std::vector<nlohmann::json>

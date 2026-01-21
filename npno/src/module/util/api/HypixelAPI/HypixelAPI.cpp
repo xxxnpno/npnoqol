@@ -44,21 +44,41 @@ auto HypixelAPI::IsNicked(const nlohmann::json& json) -> bool
 
 auto HypixelAPI::GetPlayerStats(const std::string& playerName) -> nlohmann::json
 {
-    try
-    {
-        const std::string res = Network::Get(std::format("/player?key={}&name={}", apiKey, playerName));
-        if (nlohmann::json::accept(res))
-        {
-            const nlohmann::json jsonResponse = nlohmann::json::parse(res, nullptr, false);
+    constexpr I32 MAX_RETRIES = 3;
 
-            return jsonResponse;
-        }
-        return nlohmann::json{};
-    }
-    catch (...)
+    for (I32 attempt = 0; attempt < MAX_RETRIES; ++attempt)
     {
-        return nlohmann::json{};
+        try
+        {
+            const std::string res = Network::Get(std::format("/player?key={}&name={}", apiKey, playerName), MAX_RETRIES);
+
+            if (nlohmann::json::accept(res))
+            {
+                const nlohmann::json jsonResponse = nlohmann::json::parse(res, nullptr, false);
+
+                if (!jsonResponse.is_null() && !jsonResponse.empty())
+                {
+                    return jsonResponse;
+                }
+            }
+
+            if (attempt < MAX_RETRIES - 1)
+            {
+                std::this_thread::sleep_for(std::chrono::milliseconds(100 * (1 << attempt)));
+                continue;
+            }
+        }
+        catch (...)
+        {
+            if (attempt < MAX_RETRIES - 1)
+            {
+                std::this_thread::sleep_for(std::chrono::milliseconds(100 * (1 << attempt)));
+                continue;
+            }
+        }
     }
+
+    return nlohmann::json{};
 }
 
 auto HypixelAPI::AddNickPlayer(const std::string& playerName) -> void
