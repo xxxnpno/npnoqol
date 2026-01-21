@@ -18,7 +18,6 @@ namespace hypixel
         {
             SOLO,
             TEAMS,
-            WAITING,
             LOBBY
         };
 

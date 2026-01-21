@@ -24,7 +24,29 @@ auto hypixel::BlitzSurvivalGames::Update() -> void
 {
     this->HandleMode();
 
-    if (this->mode == Mode::LOBBY)  return;
+    if (this->mode == Mode::LOBBY)
+    {
+        this->gameState = GameState::LOBBY;
+        this->ResetTeams();
+        return;
+    }
+
+    if (this->mode == Mode::TEAMS and this->gameState == GameState::LOBBY)
+    {
+        this->gameState = GameState::PREGAME;
+    }
+
+    if (this->mode == Mode::TEAMS and this->gameState == GameState::PREGAME)
+    {
+        const std::unique_ptr<WorldClient>& theWorld = mc->GetTheWorld();
+        const std::vector<std::unique_ptr<EntityPlayer>>& players = theWorld->GetPlayerEntities();
+
+        if (this->CheckGameStart(players))
+        {
+            this->gameState = GameState::INGAME;
+            this->DetectTeams(players);
+        }
+    }
 
     this->IsEveryoneLoaded();
 
@@ -143,7 +165,14 @@ auto hypixel::BlitzSurvivalGames::FormatNametag(const std::unique_ptr<EntityPlay
 
     std::pair<std::string, std::string> nametag;
 
-    nametag.first = std::format("{} ",
+    std::string teamPrefix = "";
+    if (this->mode == Mode::TEAMS && this->gameState == GameState::INGAME)
+    {
+        teamPrefix = this->GetTeamPrefix(player->GetName());
+    }
+
+    nametag.first = std::format("{}{} ",
+        teamPrefix,
         MinecraftCode::codeToString.at(MinecraftCode::Code::AQUA)
     );
 

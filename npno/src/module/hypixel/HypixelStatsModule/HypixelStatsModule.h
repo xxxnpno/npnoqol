@@ -1,19 +1,26 @@
 #pragma once
 
 #include "../../Module/Module.h"
-
 #include "../../util/HypixelGamemode/HypixelGamemode.h"
 
 #include <string>
 #include <utility>
 #include <set>
 #include <unordered_map>
+#include <unordered_set>
 #include <memory>
+#include <vector>
 
 #include <nlohmann/json.hpp>
 
 namespace hypixel
 {
+    struct Team
+    {
+        std::vector<std::string> members;
+        I32 teamNumber;
+    };
+
     class HypixelStatsModule : public Module
     {
     public:
@@ -28,12 +35,19 @@ namespace hypixel
         auto ClearCache() -> void;
 
     protected:
+        enum class GameState
+        {
+            LOBBY,
+            PREGAME,
+            INGAME
+        };
+
         struct Player
         {
             std::string prefix = "";
             std::string rank = "";
             std::string suffix = "";
-            
+
             bool isNick = false;
             bool error = false;
         };
@@ -56,9 +70,19 @@ namespace hypixel
 
         virtual auto HandleMode() -> void {};
 
-        mutable std::unordered_map<std::string, Player> playerCache;
+        auto DetectTeams(const std::vector<std::unique_ptr<EntityPlayer>>& players) -> void;
+        auto CheckGameStart(const std::vector<std::unique_ptr<EntityPlayer>>& players) -> bool;
+        auto GetPlayerTeamNumber(const std::string& playerName) const -> I32;
+        auto ResetTeams() -> void;
+        auto GetTeamPrefix(const std::string& playerName) const -> std::string;
 
+        mutable std::unordered_map<std::string, Player> playerCache;
         mutable std::set<std::string> loadingPlayers;
+
+        GameState gameState{ GameState::LOBBY };
+        std::unordered_map<std::string, I32> playerToTeam;
+        std::vector<Team> teams;
+        bool teamsDetected{ false };
 
         HypixelGamemode::Gamemode gamemode;
     };

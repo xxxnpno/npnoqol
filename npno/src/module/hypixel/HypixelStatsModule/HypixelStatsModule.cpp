@@ -1,9 +1,11 @@
 #include "HypixelStatsModule.h"
 
 #include "../../util/api/HypixelAPI/HypixelAPI.h"
+#include "../../util/MinecraftCode/MinecraftCode.h"
 
 #include <algorithm>
 #include <unordered_set>
+#include <format>
 
 hypixel::HypixelStatsModule::HypixelStatsModule(const bool enable, const HypixelGamemode::Gamemode gamemode, const std::string& autoGGLine)
     : Module{ enable }
@@ -44,9 +46,9 @@ auto hypixel::HypixelStatsModule::UpdateTabList() -> void
 
     for (Size i{ 0 }; i < playerInfoMap.size(); ++i)
     {
-		const std::unique_ptr<EntityPlayer>& playerEntity{ theWorld->GetPlayerEntityByName(playerInfoMap[i]->GetGameProfile()->GetName()) };
-        
-		if (playerEntity->GetInstance())
+        const std::unique_ptr<EntityPlayer>& playerEntity{ theWorld->GetPlayerEntityByName(playerInfoMap[i]->GetGameProfile()->GetName()) };
+
+        if (playerEntity->GetInstance())
         {
             if (this->IsBot(playerEntity))
             {
@@ -79,9 +81,9 @@ auto hypixel::HypixelStatsModule::UpdateNameTags() -> void
     Size teamIndex = 0;
 
     for (const std::unique_ptr<EntityPlayer>& player : theWorld->GetPlayerEntities())
-    {   
+    {
         if (this->IsBot(player)) continue;
-        
+
         if (teamIndex >= teamPool.size()) break;
 
         const std::string& playerName = player->GetName();
@@ -166,4 +168,125 @@ auto hypixel::HypixelStatsModule::GetHpColor(const float hp) const -> std::strin
     if (hp >= 10.0f) return MinecraftCode::codeToString.at(MinecraftCode::Code::GREEN);
     if (hp >= 5.0f)  return MinecraftCode::codeToString.at(MinecraftCode::Code::YELLOW);
     return MinecraftCode::codeToString.at(MinecraftCode::Code::RED);
+}
+
+auto hypixel::HypixelStatsModule::DetectTeams(const std::vector<std::unique_ptr<EntityPlayer>>& players) -> void
+{
+    if (teamsDetected) return;
+
+    std::unordered_map<std::string, std::vector<std::string>> cannotAttack;
+
+    for (const std::unique_ptr<EntityPlayer>& attacker : players)
+    {
+        for (const std::unique_ptr<EntityPlayer>& target : players)
+        {
+            if (attacker->GetName() == target->GetName()) continue;
+
+            if (!attacker->CanAttackPlayer(target))
+            {
+                cannotAttack[attacker->GetName()].push_back(target->GetName());
+            }
+        }
+    }
+
+    std::unordered_set<std::string> processed;
+    I32 teamNumber{ 1 };
+
+    for (const auto& [player, teammates] : cannotAttack)
+    {
+        if (processed.contains(player)) continue;
+
+        Team team{};
+        team.teamNumber = teamNumber++;
+        team.members.push_back(player);
+        processed.insert(player);
+        playerToTeam[player] = team.teamNumber;
+
+        for (const std::string& teammate : teammates)
+        {
+            if (processed.contains(teammate)) continue;
+
+            team.members.push_back(teammate);
+            processed.insert(teammate);
+            playerToTeam[teammate] = team.teamNumber;
+        }
+
+        teams.push_back(team);
+    }
+
+    for (const std::unique_ptr<EntityPlayer>& player : players)
+    {
+        if (processed.contains(player->GetName())) continue;
+
+        Team soloTeam;
+        soloTeam.teamNumber = teamNumber++;
+        soloTeam.members.push_back(player->GetName());
+        playerToTeam[player->GetName()] = soloTeam.teamNumber;
+        teams.push_back(soloTeam);
+    }
+
+    teamsDetected = true;
+}
+
+bool hypixel::HypixelStatsModule::CheckGameStart(const std::vector<std::unique_ptr<EntityPlayer>>& players)
+{
+    const std::unique_ptr<EntityPlayerSP>& thePlayer = mc->GetThePlayer();
+
+    if (players.size() < 2)
+    {
+        return false;
+    }
+
+    std::vector<const std::unique_ptr<EntityPlayer>*> enemies;
+
+    for (const std::unique_ptr<EntityPlayer>& player : players)
+    {
+        if (player->GetName() == thePlayer->GetName())
+        {
+            continue;
+        }
+
+        enemies.push_back(&player);
+
+        if (enemies.size() == 2)
+        {
+            break;
+        }
+    }
+
+    if (enemies.size() < 2)
+    {
+        return false;
+    }
+
+    for (const std::unique_ptr<EntityPlayer>* enemy : enemies)
+    {
+        if (thePlayer->CanAttackPlayer(*enemy))
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+auto hypixel::HypixelStatsModule::GetPlayerTeamNumber(const std::string& playerName) const -> I32
+{
+    auto it = playerToTeam.find(playerName);
+    return (it != playerToTeam.end()) ? it->second : 0;
+}
+
+auto hypixel::HypixelStatsModule::ResetTeams() -> void
+{
+    teams.clear();
+    playerToTeam.clear();
+    teamsDetected = false;
+}
+
+auto hypixel::HypixelStatsModule::GetTeamPrefix(const std::string& playerName) const -> std::string
+{
+    I32 teamNum = this->GetPlayerTeamNumber(playerName);
+    if (teamNum == 0) return "";
+
+    return std::format("[{}] ", teamNum);
 }

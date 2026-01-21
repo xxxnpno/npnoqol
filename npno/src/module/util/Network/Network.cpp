@@ -31,14 +31,19 @@ auto Network::Get(const std::string& endpoint, int maxRetries) -> std::string
         curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
+        curl_easy_setopt(
+            curl,
+            CURLOPT_USERAGENT,
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/121.0.0.0 Safari/537.36"
+        );
 
         CURLcode res = curl_easy_perform(curl);
         curl_easy_cleanup(curl);
 
         if (res == CURLE_OK)
-        {
             return response;
-        }
 
         if (attempt < maxRetries - 1)
         {
@@ -46,6 +51,8 @@ auto Network::Get(const std::string& endpoint, int maxRetries) -> std::string
             std::this_thread::sleep_for(std::chrono::milliseconds(delayMs));
         }
     }
+
+    return {};
 }
 
 auto Network::GetBatchPlayerStats(const std::vector<std::string>& players) -> std::vector<nlohmann::json>

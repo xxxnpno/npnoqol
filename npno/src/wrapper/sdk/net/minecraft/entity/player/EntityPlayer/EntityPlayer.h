@@ -13,9 +13,11 @@ public:
 	virtual void Init() override;
 
 	[[nodiscard]] std::string GetCustomNameTag() const;
+	[[nodiscard]] bool CanAttackPlayer(const std::unique_ptr<EntityPlayer>& target) const;
 
 private:
 	inline static std::once_flag entityPlayerSPOflag;
 
 	inline static jmethodID getCustomNameTagMethodID{ nullptr };
+	inline static jmethodID canAttackPlayerMethodID{ nullptr };
 };
