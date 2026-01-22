@@ -96,6 +96,8 @@ auto hypixel::BlitzSurvivalGames::HandleMode() -> void
 {
     const std::string currentMode = HypixelAPI::GetCurrentMode();
 
+    Mode oldMode = this->mode;
+
     if (currentMode == "solo_normal")
     {
         this->mode = Mode::SOLO;
@@ -107,6 +109,19 @@ auto hypixel::BlitzSurvivalGames::HandleMode() -> void
     else
     {
         this->mode = Mode::LOBBY;
+    }
+
+    if (oldMode != this->mode)
+    {
+        if (this->mode == Mode::LOBBY)
+        {
+            this->gameState = GameState::LOBBY;
+        }
+        else
+        {
+            this->gameState = GameState::PREGAME;
+        }
+        this->ResetTeams();
     }
 }
 
