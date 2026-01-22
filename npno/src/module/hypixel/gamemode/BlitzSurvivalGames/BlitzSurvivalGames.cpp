@@ -1,14 +1,5 @@
 #include "BlitzSurvivalGames.h"
 
-#include "../../../util/HypixelRank/HypixelRank.h"
-#include "../../../util/api/HypixelAPI/HypixelAPI.h"
-#include "../../../util/MinecraftCode/MinecraftCode.h"
-
-#include <cmath>
-#include <algorithm>
-#include <string>
-#include <format>
-
 hypixel::BlitzSurvivalGames::BlitzSurvivalGames()
     : HypixelStatsModule{
         false,

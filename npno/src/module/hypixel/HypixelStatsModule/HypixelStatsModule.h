@@ -2,14 +2,20 @@
 
 #include "../../Module/Module.h"
 #include "../../util/HypixelGamemode/HypixelGamemode.h"
+#include "../../util/HypixelRank/HypixelRank.h"
+#include "../../util/api/HypixelAPI/HypixelAPI.h"
+#include "../../util/MinecraftCode/MinecraftCode.h"
 
+#include <cmath>
 #include <string>
+#include <vector>
+#include <format>
 #include <utility>
+#include <algorithm>
 #include <set>
 #include <unordered_map>
 #include <unordered_set>
 #include <memory>
-#include <vector>
 
 #include <nlohmann/json.hpp>
 
@@ -83,6 +89,8 @@ namespace hypixel
         std::unordered_map<std::string, I32> playerToTeam;
         std::vector<Team> teams;
         bool teamsDetected{ false };
+        std::unordered_map<std::string, std::string> playerToScoreboardTeam;
+        I32 nextTeamNumber{ 1 };
 
         HypixelGamemode::Gamemode gamemode;
     };
