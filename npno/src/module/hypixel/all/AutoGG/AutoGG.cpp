@@ -16,15 +16,13 @@ hypixel::AutoGG::~AutoGG() = default;
 
 auto hypixel::AutoGG::Update() -> void
 {
-	const std::vector<std::string> newLines = Chat::GetNewLines();
-
-    for(const std::string& line : newLines)
+    for(const std::string& line : Chat::GetNewLines())
     {
         for (const std::string& autoGGLine : HypixelAPI::GetAutoGGLines())
         {
             if (line.find(autoGGLine) != std::string::npos and this->SentByServer(line))
             {
-                const std::string randomizedMessage = std::format("{}{}", "/ac", this->RandomCase("good game"));
+                const std::string randomizedMessage = std::format("{} {}", "/ac", this->RandomCase("good game"));
                 mc->GetThePlayer()->SendChatMessage(randomizedMessage);
                 return;
             }
@@ -52,17 +50,4 @@ auto hypixel::AutoGG::RandomCase(const std::string& message) const -> std::strin
     }
     
     return result;
-}
-
-auto hypixel::AutoGG::SentByServer(const std::string& line) const -> bool
-{
-    I32 count = 0;
-    for (const char c : line)
-    {
-        if (c == ':') 
-        {
-            count++;
-        }
-    }
-    return count;
 }

@@ -15,7 +15,5 @@ namespace hypixel
 
     private:
         auto RandomCase(const std::string& message) const -> std::string;
-
-		auto SentByServer(const std::string& line) const -> bool;
     };
 }

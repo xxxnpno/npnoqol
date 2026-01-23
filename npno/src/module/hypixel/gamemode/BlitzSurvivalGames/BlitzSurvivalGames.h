@@ -14,7 +14,7 @@ namespace hypixel
         auto Update() -> void override;
 
     private:
-        enum class Mode
+        enum class Mode : I8
         {
             SOLO,
             TEAMS,

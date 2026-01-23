@@ -4,7 +4,8 @@ hypixel::BlitzSurvivalGames::BlitzSurvivalGames()
     : HypixelStatsModule{
         false,
         HypixelGamemode::Gamemode::BLITZSURVIVALGAMES,
-        "Winner - " }
+        "Winner - ",
+        'IDK FOR NOW' }
 {
     this->mode = Mode::LOBBY;
 }
@@ -15,33 +16,13 @@ auto hypixel::BlitzSurvivalGames::Update() -> void
 {
     this->HandleMode();
 
-    if (this->mode == Mode::LOBBY)
+    if (this->mode == Mode::LOBBY) return;
+
+    this->IsEveryoneLoaded()
     {
-        this->gameState = GameState::LOBBY;
-        this->ResetTeams();
-        return;
+        this->UpdateTabList();
     }
-
-    if (this->mode == Mode::TEAMS and this->gameState == GameState::LOBBY)
-    {
-        this->gameState = GameState::PREGAME;
-    }
-
-    if (this->mode == Mode::TEAMS and this->gameState == GameState::PREGAME)
-    {
-        const std::unique_ptr<WorldClient>& theWorld = mc->GetTheWorld();
-        const std::vector<std::unique_ptr<EntityPlayer>>& players = theWorld->GetPlayerEntities();
-
-        if (this->CheckGameStart(players))
-        {
-            this->gameState = GameState::INGAME;
-            this->DetectTeams(players);
-        }
-    }
-
-    this->IsEveryoneLoaded();
-
-    this->UpdateTabList();
+    
     this->UpdateNameTags();
 }
 
@@ -96,7 +77,10 @@ auto hypixel::BlitzSurvivalGames::HandleMode() -> void
 {
     const std::string currentMode = HypixelAPI::GetCurrentMode();
 
-    Mode oldMode = this->mode;
+    if ((this->mode == Mode::SOLO and currentMode == Mode::TEAMS) or (this->mode == Mode::TEAMS and currentMode == Mode::TEAMS))
+    {
+        this->ClearCache();
+    }
 
     if (currentMode == "solo_normal")
     {
@@ -109,19 +93,6 @@ auto hypixel::BlitzSurvivalGames::HandleMode() -> void
     else
     {
         this->mode = Mode::LOBBY;
-    }
-
-    if (oldMode != this->mode)
-    {
-        if (this->mode == Mode::LOBBY)
-        {
-            this->gameState = GameState::LOBBY;
-        }
-        else
-        {
-            this->gameState = GameState::PREGAME;
-        }
-        this->ResetTeams();
     }
 }
 
@@ -171,14 +142,7 @@ auto hypixel::BlitzSurvivalGames::FormatNametag(const std::unique_ptr<EntityPlay
 
     std::pair<std::string, std::string> nametag;
 
-    std::string teamPrefix = "";
-    if (this->mode == Mode::TEAMS && this->gameState == GameState::INGAME)
-    {
-        teamPrefix = this->GetTeamPrefix(player->GetName());
-    }
-
-    nametag.first = std::format("{}{} ",
-        teamPrefix,
+    nametag.first = std::format("{} ",
         MinecraftCode::codeToString.at(MinecraftCode::Code::AQUA)
     );
 

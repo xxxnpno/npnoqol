@@ -21,16 +21,10 @@
 
 namespace hypixel
 {
-    struct Team
-    {
-        std::vector<std::string> members;
-        I32 teamNumber;
-    };
-
     class HypixelStatsModule : public Module
     {
     public:
-        explicit HypixelStatsModule(const bool enable = true, const HypixelGamemode::Gamemode gamemode = HypixelGamemode::Gamemode::ALL, const std::string& autoGGLine = "");
+        explicit HypixelStatsModule(const bool enable = true, const HypixelGamemode::Gamemode gamemode = HypixelGamemode::Gamemode::ALL, const std::string& autoGGLine = "", const std::string& gameStartsMessage = "");
 
         virtual ~HypixelStatsModule();
 
@@ -41,11 +35,12 @@ namespace hypixel
         auto ClearCache() -> void;
 
     protected:
-        enum class GameState
+        enum class ModeState : I8
         {
-            LOBBY,
+            INGAME,
+            PREGAMEANDRELOADED,
             PREGAME,
-            INGAME
+            NOTINGAME
         };
 
         struct Player
@@ -56,6 +51,13 @@ namespace hypixel
 
             bool isNick = false;
             bool error = false;
+        };
+
+        struct Team
+        {
+            std::string playerName = "";
+            std::string hypixelTeam = "";
+            std::string npnoTeam = "";
         };
 
         auto UpdateTabList() -> void;
@@ -76,22 +78,21 @@ namespace hypixel
 
         virtual auto HandleMode() -> void {};
 
-        auto DetectTeams(const std::vector<std::unique_ptr<EntityPlayer>>& players) -> void;
-        auto CheckGameStart(const std::vector<std::unique_ptr<EntityPlayer>>& players) -> bool;
-        auto GetPlayerTeamNumber(const std::string& playerName) const -> I32;
-        auto ResetTeams() -> void;
-        auto GetTeamPrefix(const std::string& playerName) const -> std::string;
+        virtual	auto SentByServer(const std::string& line) const final -> bool;
 
         mutable std::unordered_map<std::string, Player> playerCache;
+
         mutable std::set<std::string> loadingPlayers;
 
-        GameState gameState{ GameState::LOBBY };
-        std::unordered_map<std::string, I32> playerToTeam;
-        std::vector<Team> teams;
-        bool teamsDetected{ false };
-        std::unordered_map<std::string, std::string> playerToScoreboardTeam;
-        I32 nextTeamNumber{ 1 };
+        mutable std::vector<Team> teamManager;
 
         HypixelGamemode::Gamemode gamemode;
+
+    private:
+        auto HandleGameStart() -> void;
+
+        ModeState modeState = ModeState::NOTINGAME;
+
+        std::string gameStartsMessage;
     };
 }

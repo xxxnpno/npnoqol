@@ -7,9 +7,10 @@
 #include <unordered_set>
 #include <format>
 
-hypixel::HypixelStatsModule::HypixelStatsModule(const bool enable, const HypixelGamemode::Gamemode gamemode, const std::string& autoGGLine)
+hypixel::HypixelStatsModule::HypixelStatsModule(const bool enable, const HypixelGamemode::Gamemode gamemode, const std::string& autoGGLine, const std::string& gameStartsMessage)
     : Module{ enable }
     , gamemode{ gamemode }
+    , gameStartsMessage{ gameStartsMessage }
 {
     if (!autoGGLine.empty())
     {
@@ -37,6 +38,9 @@ auto hypixel::HypixelStatsModule::GetGamemode() const -> HypixelGamemode::Gamemo
 auto hypixel::HypixelStatsModule::ClearCache() -> void
 {
     this->playerCache.clear();
+    this->teamManager.clear();
+
+    this->modeState = ModeState::NOTINGAME;
 }
 
 auto hypixel::HypixelStatsModule::UpdateTabList() -> void
@@ -65,59 +69,100 @@ auto hypixel::HypixelStatsModule::UpdateTabList() -> void
 
 auto hypixel::HypixelStatsModule::UpdateNameTags() -> void
 {
-    const std::unique_ptr<WorldClient>& theWorld{ mc->GetTheWorld() };
-    const std::unique_ptr<Scoreboard>& scoreboard{ theWorld->GetScoreboard() };
+    /*
+        ehm this method is kinda weird
+    */
+    
+    const std::unique_ptr<WorldClient> theWorld{ mc->GetTheWorld() };
+    const std::unique_ptr<Scoreboard> scoreboard{ theWorld->GetScoreboard() };
 
-    for (const std::unique_ptr<EntityPlayer>& player : theWorld->GetPlayerEntities())
+    const std::vector<std::unique_ptr<EntityPlayer>> playerEntities{ theWorld->GetPlayerEntities() };
+
+    /*
+        the goal of this check is to save the team assigned by hypixel for each player in teams mode cause I override it later,
+        the problem is that in the pregame lobby hypixel doesn't know the real teams so we'll get garbage values, to fix this
+        problem I added an enum  ModeState that clear the teamManager when the game really starts.
+
+        so when we are in the pregame lobby we get trash values for teams but we don't care since we don't use it, however when
+        the game starts we clear every trash values to obtain real teams
+    */
+    if (this->ModeState == ModeState::PREGAME)
     {
-        if (this->IsBot(player))
+        this->teamManager.clear();
+        this->ModeState = ModeState::PREGAMEANDRELOADED;
+    }
+
+    if (this->teamManager.size() < playerEntities.size())
+    {
+        for (Size i{ this->teamManager.size() }; i < playerEntities.size(); ++i)
+        {
+            this->teamManager[i].playerName = playerEntities[i]->GetName();
+            this->teamManager[i].hypixelTeam = scoreboard->GetTeam(playerEntities[i]->GetName())->GetTeamName();
+            this->teamManager[i].npnoTeam = std::format("npno_{}", i);
+        }
+    }
+
+    /*
+        here is we are in the pregame lobby teamManager stores trash hypixelTeam values
+        but if we are ingame its store 
+    */
+
+    /*
+        in this loop we are going to create npnoTeams if needed and update nametags right after
+    */
+    for (const std::unique_ptr<EntityPlayer>& player : playerEntities)
+    {
+        const std::string& playerName = player->GetName();
+
+        if (this->IsBot(playerName))
         {
             continue;
         }
 
-        const std::string& playerName = player->GetName();
-        std::string teamName;
+        /*
+            find the corresponding entry in teamManager
+        */
+        auto it = std::find_if(this->teamManager.begin(), this->teamManager.end(),
+            [&](const auto& entry)
+            {
+                return entry.playerName == playerName;
+            }
+        );
 
-        auto it = this->playerToScoreboardTeam.find(playerName);
-        if (it != this->playerToScoreboardTeam.end())
-        {
-            teamName = it->second;
-        }
-        else
-        {
-            teamName = std::format("npno_{}", nextTeamNumber++);
-            this->playerToScoreboardTeam[playerName] = teamName;
-        }
+        std::unique_ptr<ScorePlayerTeam> team{ scoreboard->GetTeam(it->npnoTeam) };
 
-        std::unique_ptr<ScorePlayerTeam> team{ scoreboard->GetTeam(teamName) };
+        /*
+            if the npnoTeam already exists it's great but if not we create it
+        */
         if (!team->GetInstance())
         {
-            team = scoreboard->CreateTeam(teamName);
-            if (!team->GetInstance())
-            {
-                continue;
-            }
+            team = scoreboard->CreateTeam(it->npnoTeam);
+
+            /*
+                I don't remember if it can fail but checking to be sure
+            */
+            if (!team->GetInstance()) continue;
         }
 
-        std::vector<std::string> members = team->GetMembershipCollection();
-        bool alreadyInTeam = false;
-        for (const std::string& member : members)
+        /*
+            now we have a vector that associates each current player to his old hypixel team and his current npno team
+        */
+
+        /*
+            if a player is still in his old hypixel team we remove him from it and we place him in his associated npno team
+            keep in mind that the npno team of a player should not be changed during a game, it'll affect his scoreboard
+            position and that might get really annoying
+        */
+        if (!scoreboard->GetTeam(playerName)->GetTeam().starts_with("npno_"))
         {
-            if (member == playerName)
-            {
-                alreadyInTeam = true;
-            }
-            else
-            {
-                scoreboard->RemovePlayerFromTeam(member, team);
-            }
+            scoreboard->RemovePlayerFromTeam(playerName, scoreboard->GetTeam(playerName)->GetTeam());
+
+            const bool unused = scoreboard->AddPlayerToTeam(playerName, it->npnoTeam);
         }
 
-        if (!alreadyInTeam)
-        {
-            scoreboard->AddPlayerToTeam(playerName, teamName);
-        }
-
+        /*
+            we can finally update the nametag
+        */
         const std::pair<std::string, std::string> nametag = this->FormatNametag(player);
         team->SetNamePrefix(nametag.first);
         team->SetNameSuffix(nametag.second);
@@ -145,7 +190,7 @@ auto hypixel::HypixelStatsModule::IsEveryoneLoaded() -> bool
 
         if (it == this->playerCache.end() or it->second.error)
         {
-            if (it != this->playerCache.end() && it->second.error)
+            if (it != this->playerCache.end() and it->second.error)
             {
                 this->playerCache.erase(it);
             }
@@ -182,132 +227,27 @@ auto hypixel::HypixelStatsModule::GetHpColor(const float hp) const -> std::strin
     return MinecraftCode::codeToString.at(MinecraftCode::Code::RED);
 }
 
-auto hypixel::HypixelStatsModule::DetectTeams(const std::vector<std::unique_ptr<EntityPlayer>>& players) -> void
+auto hypixel::HypixelStatsModule::SentByServer(const std::string& line) const -> bool
 {
-    if (this->teamsDetected) return;
-
-    const std::unique_ptr<Scoreboard>& scoreboard{ mc->GetTheWorld()->GetScoreboard() };
-
-    this->playerToScoreboardTeam.clear();
-    this->nextTeamNumber = 1;
-
-    std::unordered_map<std::string, std::vector<std::string>> cannotAttack;
-
-    for (const std::unique_ptr<EntityPlayer>& attacker : players)
+    I32 count = 0;
+    for (const char c : line)
     {
-        for (const std::unique_ptr<EntityPlayer>& target : players)
+        if (c == ':') 
         {
-            if (attacker->GetName() == target->GetName()) continue;
-
-            if (!attacker->CanAttackPlayer(target))
-            {
-                cannotAttack[attacker->GetName()].push_back(target->GetName());
-            }
+            count++;
         }
     }
-
-    std::unordered_set<std::string> processed;
-    I32 teamNumber{ 1 };
-
-    for (const auto& [player, teammates] : cannotAttack)
-    {
-        if (processed.contains(player)) continue;
-
-        Team team{};
-        team.teamNumber = teamNumber++;
-        team.members.push_back(player);
-        processed.insert(player);
-        this->playerToTeam[player] = team.teamNumber;
-
-        for (const std::string& teammate : teammates)
-        {
-            if (processed.contains(teammate)) continue;
-
-            team.members.push_back(teammate);
-            processed.insert(teammate);
-            this->playerToTeam[teammate] = team.teamNumber;
-        }
-
-        teams.push_back(team);
-    }
-
-    for (const std::unique_ptr<EntityPlayer>& player : players)
-    {
-        if (processed.contains(player->GetName())) continue;
-
-        Team soloTeam{};
-        soloTeam.teamNumber = teamNumber++;
-        soloTeam.members.push_back(player->GetName());
-        this->playerToTeam[player->GetName()] = soloTeam.teamNumber;
-        teams.push_back(soloTeam);
-    }
-
-    teamsDetected = true;
+    return count;
 }
 
-bool hypixel::HypixelStatsModule::CheckGameStart(const std::vector<std::unique_ptr<EntityPlayer>>& players)
+auto hypixel::HypixelStatsModule::HandleGameStart() -> void
 {
-    const std::unique_ptr<EntityPlayerSP>& thePlayer = mc->GetThePlayer();
-
-    if (players.size() < 2)
+    for(const std::string& line : Chat::GetNewLines())
     {
-        return false;
-    }
-
-    std::vector<const std::unique_ptr<EntityPlayer>*> enemies;
-
-    for (const std::unique_ptr<EntityPlayer>& player : players)
-    {
-        if (player->GetName() == thePlayer->GetName())
+        if (line.find(gameStartsMessage) != std::string::npos and this->SentByServer(line))
         {
-            continue;
+            this->modeState = ModeState::INGAME;
+            return;
         }
-
-        enemies.push_back(&player);
-
-        if (enemies.size() == 2)
-        {
-            break;
-        }
-    }
-
-    if (enemies.size() < 2)
-    {
-        return false;
-    }
-
-    for (const std::unique_ptr<EntityPlayer>* enemy : enemies)
-    {
-        if (thePlayer->CanAttackPlayer(*enemy))
-        {
-            return true;
-        }
-    }
-
-    return false;
-}
-
-auto hypixel::HypixelStatsModule::GetPlayerTeamNumber(const std::string& playerName) const -> I32
-{
-    auto it = this->playerToTeam.find(playerName);
-    return (it != this->playerToTeam.end()) ? it->second : 0;
-}
-
-auto hypixel::HypixelStatsModule::ResetTeams() -> void
-{
-    this->teams.clear();
-    this->playerToTeam.clear();
-    this->teamsDetected = false;
-    this->playerToScoreboardTeam.clear();
-    this->nextTeamNumber = 1;
-}
-
-auto hypixel::HypixelStatsModule::GetTeamPrefix(const std::string& playerName) const -> std::string
-{
-    if (this->gameState != GameState::INGAME) return "";
-    
-    I32 teamNum{ this->GetPlayerTeamNumber(playerName) };
-    if (!teamNum) return "";
-
-    return std::format("[{}] ", teamNum);
+	}
 }
