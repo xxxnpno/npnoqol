@@ -90,10 +90,10 @@ namespace hypixel
 
         HypixelGamemode::Gamemode gamemode;
 
+        ModeState modeState = ModeState::NOTINGAME;
+
     private:
         auto HandleGameStart() -> void;
-
-        ModeState modeState = ModeState::NOTINGAME;
 
         std::string gameStartsMessage;
     };

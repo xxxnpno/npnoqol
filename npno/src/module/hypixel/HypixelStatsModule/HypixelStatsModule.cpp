@@ -81,7 +81,7 @@ auto hypixel::HypixelStatsModule::UpdateNameTags() -> void
     /*
         the goal of this check is to save the team assigned by hypixel for each player in teams mode cause I override it later,
         the problem is that in the pregame lobby hypixel doesn't know the real teams so we'll get garbage values, to fix this
-        problem I added an enum  ModeState that clear the teamManager when the game really starts.
+        problem I added an enum ModeState that clear the teamManager when the game really starts.
 
         so when we are in the pregame lobby we get trash values for teams but we don't care since we don't use it, however when
         the game starts we clear every trash values to obtain real teams
@@ -103,12 +103,7 @@ auto hypixel::HypixelStatsModule::UpdateNameTags() -> void
     }
 
     /*
-        here is we are in the pregame lobby teamManager stores trash hypixelTeam values
-        but if we are ingame its store 
-    */
-
-    /*
-        in this loop we are going to create npnoTeams if needed and update nametags right after
+        in this loop we are going to create npnoTeams if needed
     */
     for (const std::unique_ptr<EntityPlayer>& player : playerEntities)
     {
@@ -140,7 +135,7 @@ auto hypixel::HypixelStatsModule::UpdateNameTags() -> void
 
         /*
             if a player is still in his old hypixel team we remove him from it and we place him in his associated npno team
-            keep in mind that the npno team of a player should not be changed during a game, it'll affect his scoreboard
+            keep in mind that the npno team of a player should not be changed during a game, it'll affect his tab
             position and that might get really annoying
         */
         if (!scoreboard->GetTeam(playerName)->GetTeam().starts_with("npno_"))

@@ -83,14 +83,17 @@ auto hypixel::BlitzSurvivalGames::HandleMode() -> void
     if (currentMode == "solo_normal")
     {
         this->mode = Mode::SOLO;
+        this->modeState = ModeState::PREGAME;
     }
     else if (currentMode == "teams_normal")
     {
         this->mode = Mode::TEAMS;
+        this->modeState = ModeState::PREGAME;
     }
     else
     {
         this->mode = Mode::LOBBY;
+        this->modeState = ModeState::NOTINGAME;
     }
 }
 
