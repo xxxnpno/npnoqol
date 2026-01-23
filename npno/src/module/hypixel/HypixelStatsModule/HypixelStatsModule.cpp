@@ -86,10 +86,10 @@ auto hypixel::HypixelStatsModule::UpdateNameTags() -> void
         so when we are in the pregame lobby we get trash values for teams but we don't care since we don't use it, however when
         the game starts we clear every trash values to obtain real teams
     */
-    if (this->ModeState == ModeState::PREGAME)
+    if (this->ModeState == ModeState::INGAME)
     {
         this->teamManager.clear();
-        this->ModeState = ModeState::PREGAMEANDRELOADED;
+        this->ModeState = ModeState::INGAMEANDRELOADED;
     }
 
     if (this->teamManager.size() < playerEntities.size())
@@ -246,7 +246,7 @@ auto hypixel::HypixelStatsModule::HandleGameStart() -> void
 {
     if (this->gameStartsMessage.empty()) return;
     
-    for(const std::string& line : Chat::GetNewLines())
+    for (const std::string& line : Chat::GetNewLines())
     {
         if (line.find(this->gameStartsMessage) != std::string::npos and this->SentByServer(line))
         {

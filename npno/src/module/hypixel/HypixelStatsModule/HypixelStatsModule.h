@@ -37,8 +37,8 @@ namespace hypixel
     protected:
         enum class ModeState : I8
         {
+            INGAMEANDRELOADED,
             INGAME,
-            PREGAMEANDRELOADED,
             PREGAME,
             NOTINGAME
         };
