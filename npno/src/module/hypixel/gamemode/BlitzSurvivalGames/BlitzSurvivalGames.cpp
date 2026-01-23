@@ -5,7 +5,7 @@ hypixel::BlitzSurvivalGames::BlitzSurvivalGames()
         false,
         HypixelGamemode::Gamemode::BLITZSURVIVALGAMES,
         "Winner - ",
-        "IDK FOR NOW" }
+        "Blitz Survival Games" }
 {
     this->mode = Mode::LOBBY;
 }
@@ -52,7 +52,7 @@ auto hypixel::BlitzSurvivalGames::LoadPlayersData(const std::vector<std::string>
 
             playerData.rank = HypixelRank::GetRankPrefix(response);
 
-            const auto& hg = response["player"]["stats"]["HungerGames"];
+            const auto& hg = response.at("player").at("stats").at("HungerGames");
 
             const I32 wins = hg.value("wins", 0) + hg.value("wins_teams", 0);
             const I32 kills = hg.value("kills", 0);
@@ -75,7 +75,7 @@ auto hypixel::BlitzSurvivalGames::HandleMode() -> void
 {
     const std::string currentMode = HypixelAPI::GetCurrentMode();
 
-    if ((this->mode == Mode::SOLO and currentMode == Mode::TEAMS) or (this->mode == Mode::TEAMS and currentMode == Mode::TEAMS))
+    if ((this->mode == Mode::SOLO and currentMode == "teams_normal") or (this->mode == Mode::TEAMS and currentMode == "solo_normal"))   
     {
         this->ClearCache();
     }
@@ -104,7 +104,8 @@ auto hypixel::BlitzSurvivalGames::FormatTabName(const std::unique_ptr<EntityPlay
 
     if (playerData.error)
     {
-        return std::format(" {}? {}{} {}{:.1f}",
+        return std::format(" {} {}? {}{} {}{:.1f}",
+            this->GetTeamFromTeamManager(player->GetName()).hypixelTeam,
             MinecraftCode::codeToString.at(MinecraftCode::Code::DARK_RED),
             MinecraftCode::codeToString.at(MinecraftCode::Code::AQUA),
             player->GetName(),
@@ -115,7 +116,8 @@ auto hypixel::BlitzSurvivalGames::FormatTabName(const std::unique_ptr<EntityPlay
 
     if (playerData.isNick)
     {
-        return std::format(" {} {} {}{:.1f}",
+        return std::format(" {} {} {} {}{:.1f}",
+            this->GetTeamFromTeamManager(player->GetName()).hypixelTeam,
             playerData.prefix,
             player->GetName(),
             this->GetHpColor(health),
@@ -124,7 +126,8 @@ auto hypixel::BlitzSurvivalGames::FormatTabName(const std::unique_ptr<EntityPlay
     }
 
     const std::string rankSection = playerData.rank.empty() ? "" : (playerData.rank + " ");
-    return std::format(" {}[{}] {}{} {}{:.1f} {}; {}{}",
+    return std::format(" {} {}[{}] {}{} {}{:.1f} {}; {}{}",
+        this->GetTeamFromTeamManager(player->GetName()).hypixelTeam,
         this->GetWinsColor(playerData.prefix),
         playerData.prefix,
         rankSection,

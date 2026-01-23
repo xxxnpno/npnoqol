@@ -78,9 +78,9 @@ namespace hypixel
 
         virtual auto HandleMode() -> void {};
 
-        virtual auto GetTeamFromTeamManager(const std::string& playerName) const final -> Team;
+        virtual auto GetTeamFromTeamManager(const std::string& playerName) const -> Team final;
 
-        virtual	auto SentByServer(const std::string& line) const final -> bool;
+        virtual	auto SentByServer(const std::string& line) const -> bool final;
 
         mutable std::unordered_map<std::string, Player> playerCache;
 

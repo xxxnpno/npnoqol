@@ -76,8 +76,6 @@ auto hypixel::HypixelStatsModule::UpdateNameTags() -> void
     const std::unique_ptr<WorldClient> theWorld{ mc->GetTheWorld() };
     const std::unique_ptr<Scoreboard> scoreboard{ theWorld->GetScoreboard() };
 
-    const std::vector<std::unique_ptr<EntityPlayer>> playerEntities{ theWorld->GetPlayerEntities() };
-
     /*
         the goal of this check is to save the team assigned by hypixel for each player in teams mode cause I override it later,
         the problem is that in the pregame lobby hypixel doesn't know the real teams so we'll get garbage values, to fix this
@@ -86,30 +84,33 @@ auto hypixel::HypixelStatsModule::UpdateNameTags() -> void
         so when we are in the pregame lobby we get trash values for teams but we don't care since we don't use it, however when
         the game starts we clear every trash values to obtain real teams
     */
-    if (this->ModeState == ModeState::INGAME)
+    if (this->modeState == ModeState::INGAME)
     {
         this->teamManager.clear();
-        this->ModeState = ModeState::INGAMEANDRELOADED;
+        this->modeState = ModeState::INGAMEANDRELOADED;
     }
 
-    if (this->teamManager.size() < playerEntities.size())
+    if (this->teamManager.size() < theWorld->GetPlayerEntities().size())
     {
-        for (Size i{ this->teamManager.size() }; i < playerEntities.size(); ++i)
+        for (Size i{ this->teamManager.size() }; i < theWorld->GetPlayerEntities().size(); ++i)
         {
-            this->teamManager[i].playerName = playerEntities[i]->GetName();
-            this->teamManager[i].hypixelTeam = scoreboard->GetTeam(playerEntities[i]->GetName())->GetTeamName();
-            this->teamManager[i].npnoTeam = std::format("npno_{}", i);
+            Team team{};
+            team.playerName = theWorld->GetPlayerEntities()[i]->GetName();
+            team.hypixelTeam = scoreboard->GetTeam(team.playerName)->GetTeamName();
+            team.npnoTeam = std::format("npno_{}", i);
+
+            this->teamManager.push_back(std::move(team));
         }
     }
 
     /*
         in this loop we are going to create npnoTeams if needed
     */
-    for (const std::unique_ptr<EntityPlayer>& player : playerEntities)
+    for (const std::unique_ptr<EntityPlayer>& player : theWorld->GetPlayerEntities())
     {
         const std::string& playerName = player->GetName();
 
-        if (this->IsBot(playerName))
+        if (this->IsBot(player))
         {
             continue;
         }
@@ -125,7 +126,7 @@ auto hypixel::HypixelStatsModule::UpdateNameTags() -> void
 
             /*
                 I don't remember if it can fail but checking to be sure
-            */
+            */              
             if (!team->GetInstance()) continue;
         }
 
@@ -138,9 +139,9 @@ auto hypixel::HypixelStatsModule::UpdateNameTags() -> void
             keep in mind that the npno team of a player should not be changed during a game, it'll affect his tab
             position and that might get really annoying
         */
-        if (!scoreboard->GetTeam(playerName)->GetTeam().starts_with("npno_"))
+        if (!scoreboard->GetTeam(playerName)->GetTeamName().starts_with("npno_"))
         {
-            scoreboard->RemovePlayerFromTeam(playerName, scoreboard->GetTeam(playerName)->GetTeam());
+            scoreboard->RemovePlayerFromTeam(playerName, scoreboard->GetTeam(playerName));
 
             const bool unused = scoreboard->AddPlayerToTeam(playerName, this->GetTeamFromTeamManager(playerName).npnoTeam);
         }
@@ -210,7 +211,7 @@ auto hypixel::HypixelStatsModule::GetHpColor(const float hp) const -> std::strin
     return MinecraftCode::codeToString.at(MinecraftCode::Code::RED);
 }
 
-auto GetTeamFromTeamManager(const std::string& playerName) const -> Team
+auto hypixel::HypixelStatsModule::GetTeamFromTeamManager(const std::string& playerName) const -> Team
 {
     auto it = std::find_if(this->teamManager.begin(), this->teamManager.end(),
             [&](const auto& entry) 
@@ -221,7 +222,7 @@ auto GetTeamFromTeamManager(const std::string& playerName) const -> Team
 
         if (it != this->teamManager.end()) 
         {
-            return it->team;
+            return *it;
         } 
         else 
         {
