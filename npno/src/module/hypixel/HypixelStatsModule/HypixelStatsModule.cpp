@@ -244,9 +244,11 @@ auto hypixel::HypixelStatsModule::SentByServer(const std::string& line) const ->
 
 auto hypixel::HypixelStatsModule::HandleGameStart() -> void
 {
+    if (this->gameStartsMessage.empty()) return;
+    
     for(const std::string& line : Chat::GetNewLines())
     {
-        if (line.find(gameStartsMessage) != std::string::npos and this->SentByServer(line))
+        if (line.find(this->gameStartsMessage) != std::string::npos and this->SentByServer(line))
         {
             this->modeState = ModeState::INGAME;
             return;
