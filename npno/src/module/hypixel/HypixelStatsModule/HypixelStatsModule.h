@@ -30,7 +30,7 @@ namespace hypixel
     class HypixelStatsModule : public Module
     {
     public:
-        explicit HypixelStatsModule(const bool enable = true, const HypixelGamemode::Gamemode gamemode = HypixelGamemode::Gamemode::ALL, const std::string& autoGGLine = "idontwantittoprocsoiputarandomstring");
+        explicit HypixelStatsModule(const bool enable = true, const HypixelGamemode::Gamemode gamemode = HypixelGamemode::Gamemode::ALL, const std::string& autoGGLine = "");
 
         virtual ~HypixelStatsModule();
 

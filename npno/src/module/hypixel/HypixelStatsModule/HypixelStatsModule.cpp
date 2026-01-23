@@ -11,7 +11,10 @@ hypixel::HypixelStatsModule::HypixelStatsModule(const bool enable, const Hypixel
     : Module{ enable }
     , gamemode{ gamemode }
 {
-    HypixelAPI::AddAutoGGLine(autoGGLine);
+    if (!autoGGLine.empty())
+    {
+        HypixelAPI::AddAutoGGLine(autoGGLine);
+    }
 }
 
 hypixel::HypixelStatsModule::~HypixelStatsModule() = default;
@@ -67,28 +70,33 @@ auto hypixel::HypixelStatsModule::UpdateNameTags() -> void
 
     for (const std::unique_ptr<EntityPlayer>& player : theWorld->GetPlayerEntities())
     {
-        if (this->IsBot(player)) continue;
+        if (this->IsBot(player))
+        {
+            continue;
+        }
 
         const std::string& playerName = player->GetName();
         std::string teamName;
 
-        auto it = playerToScoreboardTeam.find(playerName);
-        if (it != playerToScoreboardTeam.end())
+        auto it = this->playerToScoreboardTeam.find(playerName);
+        if (it != this->playerToScoreboardTeam.end())
         {
             teamName = it->second;
         }
         else
         {
             teamName = std::format("npno_{}", nextTeamNumber++);
-            playerToScoreboardTeam[playerName] = teamName;
+            this->playerToScoreboardTeam[playerName] = teamName;
         }
 
         std::unique_ptr<ScorePlayerTeam> team{ scoreboard->GetTeam(teamName) };
-
         if (!team->GetInstance())
         {
             team = scoreboard->CreateTeam(teamName);
-            if (!team->GetInstance()) continue;
+            if (!team->GetInstance())
+            {
+                continue;
+            }
         }
 
         std::vector<std::string> members = team->GetMembershipCollection();
@@ -123,10 +131,9 @@ auto hypixel::HypixelStatsModule::IsBot(const std::unique_ptr<EntityPlayer>& pla
 
 auto hypixel::HypixelStatsModule::IsEveryoneLoaded() -> bool
 {
-    const std::unique_ptr<WorldClient>& theWorld{ mc->GetTheWorld() };
     std::vector<std::string> playerNames;
 
-    for (const std::unique_ptr<EntityPlayer>& player : theWorld->GetPlayerEntities())
+    for (const std::unique_ptr<EntityPlayer>& player : mc->GetTheWorld()->GetPlayerEntities())
     {
         if (this->IsBot(player))
         {
@@ -177,13 +184,12 @@ auto hypixel::HypixelStatsModule::GetHpColor(const float hp) const -> std::strin
 
 auto hypixel::HypixelStatsModule::DetectTeams(const std::vector<std::unique_ptr<EntityPlayer>>& players) -> void
 {
-    if (teamsDetected) return;
+    if (this->teamsDetected) return;
 
-    const std::unique_ptr<WorldClient>& theWorld{ mc->GetTheWorld() };
-    const std::unique_ptr<Scoreboard>& scoreboard{ theWorld->GetScoreboard() };
+    const std::unique_ptr<Scoreboard>& scoreboard{ mc->GetTheWorld()->GetScoreboard() };
 
-    playerToScoreboardTeam.clear();
-    nextTeamNumber = 1;
+    this->playerToScoreboardTeam.clear();
+    this->nextTeamNumber = 1;
 
     std::unordered_map<std::string, std::vector<std::string>> cannotAttack;
 
@@ -211,7 +217,7 @@ auto hypixel::HypixelStatsModule::DetectTeams(const std::vector<std::unique_ptr<
         team.teamNumber = teamNumber++;
         team.members.push_back(player);
         processed.insert(player);
-        playerToTeam[player] = team.teamNumber;
+        this->playerToTeam[player] = team.teamNumber;
 
         for (const std::string& teammate : teammates)
         {
@@ -219,7 +225,7 @@ auto hypixel::HypixelStatsModule::DetectTeams(const std::vector<std::unique_ptr<
 
             team.members.push_back(teammate);
             processed.insert(teammate);
-            playerToTeam[teammate] = team.teamNumber;
+            this->playerToTeam[teammate] = team.teamNumber;
         }
 
         teams.push_back(team);
@@ -229,10 +235,10 @@ auto hypixel::HypixelStatsModule::DetectTeams(const std::vector<std::unique_ptr<
     {
         if (processed.contains(player->GetName())) continue;
 
-        Team soloTeam;
+        Team soloTeam{};
         soloTeam.teamNumber = teamNumber++;
         soloTeam.members.push_back(player->GetName());
-        playerToTeam[player->GetName()] = soloTeam.teamNumber;
+        this->playerToTeam[player->GetName()] = soloTeam.teamNumber;
         teams.push_back(soloTeam);
     }
 
@@ -283,25 +289,25 @@ bool hypixel::HypixelStatsModule::CheckGameStart(const std::vector<std::unique_p
 
 auto hypixel::HypixelStatsModule::GetPlayerTeamNumber(const std::string& playerName) const -> I32
 {
-    auto it = playerToTeam.find(playerName);
-    return (it != playerToTeam.end()) ? it->second : 0;
+    auto it = this->playerToTeam.find(playerName);
+    return (it != this->playerToTeam.end()) ? it->second : 0;
 }
 
 auto hypixel::HypixelStatsModule::ResetTeams() -> void
 {
-    teams.clear();
-    playerToTeam.clear();
-    teamsDetected = false;
-    playerToScoreboardTeam.clear();
-    nextTeamNumber = 1;
+    this->teams.clear();
+    this->playerToTeam.clear();
+    this->teamsDetected = false;
+    this->playerToScoreboardTeam.clear();
+    this->nextTeamNumber = 1;
 }
 
 auto hypixel::HypixelStatsModule::GetTeamPrefix(const std::string& playerName) const -> std::string
 {
-    if (gameState != GameState::INGAME) return "";
+    if (this->gameState != GameState::INGAME) return "";
     
-    I32 teamNum = this->GetPlayerTeamNumber(playerName);
-    if (teamNum == 0) return "";
+    I32 teamNum{ this->GetPlayerTeamNumber(playerName) };
+    if (!teamNum) return "";
 
     return std::format("[{}] ", teamNum);
 }
