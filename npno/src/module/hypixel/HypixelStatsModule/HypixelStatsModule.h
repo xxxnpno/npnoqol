@@ -69,7 +69,7 @@ namespace hypixel
 
         virtual auto LoadPlayersData(const std::vector<std::string>& playerNames) -> void {};
 
-        virtual auto IsEveryoneLoaded() -> bool;
+        virtual auto LoadMissingPlayers() -> void;
 
         virtual auto FormatTabName(const std::unique_ptr<EntityPlayer>& player) -> std::string { return ""; };
         virtual auto FormatNametag(const std::unique_ptr<EntityPlayer>& player) -> std::pair<std::string, std::string> { return { "", "" }; };
@@ -77,6 +77,8 @@ namespace hypixel
         virtual auto GetHpColor(const float hp) const -> std::string;
 
         virtual auto HandleMode() -> void {};
+
+        virtual auto GetTeamFromTeamManager(const std::string& playerName) const final -> Team;
 
         virtual	auto SentByServer(const std::string& line) const final -> bool;
 

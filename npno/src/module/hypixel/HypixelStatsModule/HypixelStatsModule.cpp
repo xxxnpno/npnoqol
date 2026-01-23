@@ -119,24 +119,14 @@ auto hypixel::HypixelStatsModule::UpdateNameTags() -> void
             continue;
         }
 
-        /*
-            find the corresponding entry in teamManager
-        */
-        auto it = std::find_if(this->teamManager.begin(), this->teamManager.end(),
-            [&](const auto& entry)
-            {
-                return entry.playerName == playerName;
-            }
-        );
-
-        std::unique_ptr<ScorePlayerTeam> team{ scoreboard->GetTeam(it->npnoTeam) };
+        std::unique_ptr<ScorePlayerTeam> team{ scoreboard->GetTeam(this->GetTeamFromTeamManager(playerName).npnoTeam) };
 
         /*
             if the npnoTeam already exists it's great but if not we create it
         */
         if (!team->GetInstance())
         {
-            team = scoreboard->CreateTeam(it->npnoTeam);
+            team = scoreboard->CreateTeam(this->GetTeamFromTeamManager(playerName).npnoTeam);
 
             /*
                 I don't remember if it can fail but checking to be sure
@@ -157,7 +147,7 @@ auto hypixel::HypixelStatsModule::UpdateNameTags() -> void
         {
             scoreboard->RemovePlayerFromTeam(playerName, scoreboard->GetTeam(playerName)->GetTeam());
 
-            const bool unused = scoreboard->AddPlayerToTeam(playerName, it->npnoTeam);
+            const bool unused = scoreboard->AddPlayerToTeam(playerName, this->GetTeamFromTeamManager(playerName).npnoTeam);
         }
 
         /*
@@ -174,7 +164,7 @@ auto hypixel::HypixelStatsModule::IsBot(const std::unique_ptr<EntityPlayer>& pla
     return player->GetUniqueID()->Version() == 2;
 }
 
-auto hypixel::HypixelStatsModule::IsEveryoneLoaded() -> bool
+auto hypixel::HypixelStatsModule::LoadMissingPlayers() -> void
 {
     std::vector<std::string> playerNames;
 
@@ -202,8 +192,6 @@ auto hypixel::HypixelStatsModule::IsEveryoneLoaded() -> bool
     {
         this->LoadPlayersData(playerNames);
     }
-
-    return false;
 }
 
 auto hypixel::HypixelStatsModule::GetPlayerData(const std::string& playerName) -> Player
@@ -225,6 +213,25 @@ auto hypixel::HypixelStatsModule::GetHpColor(const float hp) const -> std::strin
     if (hp >= 10.0f) return MinecraftCode::codeToString.at(MinecraftCode::Code::GREEN);
     if (hp >= 5.0f)  return MinecraftCode::codeToString.at(MinecraftCode::Code::YELLOW);
     return MinecraftCode::codeToString.at(MinecraftCode::Code::RED);
+}
+
+auto GetTeamFromTeamManager(const std::string& playerName) const -> Team
+{
+    auto it = std::find_if(this->teamManager.begin(), this->teamManager.end(),
+            [&](const auto& entry) 
+            {
+                return entry.playerName == playerName;
+            }
+        );
+
+        if (it != this->teamManager.end()) 
+        {
+            return it->team;
+        } 
+        else 
+        {
+            return Team{};
+        }
 }
 
 auto hypixel::HypixelStatsModule::SentByServer(const std::string& line) const -> bool

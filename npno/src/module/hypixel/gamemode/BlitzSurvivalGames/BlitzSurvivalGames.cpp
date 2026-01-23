@@ -5,7 +5,7 @@ hypixel::BlitzSurvivalGames::BlitzSurvivalGames()
         false,
         HypixelGamemode::Gamemode::BLITZSURVIVALGAMES,
         "Winner - ",
-        'IDK FOR NOW' }
+        "IDK FOR NOW" }
 {
     this->mode = Mode::LOBBY;
 }
@@ -18,11 +18,9 @@ auto hypixel::BlitzSurvivalGames::Update() -> void
 
     if (this->mode == Mode::LOBBY) return;
 
-    this->IsEveryoneLoaded()
-    {
-        this->UpdateTabList();
-    }
-    
+    this->LoadMissingPlayers();
+
+    this->UpdateTabList();
     this->UpdateNameTags();
 }
 
