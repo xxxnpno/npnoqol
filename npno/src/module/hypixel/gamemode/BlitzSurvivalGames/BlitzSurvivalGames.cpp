@@ -101,17 +101,6 @@ auto hypixel::BlitzSurvivalGames::FormatTabName(const std::unique_ptr<EntityPlay
     Player playerData = this->GetPlayerData(player->GetName());
     const float health = player->GetHealth() + player->GetAbsorptionAmount();
 
-    if (this->mode == Mode::TEAMS)
-    {
-        const std::string& teamName = this->GetTeamFromTeamManager(player->GetName()).hypixelTeam;
-
-        auto it = teamColors.find(teamName);
-        if (it != teamColors.end())
-        {
-            playerData.prefix = it->second + playerData.prefix;
-        }
-    }
-
     if (playerData.error)
     {
         return std::format(" {}? {}{} {}{:.1f}",
@@ -141,7 +130,7 @@ auto hypixel::BlitzSurvivalGames::FormatTabName(const std::unique_ptr<EntityPlay
         player->GetName(),
         this->GetHpColor(health),
         health,
-        MinecraftCode::codeToString.at(MinecraftCode::Code::AQUA),
+        MinecraftCode::codeToString.at(MinecraftCode::Code::DARK_AQUA),
         this->GetKDRColor(playerData.suffix),
         playerData.suffix
     );
@@ -154,7 +143,7 @@ auto hypixel::BlitzSurvivalGames::FormatNametag(const std::unique_ptr<EntityPlay
     std::pair<std::string, std::string> nametag;
 
     nametag.first = std::format("{} ",
-        MinecraftCode::codeToString.at(MinecraftCode::Code::AQUA)
+        MinecraftCode::codeToString.at(MinecraftCode::Code::DARK_AQUA)
     );
 
     nametag.second = std::format(" {}{:.1f} ",
@@ -244,10 +233,10 @@ auto hypixel::BlitzSurvivalGames::AssignTeamColors() -> void
 
     const std::vector<MinecraftCode::Code> baseColors = 
     {
+        MinecraftCode::Code::DARK_AQUA,
         MinecraftCode::Code::BLACK,
         MinecraftCode::Code::DARK_BLUE,
         MinecraftCode::Code::DARK_GREEN,
-        MinecraftCode::Code::DARK_AQUA,
         MinecraftCode::Code::DARK_RED,
         MinecraftCode::Code::DARK_PURPLE,
         MinecraftCode::Code::GOLD,

@@ -136,8 +136,8 @@ auto hypixel::HypixelStatsModule::UpdateNameTags() -> void
         }
 
         const std::pair<std::string, std::string> nametag = this->FormatNametag(player);
-        team->SetNamePrefix(nametag.first);
-        team->SetNameSuffix(nametag.second);
+        team->SetNamePrefix(JavaUtil::FixString(nametag.first));
+        team->SetNameSuffix(JavaUtil::FixString(nametag.second));
     }
 
     this->OrginizeTeams();
