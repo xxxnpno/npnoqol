@@ -31,6 +31,14 @@ namespace hypixel
         auto GetWinsColor(const std::string& wins) const -> std::string;
         auto GetKDRColor(const std::string& kdr) const -> std::string;
 
+		auto AssignTeamNumbers() -> void;
+
+        auto GetTeamIndex(const std::string& playerName) const -> I32;
+        auto AssignTeamColors() -> void;
+
+        mutable std::unordered_map<std::string, I32> teamNumbers;
+        mutable std::unordered_map<std::string, std::string> teamColors;
+
         Mode mode;
     };
 }

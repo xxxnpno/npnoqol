@@ -24,7 +24,7 @@ namespace hypixel
     class HypixelStatsModule : public Module
     {
     public:
-        explicit HypixelStatsModule(const bool enable = true, const HypixelGamemode::Gamemode gamemode = HypixelGamemode::Gamemode::ALL, const std::string& autoGGLine = "", const std::string& gameStartsMessage = "");
+        explicit HypixelStatsModule(const bool enable = true, const HypixelGamemode::Gamemode gamemode = HypixelGamemode::Gamemode::ALL, const std::string& autoGGLine = "");
 
         virtual ~HypixelStatsModule();
 
@@ -35,14 +35,6 @@ namespace hypixel
         auto ClearCache() -> void;
 
     protected:
-        enum class ModeState : I8
-        {
-            INGAMEANDRELOADED,
-            INGAME,
-            PREGAME,
-            NOTINGAME
-        };
-
         struct Player
         {
             std::string prefix = "";
@@ -80,21 +72,19 @@ namespace hypixel
 
         virtual auto GetTeamFromTeamManager(const std::string& playerName) const -> Team final;
 
+        virtual auto GetTeamEntry(const std::string& playerName) -> Team* final;
+
         virtual	auto SentByServer(const std::string& line) const -> bool final;
+
+		virtual auto OrginizeTeams() -> void final;
 
         mutable std::unordered_map<std::string, Player> playerCache;
 
         mutable std::set<std::string> loadingPlayers;
 
+        mutable std::unordered_map<std::string, std::vector<Team>> sortedTeams;
         mutable std::vector<Team> teamManager;
 
         HypixelGamemode::Gamemode gamemode;
-
-        ModeState modeState = ModeState::NOTINGAME;
-
-    private:
-        auto HandleGameStart() -> void;
-
-        std::string gameStartsMessage;
     };
 }
