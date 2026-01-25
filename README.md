@@ -20,4 +20,4 @@
   - Deobfuscates tab list  
   - Adds a stats overlay in the tab (overall wins & overall KDR)  
   - Displays HP in tab & nametag  
-  - Assigns unique nametag colors for each team in team modes
+  - Assigns unique colors for each team in team modes
