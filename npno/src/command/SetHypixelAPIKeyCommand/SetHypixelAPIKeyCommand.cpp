@@ -34,4 +34,17 @@ auto SetHypixelAPIKeyCommand::OnCommand(const std::string& input) -> void
 			MinecraftCode::codeToString.at(MinecraftCode::Code::DARK_AQUA), 
 			MinecraftCode::codeToString.at(MinecraftCode::Code::AQUA),
 			args[1])));
+
+	if (HypixelAPI::CheckKey())
+	{
+		mc->GetThePlayer()->AddChatMessage(std::make_unique<ChatComponentText>(
+			std::format("{}Hypixel API key is valid",
+				MinecraftCode::codeToString.at(MinecraftCode::Code::GREEN))));
+	}
+	else
+	{
+		mc->GetThePlayer()->AddChatMessage(std::make_unique<ChatComponentText>(
+			std::format("{}Hypixel API key is invalid",
+				MinecraftCode::codeToString.at(MinecraftCode::Code::RED))));
+	}
 }

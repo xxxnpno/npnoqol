@@ -64,19 +64,6 @@ auto hypixel::HypixelStatsModule::UpdateNameTags() -> void
 
     scoreboard->SetObjectiveInDisplaySlot(Scoreboard::DisplaySlot::BELOW_NAME, nullptr);
 
-    if (this->teamManager.size() < theWorld->GetPlayerEntities().size())
-    {
-        for (Size i{ this->teamManager.size() }; i < theWorld->GetPlayerEntities().size(); ++i)
-        {
-            Team team{};
-            team.playerName = theWorld->GetPlayerEntities()[i]->GetName();
-            team.hypixelTeam = scoreboard->GetTeam(team.playerName)->GetTeamName();
-            team.npnoTeam = std::format("npno_{}", i);
-
-            this->teamManager.push_back(std::move(team));
-        }
-    }
-
     for (const std::unique_ptr<ScorePlayerTeam>& scoreTeam : scoreboard->GetTeams())
     {
         const std::string hypixelTeamName = scoreTeam->GetTeamName();
@@ -95,13 +82,40 @@ auto hypixel::HypixelStatsModule::UpdateNameTags() -> void
                     Team team{};
                     team.playerName = playerName;
                     team.hypixelTeam = hypixelTeamName;
-                    team.npnoTeam = std::format("npno_{}", this->teamManager.size());
                     this->teamManager.push_back(std::move(team));
                 }
                 else
                 {
                     this->GetTeamEntry(playerName)->hypixelTeam = hypixelTeamName;
                 }
+            }
+        }
+    }
+
+    for (const std::unique_ptr<EntityPlayer>& player : theWorld->GetPlayerEntities())
+    {
+        const std::string& playerName = player->GetName();
+
+        if (!this->GetTeamEntry(playerName))
+        {
+            Team team{};
+            team.playerName = playerName;
+            team.hypixelTeam = scoreboard->GetTeam(playerName)->GetTeamName();
+            this->teamManager.push_back(std::move(team));
+        }
+    }
+
+    this->OrginizeTeams();
+
+    I32 teamCounter = 0;
+    for (const auto& [hypixelTeamName, players] : sortedTeams)
+    {
+        for (const Team& teamEntry : players)
+        {
+            Team* entry = this->GetTeamEntry(teamEntry.playerName);
+            if (entry)
+            {
+                entry->npnoTeam = std::format("npno_{}", teamCounter++);
             }
         }
     }
@@ -134,8 +148,6 @@ auto hypixel::HypixelStatsModule::UpdateNameTags() -> void
         team->SetNamePrefix(JavaUtil::FixString(nametag.first));
         team->SetNameSuffix(JavaUtil::FixString(nametag.second));
     }
-
-    this->OrginizeTeams();
 }
 
 auto hypixel::HypixelStatsModule::IsBot(const std::unique_ptr<EntityPlayer>& player) -> bool

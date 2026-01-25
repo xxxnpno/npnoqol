@@ -7,7 +7,7 @@ Command::Command(const std::string name, const std::string usage)
 	: name{ name }
 	, usage{ 
         std::format("{}Usage: {}",
-        MinecraftCode::codeToString.at(MinecraftCode::Code::DARK_AQUA),
+        MinecraftCode::codeToString.at(MinecraftCode::Code::GREEN),
         usage)
     }
 {

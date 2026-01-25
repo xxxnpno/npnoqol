@@ -4,7 +4,7 @@ hypixel::BlitzSurvivalGames::BlitzSurvivalGames()
     : HypixelStatsModule{
         false,
         HypixelGamemode::Gamemode::BLITZSURVIVALGAMES,
-        "Winner - " 
+        "Winner - "
     }
 {
     this->mode = Mode::LOBBY;
@@ -95,7 +95,7 @@ auto hypixel::BlitzSurvivalGames::HandleMode() -> void
 {
     const std::string currentMode = HypixelAPI::GetCurrentMode();
 
-    if ((this->mode == Mode::SOLO and currentMode == "teams_normal") or (this->mode == Mode::TEAMS and currentMode == "solo_normal"))   
+    if ((this->mode == Mode::SOLO and currentMode == "teams_normal") or (this->mode == Mode::TEAMS and currentMode == "solo_normal"))
     {
         this->ClearCache();
     }
@@ -134,14 +134,14 @@ auto hypixel::BlitzSurvivalGames::UpdateChat() const -> void
             }
             chatLines[i]->SetLineString(std::make_unique<ChatComponentText>(cleanedText));
 
-			refresh = true;
+            refresh = true;
         }
     }
 
     if (refresh)
     {
         mc->GetIngameGUI()->GetPersistantChatGUI()->RefreshChat();
-	}
+    }
 }
 
 auto hypixel::BlitzSurvivalGames::FormatTabName(const std::unique_ptr<EntityPlayer>& player) -> std::string
@@ -149,17 +149,24 @@ auto hypixel::BlitzSurvivalGames::FormatTabName(const std::unique_ptr<EntityPlay
     Player playerData = this->GetPlayerData(player->GetName());
     const float health = player->GetHealth() + player->GetAbsorptionAmount();
 
-    if (player->IsSpectator())
+    std::string teamPrefix = "";
+    if (this->mode == Mode::TEAMS and this->GetTeamCount() > 3)
     {
-        return std::format(" {}{}",
-            MinecraftCode::codeToString.at(MinecraftCode::Code::DARK_AQUA),
-            player->GetName()
-        );
+        const std::string teamColor = this->GetPlayerTeamColor(player->GetName());
+        if (!teamColor.empty())
+        {
+            teamPrefix = std::format("{}{}O{} ",
+                teamColor,
+                MinecraftCode::codeToString.at(MinecraftCode::Code::OBFUSCATED),
+                MinecraftCode::codeToString.at(MinecraftCode::Code::RESET)
+            );
+        }
     }
 
     if (playerData.error)
     {
-        return std::format(" {}? {}{} {}{:.1f}",
+        return std::format(" {}{}? {}{} {}{:.1f}",
+            teamPrefix,
             MinecraftCode::codeToString.at(MinecraftCode::Code::DARK_RED),
             MinecraftCode::codeToString.at(MinecraftCode::Code::DARK_AQUA),
             player->GetName(),
@@ -170,7 +177,8 @@ auto hypixel::BlitzSurvivalGames::FormatTabName(const std::unique_ptr<EntityPlay
 
     if (playerData.isNick)
     {
-        return std::format(" {} {} {}{:.1f}",
+        return std::format(" {}{} {} {}{:.1f}",
+            teamPrefix,
             playerData.prefix,
             player->GetName(),
             this->GetHpColor(health),
@@ -179,7 +187,8 @@ auto hypixel::BlitzSurvivalGames::FormatTabName(const std::unique_ptr<EntityPlay
     }
 
     const std::string rankSection = playerData.rank.empty() ? "" : (playerData.rank + " ");
-    return std::format(" {}[{}] {}{} {}{:.1f} {}; {}{}",
+    return std::format(" {}{}[{}] {}{} {}{:.1f} {}; {}{}",
+        teamPrefix,
         this->GetWinsColor(playerData.prefix),
         playerData.prefix,
         rankSection,
@@ -209,12 +218,10 @@ auto hypixel::BlitzSurvivalGames::FormatNametag(const std::unique_ptr<EntityPlay
 
     if (this->mode == Mode::TEAMS)
     {
-        const std::string& teamName = this->GetTeamFromTeamManager(player->GetName()).hypixelTeam;
-
-        auto it = teamColors.find(teamName);
-        if (it != teamColors.end())
+        const std::string teamColor = this->GetPlayerTeamColor(player->GetName());
+        if (!teamColor.empty())
         {
-            nametag.first = nametag.first + it->second;
+            nametag.first = nametag.first + teamColor;
         }
     }
 
@@ -225,7 +232,7 @@ auto hypixel::BlitzSurvivalGames::GetWinsColor(const std::string& wins) const ->
 {
     if (wins.empty()) return MinecraftCode::codeToString.at(MinecraftCode::Code::GRAY);
 
-    if (!std::all_of(wins.begin(), wins.end(), ::isdigit)) 
+    if (!std::all_of(wins.begin(), wins.end(), ::isdigit))
     {
         return MinecraftCode::codeToString.at(MinecraftCode::Code::GRAY);
     }
@@ -287,7 +294,7 @@ auto hypixel::BlitzSurvivalGames::AssignTeamColors() -> void
 {
     teamColors.clear();
 
-    const std::vector<MinecraftCode::Code> baseColors = 
+    const std::vector<MinecraftCode::Code> baseColors =
     {
         MinecraftCode::Code::DARK_AQUA,
         MinecraftCode::Code::BLACK,
@@ -319,4 +326,27 @@ auto hypixel::BlitzSurvivalGames::AssignTeamColors() -> void
         teamColors[teamName] = color;
         ++i;
     }
+}
+
+auto hypixel::BlitzSurvivalGames::GetPlayerTeamName(const std::string& playerName) const -> std::string
+{
+    return this->GetTeamFromTeamManager(playerName).hypixelTeam;
+}
+
+auto hypixel::BlitzSurvivalGames::GetPlayerTeamColor(const std::string& playerName) const -> std::string
+{
+    const std::string teamName = this->GetPlayerTeamName(playerName);
+
+    auto it = teamColors.find(teamName);
+    if (it != teamColors.end())
+    {
+        return it->second;
+    }
+
+    return "";
+}
+
+auto hypixel::BlitzSurvivalGames::GetTeamCount() const -> I32
+{
+    return static_cast<I32>(this->sortedTeams.size());
 }
