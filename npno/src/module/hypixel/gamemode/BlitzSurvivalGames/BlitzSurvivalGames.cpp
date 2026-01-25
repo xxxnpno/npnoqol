@@ -101,11 +101,19 @@ auto hypixel::BlitzSurvivalGames::FormatTabName(const std::unique_ptr<EntityPlay
     Player playerData = this->GetPlayerData(player->GetName());
     const float health = player->GetHealth() + player->GetAbsorptionAmount();
 
+    if (player->IsSpectator())
+    {
+        return std::format(" {}{}",
+            MinecraftCode::codeToString.at(MinecraftCode::Code::DARK_AQUA),
+            player->GetName()
+        );
+    }
+
     if (playerData.error)
     {
         return std::format(" {}? {}{} {}{:.1f}",
             MinecraftCode::codeToString.at(MinecraftCode::Code::DARK_RED),
-            MinecraftCode::codeToString.at(MinecraftCode::Code::AQUA),
+            MinecraftCode::codeToString.at(MinecraftCode::Code::DARK_AQUA),
             player->GetName(),
             this->GetHpColor(health),
             health

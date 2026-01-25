@@ -18,9 +18,15 @@ void EntityPlayer::Init()
 {
 	std::call_once(this->entityPlayerSPOflag, [this]
 		{
+			isSpectatorMethodID = Jvm::env->GetMethodID(this->javaClass, "isSpectator", "()Z");
 			getCustomNameTagMethodID = Jvm::env->GetMethodID(this->javaClass, "getCustomNameTag", "()Ljava/lang/String;");
 			canAttackPlayerMethodID = Jvm::env->GetMethodID(this->javaClass, "canAttackPlayer", "(Lnet/minecraft/entity/player/EntityPlayer;)Z");
 		});
+}
+
+bool EntityPlayer::IsSpectator() const
+{
+	return Jvm::env->CallBooleanMethod(this->instance, isSpectatorMethodID);
 }
 
 std::string EntityPlayer::GetCustomNameTag() const

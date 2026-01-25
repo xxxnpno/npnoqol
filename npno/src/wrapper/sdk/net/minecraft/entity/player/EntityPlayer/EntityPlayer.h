@@ -12,12 +12,15 @@ public:
 
 	virtual void Init() override;
 
-	[[nodiscard]] std::string GetCustomNameTag() const;
-	[[nodiscard]] bool CanAttackPlayer(const std::unique_ptr<EntityPlayer>& target) const;
+	[[nodiscard]] virtual bool IsSpectator() const final;
+
+	[[nodiscard]] virtual std::string GetCustomNameTag() const final;
+	[[nodiscard]] virtual bool CanAttackPlayer(const std::unique_ptr<EntityPlayer>& target) const final;
 
 private:
 	inline static std::once_flag entityPlayerSPOflag;
 
+	inline static jmethodID isSpectatorMethodID{ nullptr };
 	inline static jmethodID getCustomNameTagMethodID{ nullptr };
 	inline static jmethodID canAttackPlayerMethodID{ nullptr };
 };
