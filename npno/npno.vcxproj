@@ -53,6 +53,7 @@
     <ClInclude Include="src\wrapper\sdk\java\util\List\List.h" />
     <ClInclude Include="src\wrapper\sdk\java\util\UUID\UUID.h" />
     <ClInclude Include="src\wrapper\sdk\net\minecraft\client\entity\EntityPlayerSP\EntityPlayerSP.h" />
+    <ClInclude Include="src\wrapper\sdk\net\minecraft\client\gui\ChatLine\ChatLine.h" />
     <ClInclude Include="src\wrapper\sdk\net\minecraft\client\gui\GuiIngame\GuiIngame.h" />
     <ClInclude Include="src\wrapper\sdk\net\minecraft\client\gui\GuiNewChat\GuiNewChat.h" />
     <ClInclude Include="src\wrapper\sdk\net\minecraft\client\gui\GuiPlayerTabOverlay\GuiPlayerTabOverlay.h" />
@@ -93,6 +94,7 @@
     <ClCompile Include="src\wrapper\sdk\java\util\List\List.cpp" />
     <ClCompile Include="src\wrapper\sdk\java\util\UUID\UUID.cpp" />
     <ClCompile Include="src\wrapper\sdk\net\minecraft\client\entity\EntityPlayerSP\EntityPlayerSP.cpp" />
+    <ClCompile Include="src\wrapper\sdk\net\minecraft\client\gui\ChatLine\ChatLine.cpp" />
     <ClCompile Include="src\wrapper\sdk\net\minecraft\client\gui\GuiIngame\GuiIngame.cpp" />
     <ClCompile Include="src\wrapper\sdk\net\minecraft\client\gui\GuiNewChat\GuiNewChat.cpp" />
     <ClCompile Include="src\wrapper\sdk\net\minecraft\client\gui\GuiPlayerTabOverlay\GuiPlayerTabOverlay.cpp" />

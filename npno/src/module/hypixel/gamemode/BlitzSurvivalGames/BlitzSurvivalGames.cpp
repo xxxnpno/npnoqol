@@ -17,6 +17,8 @@ auto hypixel::BlitzSurvivalGames::Update() -> void
 
     if (this->mode == Mode::LOBBY) return;
 
+    this->UpdateChat();
+
     this->LoadMissingPlayers();
 
     this->UpdateTabList();
@@ -94,6 +96,36 @@ auto hypixel::BlitzSurvivalGames::HandleMode() -> void
     {
         this->mode = Mode::LOBBY;
     }
+}
+
+auto hypixel::BlitzSurvivalGames::UpdateChat() const -> void
+{
+    const std::vector<std::unique_ptr<ChatLine>>& chatLines = mc->GetIngameGUI()->GetPersistantChatGUI()->GetChatLines();
+
+    bool refresh = false;
+    for (I32 i{ 0 }; i < 10; ++i)
+    {
+        const std::string text = chatLines[i]->GetLineString()->GetFormattedText();
+
+        if (text.find("§k") != std::string::npos)
+        {
+
+            std::string cleanedText = text;
+            size_t pos;
+            while ((pos = cleanedText.find("§k")) != std::string::npos)
+            {
+                cleanedText.erase(pos, 3);
+            }
+            chatLines[i]->SetLineString(std::make_unique<ChatComponentText>(cleanedText));
+
+			refresh = true;
+        }
+    }
+
+    if (refresh)
+    {
+        mc->GetIngameGUI()->GetPersistantChatGUI()->RefreshChat();
+	}
 }
 
 auto hypixel::BlitzSurvivalGames::FormatTabName(const std::unique_ptr<EntityPlayer>& player) -> std::string

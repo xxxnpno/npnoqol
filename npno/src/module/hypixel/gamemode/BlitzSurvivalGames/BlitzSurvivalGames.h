@@ -25,6 +25,8 @@ namespace hypixel
 
         auto HandleMode() -> void override;
 
+		auto UpdateChat() const -> void;
+
         auto FormatTabName(const std::unique_ptr<EntityPlayer>& player) -> std::string override;
         auto FormatNametag(const std::unique_ptr<EntityPlayer>& player) -> std::pair<std::string, std::string> override;
 
