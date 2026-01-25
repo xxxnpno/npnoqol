@@ -6,5 +6,5 @@
   *(Currently supported only for Blitz Survival Games)*
 
 ### Blitz Survival Games
-- **Stats Overlay in tab**
-- **Tab & Nametag deobfuscation**
+- **Stats overlay in tab**
+- **Tab, Nametag & Chat deobfuscation**
