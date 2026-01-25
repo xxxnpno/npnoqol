@@ -10,7 +10,7 @@
   *(Currently supported only for certain gamemodes.)*
 
 ### Commands
-- **/sethypixelapikey <key>**  
+- **/sethypixelapikey <<key>>**  
   Set your Hypixel API key to enable features.
 
 ### Supported Gamemodes
