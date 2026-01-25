@@ -37,7 +37,7 @@ namespace hypixel
         auto ClearCache() -> void;
 
     protected:
-        struct Player
+        struct Player 
         {
             std::string prefix = "";
             std::string rank = "";
@@ -45,6 +45,13 @@ namespace hypixel
 
             bool isNick = false;
             bool error = false;
+
+            bool isLoading = false;
+
+            I32 retryCount = 0;
+
+            std::chrono::steady_clock::time_point lastRequestTime;
+            std::chrono::steady_clock::time_point cacheTime;
         };
 
         struct Team

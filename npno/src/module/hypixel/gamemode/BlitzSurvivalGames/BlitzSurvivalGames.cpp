@@ -25,8 +25,8 @@ auto hypixel::BlitzSurvivalGames::Update() -> void
     this->UpdateTabList();
     this->UpdateNameTags();
 
-	this->AssignTeamNumbers();
-	this->AssignTeamColors();
+    this->AssignTeamNumbers();
+    this->AssignTeamColors();
 }
 
 auto hypixel::BlitzSurvivalGames::LoadPlayersData(const std::vector<std::string>& playerNames) -> void
@@ -48,6 +48,7 @@ auto hypixel::BlitzSurvivalGames::LoadPlayersData(const std::vector<std::string>
                     MinecraftCode::codeToString.at(MinecraftCode::Code::WHITE)
                 );
                 playerData.isNick = true;
+                playerData.cacheTime = std::chrono::steady_clock::now();
 
                 HypixelAPI::AddNickPlayer(playerName);
 
@@ -65,12 +66,26 @@ auto hypixel::BlitzSurvivalGames::LoadPlayersData(const std::vector<std::string>
 
             playerData.prefix = std::to_string(wins);
             playerData.suffix = std::format("{:.1f}", static_cast<float>(kills) / max(1, deaths));
+            playerData.cacheTime = std::chrono::steady_clock::now();
+            playerData.retryCount = 0;
 
             this->playerCache[playerName] = playerData;
         }
         catch (...)
         {
+            auto it = this->playerCache.find(playerName);
+            if (it != this->playerCache.end())
+            {
+                playerData.retryCount = it->second.retryCount + 1;
+            }
+            else
+            {
+                playerData.retryCount = 1;
+            }
+
             playerData.error = true;
+            playerData.isLoading = false;
+            playerData.lastRequestTime = std::chrono::steady_clock::now();
             this->playerCache[playerName] = playerData;
         }
     }

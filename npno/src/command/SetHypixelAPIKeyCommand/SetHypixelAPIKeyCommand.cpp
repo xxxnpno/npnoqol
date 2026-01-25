@@ -32,6 +32,6 @@ auto SetHypixelAPIKeyCommand::OnCommand(const std::string& input) -> void
 	mc->GetThePlayer()->AddChatMessage(std::make_unique<ChatComponentText>(
 		std::format("{}Set hypixel api key to {}{}",
 			MinecraftCode::codeToString.at(MinecraftCode::Code::DARK_AQUA), 
-			args[1],
-			MinecraftCode::codeToString.at(MinecraftCode::Code::AQUA))));
+			MinecraftCode::codeToString.at(MinecraftCode::Code::AQUA),
+			args[1])));
 }

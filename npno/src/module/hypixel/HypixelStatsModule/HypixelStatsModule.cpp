@@ -145,7 +145,19 @@ auto hypixel::HypixelStatsModule::IsBot(const std::unique_ptr<EntityPlayer>& pla
 
 auto hypixel::HypixelStatsModule::LoadMissingPlayers() -> void
 {
+    static auto lastBatchTime = std::chrono::steady_clock::now();
+    auto now = std::chrono::steady_clock::now();
+
+    if (now - lastBatchTime < std::chrono::seconds(2))
+    {
+        return;
+    }
+
+    lastBatchTime = now;
+
     std::vector<std::string> playerNames;
+    constexpr I32 MAX_BATCH_SIZE = 10;
+    constexpr I32 MAX_RETRY_COUNT = 5;
 
     for (const std::unique_ptr<EntityPlayer>& player : mc->GetTheWorld()->GetPlayerEntities())
     {
@@ -157,13 +169,36 @@ auto hypixel::HypixelStatsModule::LoadMissingPlayers() -> void
         const std::string& playerName = player->GetName();
         auto it = this->playerCache.find(playerName);
 
-        if (it == this->playerCache.end() or it->second.error)
+        if (it == this->playerCache.end())
         {
-            if (it != this->playerCache.end() and it->second.error)
-            {
-                this->playerCache.erase(it);
-            }
             playerNames.push_back(playerName);
+
+            Player loadingPlayer{};
+            loadingPlayer.isLoading = true;
+            loadingPlayer.lastRequestTime = now;
+            this->playerCache[playerName] = loadingPlayer;
+        }
+        else if (it->second.error && !it->second.isLoading)
+        {
+            if (it->second.retryCount >= MAX_RETRY_COUNT)
+            {
+                continue;
+            }
+
+            I32 retryDelay = 5 * (1 << it->second.retryCount);
+            auto timeSinceLastRequest = std::chrono::duration_cast<std::chrono::seconds>(now - it->second.lastRequestTime).count();
+
+            if (timeSinceLastRequest >= retryDelay)
+            {
+                playerNames.push_back(playerName);
+                it->second.isLoading = true;
+                it->second.lastRequestTime = now;
+            }
+        }
+
+        if (playerNames.size() >= MAX_BATCH_SIZE)
+        {
+            break;
         }
     }
 
