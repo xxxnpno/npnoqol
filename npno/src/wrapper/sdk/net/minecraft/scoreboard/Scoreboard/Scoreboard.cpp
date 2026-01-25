@@ -18,9 +18,11 @@ void Scoreboard::Init()
             getTeamMethodID = Jvm::env->GetMethodID(this->javaClass, "getTeam", "(Ljava/lang/String;)Lnet/minecraft/scoreboard/ScorePlayerTeam;");
             getPlayersTeamMethodID = Jvm::env->GetMethodID(this->javaClass, "getPlayersTeam", "(Ljava/lang/String;)Lnet/minecraft/scoreboard/ScorePlayerTeam;");
             createTeamMethodID = Jvm::env->GetMethodID(this->javaClass, "createTeam", "(Ljava/lang/String;)Lnet/minecraft/scoreboard/ScorePlayerTeam;");
+            getObjectiveInDisplaySlotMethodID = Jvm::env->GetMethodID(this->javaClass, "getObjectiveInDisplaySlot", "(I)Lnet/minecraft/scoreboard/ScoreObjective;");
 			getTeamsMethodID = Jvm::env->GetMethodID(this->javaClass, "getTeams", "()Ljava/util/Collection;");
             removeTeamMethodID = Jvm::env->GetMethodID(this->javaClass, "removeTeam", "(Lnet/minecraft/scoreboard/ScorePlayerTeam;)V");
             removePlayerFromTeamMethodID = Jvm::env->GetMethodID(this->javaClass, "removePlayerFromTeam", "(Ljava/lang/String;Lnet/minecraft/scoreboard/ScorePlayerTeam;)V");
+            setObjectiveInDisplaySlotMethodID = Jvm::env->GetMethodID(this->javaClass, "setObjectiveInDisplaySlot", "(ILnet/minecraft/scoreboard/ScoreObjective;)V");
         });
 }
 
@@ -42,6 +44,11 @@ std::unique_ptr<ScorePlayerTeam> Scoreboard::GetPlayersTeam(const std::string& p
 std::unique_ptr<ScorePlayerTeam> Scoreboard::CreateTeam(const std::string& teamName) const 
 {
     return std::make_unique<ScorePlayerTeam>(Jvm::env->NewGlobalRef(Jvm::env->CallObjectMethod(this->instance, createTeamMethodID, JavaUtil::StringToJString(teamName))));
+}
+
+std::unique_ptr<ScoreObjective> Scoreboard::GetObjectiveInDisplaySlot(DisplaySlot slot) const
+{
+    return std::make_unique<ScoreObjective>(Jvm::env->NewGlobalRef(Jvm::env->CallObjectMethod(this->instance, getObjectiveInDisplaySlotMethodID, static_cast<jint>(slot))));
 }
 
 std::vector<std::unique_ptr<ScorePlayerTeam>> Scoreboard::GetTeams() const
@@ -70,4 +77,9 @@ void Scoreboard::RemoveTeam(const std::unique_ptr<ScorePlayerTeam>& team) const
 void Scoreboard::RemovePlayerFromTeam(const std::string& playerName, const std::unique_ptr<ScorePlayerTeam>& team) const
 {
     Jvm::env->CallVoidMethod(this->instance, removePlayerFromTeamMethodID, JavaUtil::StringToJString(playerName), team->GetInstance());
+}
+
+void Scoreboard::SetObjectiveInDisplaySlot(const DisplaySlot slot, const std::unique_ptr<ScoreObjective>& objective) const
+{
+    Jvm::env->CallVoidMethod(this->instance, setObjectiveInDisplaySlotMethodID, static_cast<jint>(slot), objective ? objective->GetInstance() : nullptr);
 }

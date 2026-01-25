@@ -69,6 +69,8 @@ auto hypixel::HypixelStatsModule::UpdateNameTags() -> void
     const std::unique_ptr<WorldClient> theWorld{ mc->GetTheWorld() };
     const std::unique_ptr<Scoreboard> scoreboard{ theWorld->GetScoreboard() };
 
+    scoreboard->SetObjectiveInDisplaySlot(Scoreboard::DisplaySlot::BELOW_NAME, nullptr);
+
     if (this->teamManager.size() < theWorld->GetPlayerEntities().size())
     {
         for (Size i{ this->teamManager.size() }; i < theWorld->GetPlayerEntities().size(); ++i)

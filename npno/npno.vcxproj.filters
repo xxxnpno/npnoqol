@@ -165,6 +165,9 @@
     <ClInclude Include="src\wrapper\sdk\java\util\UUID\UUID.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="src\wrapper\sdk\net\minecraft\scoreboard\ScoreObjective\ScoreObjective.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Base\Base.cpp">
@@ -276,6 +279,9 @@
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="src\wrapper\sdk\java\util\UUID\UUID.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\wrapper\sdk\net\minecraft\scoreboard\ScoreObjective\ScoreObjective.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>
