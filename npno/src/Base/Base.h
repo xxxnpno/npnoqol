@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../module/ModuleManager/ModuleManager.h"
+#include "../command/CommandManager/CommandManager.h"
 
 #include <memory>
 
@@ -17,6 +18,7 @@ public:
 
 private:
     std::unique_ptr<ModuleManager> moduleManager;
+    std::unique_ptr<CommandManager> commandManager;
 
     bool running;
 };

@@ -2,7 +2,7 @@
 
 #include "../../src/wrapper/sdk/net/minecraft/client/Minecraft/Minecraft.h"
 
-#include "../util/Chat/Chat.h"
+#include "../../util/Chat/Chat.h"
 
 #include <print>
 #include <memory>
@@ -18,7 +18,7 @@ public:
 
 	virtual void Update() = 0;
 
-	virtual auto SanityCheck() const -> bool;
+	virtual auto SanityCheck() -> bool;
 
 	virtual auto IsEnable() const -> bool final;
 	virtual auto SetEnable(const bool state) -> void final;

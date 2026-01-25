@@ -4,12 +4,12 @@
 
 namespace hypixel
 {
-    class CurrentGamemode final : public HypixelStatsModule
+    class GamemodeManager final : public HypixelStatsModule
     {
     public:
-        CurrentGamemode();
+        GamemodeManager();
 
-        ~CurrentGamemode() override;
+        ~GamemodeManager() override;
 
         auto Update() -> void override;
 

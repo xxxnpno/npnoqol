@@ -2,7 +2,7 @@
 
 #include "../Module/Module.h"
 
-#include "../util/Chat/Chat.h"
+#include "../../util/Chat/Chat.h"
 
 #include <vector>
 #include <memory>

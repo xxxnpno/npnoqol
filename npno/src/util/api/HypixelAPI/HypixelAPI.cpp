@@ -123,3 +123,8 @@ auto HypixelAPI::SetCurrentMode(const std::string& mode) -> void
 {
     currentMode = mode;
 }
+
+auto HypixelAPI::SetAPIKey(const std::string& key) -> void
+{
+    apiKey = key;
+}

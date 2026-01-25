@@ -1,12 +1,5 @@
 #include "HypixelStatsModule.h"
 
-#include "../../util/api/HypixelAPI/HypixelAPI.h"
-#include "../../util/MinecraftCode/MinecraftCode.h"
-
-#include <algorithm>
-#include <unordered_set>
-#include <format>
-
 hypixel::HypixelStatsModule::HypixelStatsModule(const bool enable, const HypixelGamemode::Gamemode gamemode, const std::string& autoGGLine)
     : Module{ enable }
     , gamemode{ gamemode }
@@ -19,7 +12,7 @@ hypixel::HypixelStatsModule::HypixelStatsModule(const bool enable, const Hypixel
 
 hypixel::HypixelStatsModule::~HypixelStatsModule() = default;
 
-auto hypixel::HypixelStatsModule::SanityCheck() const -> bool
+auto hypixel::HypixelStatsModule::SanityCheck() -> bool
 {
     return
         mc->GetThePlayer()->GetInstance() and

@@ -1,17 +1,14 @@
-#include "CurrentGamemode.h"
+#include "GamemodeManager.h"
 
-#include "../../../util/HypixelGamemode/HypixelGamemode.h"
-#include "../../../util/api/HypixelAPI/HypixelAPI.h"
-
-hypixel::CurrentGamemode::CurrentGamemode()
+hypixel::GamemodeManager::GamemodeManager()
     : HypixelStatsModule{ true, HypixelGamemode::Gamemode::ALL }
 {
     
 }
 
-hypixel::CurrentGamemode::~CurrentGamemode() = default;
+hypixel::GamemodeManager::~GamemodeManager() = default;
 
-auto hypixel::CurrentGamemode::Update() -> void
+auto hypixel::GamemodeManager::Update() -> void
 {
     for (const std::string& line : Chat::GetNewLines())
     {
@@ -40,7 +37,7 @@ auto hypixel::CurrentGamemode::Update() -> void
     }
 }
 
-auto hypixel::CurrentGamemode::ExtractJson(const std::string& line) -> std::string
+auto hypixel::GamemodeManager::ExtractJson(const std::string& line) -> std::string
 {
     auto pos = line.find('{');
     if (pos != std::string::npos) 

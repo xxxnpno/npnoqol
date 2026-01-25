@@ -2,6 +2,7 @@
 
 #include "../../src/wrapper/JavaClass/JavaClass.h"
 
+#include "../../src/wrapper/sdk/net/minecraft/scoreboard/Score/Score.h"
 #include "../../src/wrapper/sdk/net/minecraft/scoreboard/ScoreObjective/ScoreObjective.h"
 #include "../../src/wrapper/sdk/net/minecraft/scoreboard/ScorePlayerTeam/ScorePlayerTeam.h"
 
@@ -31,6 +32,8 @@ public:
 
 	[[nodiscard]] std::vector<std::unique_ptr<ScorePlayerTeam>> GetTeams() const;
 
+	[[nodiscard]] std::vector<std::unique_ptr<Score>> GetSortedScores(const std::unique_ptr<ScoreObjective>& objective) const;
+
 	void RemoveTeam(const std::unique_ptr<ScorePlayerTeam>& team) const;
 	void RemovePlayerFromTeam(const std::string& playerName, const std::unique_ptr<ScorePlayerTeam>& team) const;
 	void SetObjectiveInDisplaySlot(const DisplaySlot slot, const std::unique_ptr<ScoreObjective>& objective) const;
@@ -42,6 +45,7 @@ private:
 	inline static jmethodID createTeamMethodID{ nullptr };
 	inline static jmethodID getObjectiveInDisplaySlotMethodID{ nullptr };
 	inline static jmethodID getTeamsMethodID{ nullptr };
+	inline static jmethodID getSortedScoresMethodID{ nullptr };
 	inline static jmethodID removeTeamMethodID{ nullptr };
 	inline static jmethodID removePlayerFromTeamMethodID{ nullptr };
 	inline static jmethodID setObjectiveInDisplaySlotMethodID{ nullptr };

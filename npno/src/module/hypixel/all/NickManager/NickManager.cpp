@@ -1,7 +1,5 @@
 #include "NickManager.h"
 
-#include "../../../util/api/HypixelAPI/HypixelAPI.h"
-#include "../../../util/MinecraftCode/MinecraftCode.h"
 
 hypixel::NickManager::NickManager()
     : HypixelStatsModule{ true, HypixelGamemode::Gamemode::ALL }

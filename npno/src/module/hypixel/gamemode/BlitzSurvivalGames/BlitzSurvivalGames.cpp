@@ -4,7 +4,8 @@ hypixel::BlitzSurvivalGames::BlitzSurvivalGames()
     : HypixelStatsModule{
         false,
         HypixelGamemode::Gamemode::BLITZSURVIVALGAMES,
-        "Winner - " }
+        "Winner - " 
+    }
 {
     this->mode = Mode::LOBBY;
 }
@@ -107,7 +108,7 @@ auto hypixel::BlitzSurvivalGames::UpdateChat() const -> void
     {
         const std::string text = chatLines[i]->GetLineString()->GetFormattedText();
 
-        if (text.find("§k") != std::string::npos)
+        if (text.find("§k") != std::string::npos and !text.contains(":"))
         {
 
             std::string cleanedText = text;

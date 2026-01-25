@@ -1,19 +1,21 @@
 #include "ModuleManager.h"
 
 #include "../hypixel/HypixelStatsModule/HypixelStatsModule.h"
-#include "../util/api/HypixelAPI/HypixelAPI.h"
+#include "../../util/api/HypixelAPI/HypixelAPI.h"
 
 #include "../hypixel/all/AutoGG/AutoGG.h"
-#include "../hypixel/all/CurrentGamemode/CurrentGamemode.h"
+#include "../hypixel/all/GamemodeManager/GamemodeManager.h"
 #include "../hypixel/all/NickManager/NickManager.h"
+#include "../hypixel/all/ScoreboardManager/ScoreboardManager.h"
 
 #include "../hypixel/gamemode/BlitzSurvivalGames/BlitzSurvivalGames.h"
 
 ModuleManager::ModuleManager()
 {	
 	this->RegisterModule<hypixel::AutoGG>();
-	this->RegisterModule<hypixel::CurrentGamemode>();
+	this->RegisterModule<hypixel::GamemodeManager>();
 	this->RegisterModule<hypixel::NickManager>();
+	this->RegisterModule<hypixel::ScoreboardManager>();
 
 	this->RegisterModule<hypixel::BlitzSurvivalGames>();
 

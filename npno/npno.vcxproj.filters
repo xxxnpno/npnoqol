@@ -120,22 +120,10 @@
     <ClInclude Include="src\wrapper\sdk\net\minecraft\client\gui\GuiPlayerTabOverlay\GuiPlayerTabOverlay.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="src\module\util\MinecraftCode\MinecraftCode.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
     <ClInclude Include="src\wrapper\sdk\net\minecraft\scoreboard\Scoreboard\Scoreboard.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="src\wrapper\sdk\net\minecraft\scoreboard\ScorePlayerTeam\ScorePlayerTeam.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="src\module\util\api\HypixelAPI\HypixelAPI.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="src\module\util\Config\Config.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="src\module\util\HypixelRank\HypixelRank.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="src\module\hypixel\HypixelStatsModule\HypixelStatsModule.h">
@@ -144,22 +132,13 @@
     <ClInclude Include="src\module\hypixel\all\AutoGG\AutoGG.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="src\module\hypixel\all\CurrentGamemode\CurrentGamemode.h">
+    <ClInclude Include="src\module\hypixel\all\GamemodeManager\GamemodeManager.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="src\module\hypixel\all\NickManager\NickManager.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="src\module\hypixel\gamemode\BlitzSurvivalGames\BlitzSurvivalGames.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="src\module\util\HypixelGamemode\HypixelGamemode.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="src\module\util\Network\Network.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="src\module\util\Chat\Chat.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="src\wrapper\sdk\java\util\UUID\UUID.h">
@@ -169,6 +148,42 @@
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="src\wrapper\sdk\net\minecraft\client\gui\ChatLine\ChatLine.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="src\module\hypixel\all\ScoreboardManager\ScoreboardManager.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="src\wrapper\sdk\net\minecraft\scoreboard\Score\Score.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="src\command\Command\Command.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="src\command\CommandManager\CommandManager.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="src\command\SetHypixelAPIKeyCommand\SetHypixelAPIKeyCommand.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="src\util\api\HypixelAPI\HypixelAPI.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="src\util\Chat\Chat.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="src\util\Config\Config.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="src\util\HypixelGamemode\HypixelGamemode.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="src\util\HypixelRank\HypixelRank.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="src\util\MinecraftCode\MinecraftCode.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="src\util\Network\Network.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>
@@ -251,34 +266,19 @@
     <ClCompile Include="src\wrapper\sdk\net\minecraft\scoreboard\ScorePlayerTeam\ScorePlayerTeam.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="src\module\util\api\HypixelAPI\HypixelAPI.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="src\module\util\Config\Config.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="src\module\util\HypixelRank\HypixelRank.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
     <ClCompile Include="src\module\hypixel\HypixelStatsModule\HypixelStatsModule.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="src\module\hypixel\all\AutoGG\AutoGG.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="src\module\hypixel\all\CurrentGamemode\CurrentGamemode.cpp">
+    <ClCompile Include="src\module\hypixel\all\GamemodeManager\GamemodeManager.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="src\module\hypixel\all\NickManager\NickManager.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="src\module\hypixel\gamemode\BlitzSurvivalGames\BlitzSurvivalGames.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="src\module\util\Network\Network.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="src\module\util\Chat\Chat.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="src\wrapper\sdk\java\util\UUID\UUID.cpp">
@@ -288,6 +288,36 @@
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="src\wrapper\sdk\net\minecraft\client\gui\ChatLine\ChatLine.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\module\hypixel\all\ScoreboardManager\ScoreboardManager.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\wrapper\sdk\net\minecraft\scoreboard\Score\Score.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\command\Command\Command.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\command\CommandManager\CommandManager.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\command\SetHypixelAPIKeyCommand\SetHypixelAPIKeyCommand.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\util\api\HypixelAPI\HypixelAPI.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\util\Chat\Chat.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\util\Config\Config.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\util\HypixelRank\HypixelRank.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\util\Network\Network.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>

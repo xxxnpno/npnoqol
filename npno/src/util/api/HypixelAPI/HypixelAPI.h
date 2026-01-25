@@ -37,6 +37,8 @@ public:
 	static auto GetCurrentMode() -> std::string;
 	static auto SetCurrentMode(const std::string& mode) -> void;
 
+	static auto SetAPIKey(const std::string& key) -> void;
+
 private:
 	inline static std::map<std::string, Nick> nickList;
 

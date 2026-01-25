@@ -1,13 +1,15 @@
 #pragma once
 
 #include "../../Module/Module.h"
-#include "../../util/HypixelGamemode/HypixelGamemode.h"
-#include "../../util/HypixelRank/HypixelRank.h"
-#include "../../util/api/HypixelAPI/HypixelAPI.h"
-#include "../../util/MinecraftCode/MinecraftCode.h"
+#include "../../../util/HypixelGamemode/HypixelGamemode.h"
+#include "../../../util/HypixelRank/HypixelRank.h"
+#include "../../../util/api/HypixelAPI/HypixelAPI.h"
+#include "../../../util/MinecraftCode/MinecraftCode.h"
 
+#include <cctype>
 #include <cmath>
 #include <string>
+#include <random>
 #include <vector>
 #include <format>
 #include <utility>
@@ -28,7 +30,7 @@ namespace hypixel
 
         virtual ~HypixelStatsModule();
 
-        auto SanityCheck() const -> bool override;
+        auto SanityCheck() -> bool override;
 
         auto GetGamemode() const -> HypixelGamemode::Gamemode;
 

@@ -20,7 +20,8 @@ void Scoreboard::Init()
             createTeamMethodID = Jvm::env->GetMethodID(this->javaClass, "createTeam", "(Ljava/lang/String;)Lnet/minecraft/scoreboard/ScorePlayerTeam;");
             getObjectiveInDisplaySlotMethodID = Jvm::env->GetMethodID(this->javaClass, "getObjectiveInDisplaySlot", "(I)Lnet/minecraft/scoreboard/ScoreObjective;");
 			getTeamsMethodID = Jvm::env->GetMethodID(this->javaClass, "getTeams", "()Ljava/util/Collection;");
-            removeTeamMethodID = Jvm::env->GetMethodID(this->javaClass, "removeTeam", "(Lnet/minecraft/scoreboard/ScorePlayerTeam;)V");
+            getSortedScoresMethodID = Jvm::env->GetMethodID(this->javaClass, "getSortedScores", "(Lnet/minecraft/scoreboard/ScoreObjective;)Ljava/util/Collection;");
+            removeTeamMethodID = Jvm::env->GetMethodID(this->javaClass, "removeTeam", "(Lnet/minecraft/scoreboard/ScoreObjective;)Ljava/util/Collection;");
             removePlayerFromTeamMethodID = Jvm::env->GetMethodID(this->javaClass, "removePlayerFromTeam", "(Ljava/lang/String;Lnet/minecraft/scoreboard/ScorePlayerTeam;)V");
             setObjectiveInDisplaySlotMethodID = Jvm::env->GetMethodID(this->javaClass, "setObjectiveInDisplaySlot", "(ILnet/minecraft/scoreboard/ScoreObjective;)V");
         });
@@ -67,6 +68,24 @@ std::vector<std::unique_ptr<ScorePlayerTeam>> Scoreboard::GetTeams() const
     Jvm::env->DeleteGlobalRef(array);
 
     return teamList;
+}
+
+std::vector<std::unique_ptr<Score>> Scoreboard::GetSortedScores(const std::unique_ptr<ScoreObjective>& objective) const
+{
+    std::vector<std::unique_ptr<Score>> scoreList;
+
+    std::unique_ptr<Collection> getScores = std::make_unique<Collection>(Jvm::env->CallObjectMethod(this->instance, getSortedScoresMethodID));
+
+    const jobjectArray array = getScores->ToArray();
+
+    for (jint i = 0; i < getScores->Size(); ++i)
+    {
+        scoreList.push_back(std::make_unique<Score>(Jvm::env->NewGlobalRef(Jvm::env->GetObjectArrayElement(array, i))));
+    }
+
+    Jvm::env->DeleteGlobalRef(array);
+
+    return scoreList;
 }
 
 void Scoreboard::RemoveTeam(const std::unique_ptr<ScorePlayerTeam>& team) const 

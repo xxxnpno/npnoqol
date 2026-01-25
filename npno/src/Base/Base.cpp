@@ -11,6 +11,7 @@ Base::Base()
     if (running)
     {
         this->moduleManager = std::make_unique<ModuleManager>();
+		this->commandManager = std::make_unique<CommandManager>();
     }
 }
 
@@ -24,6 +25,7 @@ void Base::Run()
     while (this->running)
     {
         this->moduleManager->Update();
+		this->commandManager->Update();
 
         if (GetAsyncKeyState(VK_DELETE) bitand 0x8000)
         {

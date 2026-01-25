@@ -1,11 +1,5 @@
 #include "AutoGG.h"
 
-#include "../../../util/api/HypixelAPI/HypixelAPI.h"
-#include "../../../util/HypixelGamemode/HypixelGamemode.h"
-
-#include <random>
-#include <cctype>
-
 hypixel::AutoGG::AutoGG()
     : HypixelStatsModule{ true, HypixelGamemode::Gamemode::ALL }
 {
