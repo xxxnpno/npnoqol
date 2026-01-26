@@ -267,9 +267,9 @@ auto hypixel::BlitzSurvivalGames::AssignTeamNumbers() -> void
     this->teamNumbers.clear();
 
     U32 counter = 1;
-    for (const auto& [teamName, players] : sortedTeams)
+    for (const auto& [teamName, players] : this->sortedTeams)
     {
-        teamNumbers[teamName] = counter++;
+        this->teamNumbers[teamName] = counter++;
     }
 }
 
@@ -312,19 +312,19 @@ auto hypixel::BlitzSurvivalGames::AssignTeamColors() -> void
         MinecraftCode::Code::WHITE
     };
 
-    for (const auto& [teamName, _] : sortedTeams)
+    for (const auto& [teamName, _] : this->sortedTeams)
     {
-        if (teamColors.find(teamName) == teamColors.end())
+        if (this->teamColors.find(teamName) == teamColors.end())
         {
             std::string color = MinecraftCode::codeToString.at(baseColors[nextColorIndex % baseColors.size()]);
 
-            if (nextColorIndex >= baseColors.size())
+            if (this->nextColorIndex >= baseColors.size())
             {
                 color = MinecraftCode::codeToString.at(MinecraftCode::Code::BOLD) + color;
             }
 
-            teamColors[teamName] = color;
-            ++nextColorIndex;
+            this->teamColors[teamName] = color;
+            ++this->nextColorIndex;
         }
     }
 }
