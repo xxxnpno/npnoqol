@@ -4,6 +4,7 @@
 #include "../../util/api/HypixelAPI/HypixelAPI.h"
 
 #include "../hypixel/all/AutoGG/AutoGG.h"
+#include "../hypixel/all/ChatManager/ChatManager.h"
 #include "../hypixel/all/GamemodeManager/GamemodeManager.h"
 #include "../hypixel/all/NickManager/NickManager.h"
 #include "../hypixel/all/ScoreboardManager/ScoreboardManager.h"
@@ -13,6 +14,7 @@
 ModuleManager::ModuleManager()
 {	
 	this->RegisterModule<hypixel::AutoGG>();
+	this->RegisterModule<hypixel::ChatManager>();
 	this->RegisterModule<hypixel::GamemodeManager>();
 	this->RegisterModule<hypixel::NickManager>();
 	this->RegisterModule<hypixel::ScoreboardManager>();

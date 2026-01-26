@@ -11,6 +11,7 @@
 #include <string>
 #include <random>
 #include <vector>
+#include <iterator>
 #include <format>
 #include <utility>
 #include <algorithm>
