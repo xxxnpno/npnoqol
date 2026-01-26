@@ -15,6 +15,8 @@ public:
     [[nodiscard]] jstring GetName() const;
 
 private:
+    inline static std::once_flag oflag{};
+
     inline static jmethodID getValueMethodID{ nullptr };
     inline static jmethodID getNameMethodID{ nullptr };
 };
