@@ -35,6 +35,7 @@
     <ClInclude Include="src\command\Command\Command.h" />
     <ClInclude Include="src\command\SetHypixelAPIKeyCommand\SetHypixelAPIKeyCommand.h" />
     <ClInclude Include="src\module\hypixel\all\AutoGG\AutoGG.h" />
+    <ClInclude Include="src\module\hypixel\all\ChatManager\ChatManager.h" />
     <ClInclude Include="src\module\hypixel\all\GamemodeManager\GamemodeManager.h" />
     <ClInclude Include="src\module\hypixel\all\NickManager\NickManager.h" />
     <ClInclude Include="src\module\hypixel\all\ScoreboardManager\ScoreboardManager.h" />
@@ -83,6 +84,7 @@
     <ClCompile Include="src\command\Command\Command.cpp" />
     <ClCompile Include="src\command\SetHypixelAPIKeyCommand\SetHypixelAPIKeyCommand.cpp" />
     <ClCompile Include="src\module\hypixel\all\AutoGG\AutoGG.cpp" />
+    <ClCompile Include="src\module\hypixel\all\ChatManager\ChatManager.cpp" />
     <ClCompile Include="src\module\hypixel\all\GamemodeManager\GamemodeManager.cpp" />
     <ClCompile Include="src\module\hypixel\all\NickManager\NickManager.cpp" />
     <ClCompile Include="src\module\hypixel\all\ScoreboardManager\ScoreboardManager.cpp" />
