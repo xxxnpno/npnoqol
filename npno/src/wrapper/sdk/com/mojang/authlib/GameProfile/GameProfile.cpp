@@ -12,7 +12,7 @@ GameProfile::~GameProfile() = default;
 
 void GameProfile::Init()
 {
-    std::call_once(this->oflag, [this]
+    std::call_once(oflag, [this]
         {
             getNameMethodID = Jvm::env->GetMethodID(this->javaClass, "getName", "()Ljava/lang/String;");
             getPropertiesMethodID = Jvm::env->GetMethodID(this->javaClass, "getProperties", "()Lcom/mojang/authlib/properties/PropertyMap;");
