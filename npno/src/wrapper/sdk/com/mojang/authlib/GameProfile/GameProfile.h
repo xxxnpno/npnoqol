@@ -2,6 +2,8 @@
 
 #include "../../src/wrapper/JavaClass/JavaClass.h"
 
+#include "../../src/wrapper/sdk/com/mojang/authlib/properties/PropertyMap/PropertyMap.h"
+
 class GameProfile final : public JavaClass
 {
 public:
@@ -13,6 +15,9 @@ public:
 
 	[[nodiscard]] std::string GetName() const;
 
+	[[nodiscard]] std::unique_ptr<PropertyMap> GetProperties() const;
+
 private:
 	inline static jmethodID getNameMethodID{ nullptr };
+	inline static jmethodID getPropertiesMethodID{ nullptr };
 };
