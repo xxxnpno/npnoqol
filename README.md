@@ -6,7 +6,7 @@
   *(Currently supported only for certain gamemodes.)*
 
 - **Nick Manager**  
-  Alerts you when a nicked player joins your lobby.
+  Alerts you when a nicked player joins your lobby.  
   Skin denicker.  
   *(Currently supported only for certain gamemodes.)*
 
