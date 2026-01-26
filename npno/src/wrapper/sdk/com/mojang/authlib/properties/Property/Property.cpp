@@ -10,7 +10,7 @@ Property::~Property() = default;
 
 void Property::Init()
 {
-    std::call_once(this->oflag, [this]
+    std::call_once(oflag, [this]
         {
             getValueMethodID = Jvm::env->GetMethodID(this->javaClass, "getValue", "()Ljava/lang/String;");
             getNameMethodID = Jvm::env->GetMethodID(this->javaClass, "getName", "()Ljava/lang/String;");
