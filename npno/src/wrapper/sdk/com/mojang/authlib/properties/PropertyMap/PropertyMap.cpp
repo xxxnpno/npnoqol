@@ -12,7 +12,7 @@ PropertyMap::~PropertyMap() = default;
 
 void PropertyMap::Init()
 {
-    std::call_once(this->oflag, [this]
+    std::call_once(oflag, [this]
         {
             valuesMethodID = Jvm::env->GetMethodID(this->javaClass, "values", "()Ljava/util/Collection;");
         });
