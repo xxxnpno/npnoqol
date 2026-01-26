@@ -20,6 +20,8 @@ public:
     [[nodiscard]] std::unique_ptr<GuiIngame> GetIngameGUI() const;
 
 private:
+    inline static std::once_flag oflag{};
+
     inline static jfieldID theMinecraftFieldID{ nullptr };
 
     inline static jfieldID thePlayerFieldID{ nullptr };

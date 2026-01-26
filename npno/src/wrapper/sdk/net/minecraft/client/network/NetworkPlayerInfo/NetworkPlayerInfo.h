@@ -20,6 +20,8 @@ public:
 	void SetDisplayName(const std::unique_ptr<IChatComponent>& newName);
 
 private:
+	inline static std::once_flag oflag{};
+
 	inline static jmethodID getGameProfileMethodID{ nullptr };
 	inline static jmethodID getDisplayNameMethodID{ nullptr };
 	inline static jmethodID setDisplayNameMethodID{ nullptr };

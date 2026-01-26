@@ -12,7 +12,7 @@ ScorePlayerTeam::~ScorePlayerTeam() = default;
 
 void ScorePlayerTeam::Init()
 {
-    std::call_once(this->oflag, [this]
+    std::call_once(oflag, [this]
         {
             getNamePrefixMethodID = Jvm::env->GetMethodID(this->javaClass, "getColorPrefix", "()Ljava/lang/String;");
             getNameSuffixMethodID = Jvm::env->GetMethodID(this->javaClass, "getColorSuffix", "()Ljava/lang/String;");

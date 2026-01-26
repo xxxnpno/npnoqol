@@ -16,6 +16,8 @@ public:
     [[nodiscard]] std::string GetUnformattedText() const;
 
 private:
+    inline static std::once_flag oflag{};
+
     inline static jmethodID getFormattedTextMethodID{ nullptr };
     inline static jmethodID getUnformattedTextMethodID{ nullptr };
 };

@@ -39,6 +39,8 @@ public:
 	void SetObjectiveInDisplaySlot(const DisplaySlot slot, const std::unique_ptr<ScoreObjective>& objective) const;
 
 private:
+	inline static std::once_flag oflag{};
+
 	inline static jmethodID addPlayerToTeamMethodID{ nullptr };
 	inline static jmethodID getTeamMethodID{ nullptr };
 	inline static jmethodID getPlayersTeamMethodID{ nullptr };

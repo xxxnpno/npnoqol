@@ -21,7 +21,7 @@ public:
 	[[nodiscard]] virtual std::vector<std::unique_ptr<PotionEffect>> GetActivePotionEffects() const final;
 
 private:
-	inline static std::once_flag entityLivingBaseOFlag;
+	inline static std::once_flag oflag{};
 
 	inline static jmethodID getHealthMethodID{ nullptr };
 	inline static jmethodID getMaxHealthMethodID{ nullptr };

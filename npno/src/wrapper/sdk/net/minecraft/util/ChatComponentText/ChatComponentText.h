@@ -13,7 +13,7 @@ public:
 	virtual void Init() override;
 
 private:
-	inline static std::once_flag chatComponentTextOFlag;
+	inline static std::once_flag oflag{};
 
 	inline static jmethodID constructorMethodID{ nullptr };
 };

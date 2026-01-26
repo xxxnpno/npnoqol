@@ -12,7 +12,7 @@ Minecraft::~Minecraft() = default;
 
 void Minecraft::Init()
 {
-    std::call_once(this->oflag, [this]
+    std::call_once(oflag, [this]
         {
             theMinecraftFieldID = Jvm::env->GetStaticFieldID(this->javaClass, "theMinecraft", "Lnet/minecraft/client/Minecraft;");
 

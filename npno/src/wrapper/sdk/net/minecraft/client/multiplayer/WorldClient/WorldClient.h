@@ -18,7 +18,7 @@ public:
 	[[nodiscard]] std::unique_ptr<EntityPlayer> GetPlayerEntityByName(const std::string& name) const;
 
 private:
-	inline static std::once_flag worldClientOflag;
+	inline static std::once_flag oflag{};
 
 	inline static jmethodID getScoreboardMethodID{ nullptr };
 	inline static jmethodID getPlayerEntityByNameMethodID{ nullptr };

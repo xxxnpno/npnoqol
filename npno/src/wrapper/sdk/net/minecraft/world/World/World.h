@@ -19,5 +19,7 @@ public:
 	[[nodiscard]] virtual std::vector<std::unique_ptr<EntityPlayer>> GetPlayerEntities() const final;
 
 private:
+	inline static std::once_flag oflag{};
+
 	inline static jfieldID playerEntitiesFieldID{ nullptr };
 };

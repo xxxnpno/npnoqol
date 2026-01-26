@@ -10,7 +10,7 @@ ScoreObjective::~ScoreObjective() = default;
 
 void ScoreObjective::Init()
 {
-	std::call_once(this->oflag, [this]
+	std::call_once(oflag, [this]
 		{
 			getNameMethodID = Jvm::env->GetMethodID(this->javaClass, "getName", "()Ljava/lang/String;");
 			getDisplayNameMethodID = Jvm::env->GetMethodID(this->javaClass, "getDisplayName", "()Ljava/lang/String;");

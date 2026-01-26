@@ -4,7 +4,7 @@ hypixel::BlitzSurvivalGames::BlitzSurvivalGames()
     : HypixelStatsModule{
         false,
         HypixelGamemode::Gamemode::BLITZSURVIVALGAMES,
-        "Winner - "
+        "1st - "
     }
     , nextColorIndex{ 0 }
 {

@@ -18,7 +18,7 @@ public:
 	void SendChatMessage(const std::string& message) const;
 
 private:
-	inline static std::once_flag entityPlayerSPOFlag;
+	inline static std::once_flag oflag{};
 
 	inline static jfieldID sendQueueFieldID{ nullptr };
 

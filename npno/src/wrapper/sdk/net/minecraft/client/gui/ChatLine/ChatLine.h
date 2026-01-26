@@ -20,6 +20,8 @@ public:
     void SetLineString(const std::unique_ptr<IChatComponent>& newLine);
 
 private:
+    inline static std::once_flag oflag{};
+
 	inline static jfieldID chatLineIDFieldID{ nullptr };
     inline static jfieldID lineStringFieldID{ nullptr };
 };

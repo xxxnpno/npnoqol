@@ -14,5 +14,7 @@ public:
     [[nodiscard]] virtual jint Version() const final;
 
 private:
+    inline static std::once_flag oflag{};
+
     inline static jmethodID versionMethodID{ nullptr };
 };

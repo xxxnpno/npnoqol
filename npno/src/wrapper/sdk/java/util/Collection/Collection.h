@@ -17,6 +17,8 @@ public:
 	[[nodiscard]] virtual jobjectArray ToArray() const final;
 
 private:
+	inline static std::once_flag oflag{};
+
 	inline static jmethodID sizeMethodID{ nullptr };
 	inline static jmethodID toArrayMethodID{ nullptr };
 };

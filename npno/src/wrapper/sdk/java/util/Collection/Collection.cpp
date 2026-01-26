@@ -16,7 +16,7 @@ Collection::~Collection() = default;
 
 void Collection::Init() 
 {
-    std::call_once(this->oflag, [this] 
+    std::call_once(oflag, [this] 
         {
         sizeMethodID = Jvm::env->GetMethodID(this->javaClass, "size", "()I");
         toArrayMethodID = Jvm::env->GetMethodID(this->javaClass, "toArray", "()[Ljava/lang/Object;");

@@ -16,7 +16,7 @@ EntityPlayer::~EntityPlayer() = default;
 
 void EntityPlayer::Init()
 {
-	std::call_once(this->entityPlayerSPOflag, [this]
+	std::call_once(oflag, [this]
 		{
 			isSpectatorMethodID = Jvm::env->GetMethodID(this->javaClass, "isSpectator", "()Z");
 			getCustomNameTagMethodID = Jvm::env->GetMethodID(this->javaClass, "getCustomNameTag", "()Ljava/lang/String;");

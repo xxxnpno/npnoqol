@@ -14,5 +14,7 @@ public:
 	[[nodiscard]] std::string GetPlayerName(const std::unique_ptr<NetworkPlayerInfo>& playerInfo) const;
 
 private:
+	inline static std::once_flag oflag{};
+
 	inline static jmethodID getPlayerNameMethodID{ nullptr };
 };

@@ -10,7 +10,7 @@ WorldClient::~WorldClient() = default;
 
 void WorldClient::Init()
 {
-    std::call_once(this->worldClientOflag, [this]
+    std::call_once(oflag, [this]
         {
             getScoreboardMethodID = Jvm::env->GetMethodID(this->javaClass, "getScoreboard", "()Lnet/minecraft/scoreboard/Scoreboard;");
             getPlayerEntityByNameMethodID = Jvm::env->GetMethodID(this->javaClass, "getPlayerEntityByName", "(Ljava/lang/String;)Lnet/minecraft/entity/player/EntityPlayer;");

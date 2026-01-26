@@ -18,6 +18,8 @@ public:
 	[[nodiscard]] std::unique_ptr<GuiPlayerTabOverlay> GetOverlayPlayerList() const;
 
 private:
+	inline static std::once_flag oflag{};
+
 	inline static jfieldID persistantChatGUIFieldID{ nullptr };
 	inline static jfieldID overlayPlayerListFieldID{ nullptr };
 };

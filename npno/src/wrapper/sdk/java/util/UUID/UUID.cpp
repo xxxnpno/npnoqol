@@ -10,7 +10,7 @@ UUID_J::~UUID_J() = default;
 
 void UUID_J::Init()
 {
-    std::call_once(this->oflag, [this]
+    std::call_once(oflag, [this]
         {
             versionMethodID = Jvm::env->GetMethodID(this->javaClass, "version", "()I");
         });

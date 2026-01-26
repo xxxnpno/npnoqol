@@ -16,5 +16,7 @@ public:
 	[[nodiscard]] std::vector<std::unique_ptr<NetworkPlayerInfo>> GetPlayerInfoMap() const;
 
 private:
+	inline static std::once_flag oflag{};
+
 	inline static jmethodID getPlayerInfoMapMethodID{ nullptr };
 };

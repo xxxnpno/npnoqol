@@ -19,6 +19,8 @@ public:
 	void DeleteChatLine(const I32 id) const;
 
 private:
+	inline static std::once_flag oflag{};
+
 	inline static jfieldID chatLinesFieldID{ nullptr };
 
 	inline static jmethodID refreshChatMethodID{ nullptr };

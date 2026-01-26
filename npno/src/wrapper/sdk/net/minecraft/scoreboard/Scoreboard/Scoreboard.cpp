@@ -12,7 +12,7 @@ Scoreboard::~Scoreboard() = default;
 
 void Scoreboard::Init() 
 {
-    std::call_once(this->oflag, [this]
+    std::call_once(oflag, [this]
         {
             addPlayerToTeamMethodID = Jvm::env->GetMethodID(this->javaClass, "addPlayerToTeam", "(Ljava/lang/String;Ljava/lang/String;)Z");
             getTeamMethodID = Jvm::env->GetMethodID(this->javaClass, "getTeam", "(Ljava/lang/String;)Lnet/minecraft/scoreboard/ScorePlayerTeam;");

@@ -18,7 +18,7 @@ public:
 	[[nodiscard]] virtual bool CanAttackPlayer(const std::unique_ptr<EntityPlayer>& target) const final;
 
 private:
-	inline static std::once_flag entityPlayerSPOflag;
+	inline static std::once_flag oflag{};
 
 	inline static jmethodID isSpectatorMethodID{ nullptr };
 	inline static jmethodID getCustomNameTagMethodID{ nullptr };
