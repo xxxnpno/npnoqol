@@ -9,8 +9,8 @@
   Alerts you when a nicked player joins your lobby.  
   *(Currently supported only for certain gamemodes.)*
 
-- **Chat Manager**
-  Filters your chat
+- **Chat Manager**  
+  Filters your chat.
   
 ### Commands
 - **/sethypixelapikey (key)**  
