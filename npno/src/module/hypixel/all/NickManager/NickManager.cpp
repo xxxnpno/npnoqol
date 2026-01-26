@@ -72,9 +72,9 @@ auto hypixel::NickManager::SkinDenicker() -> void
 
         const std::unique_ptr<GameProfile>& profile = player->GetGameProfile();
 
-        for (const std::unique_ptr<Property>& property : profile->GetProperties()->GetAllProperties())
+        for (const std::unique_ptr<Property>& property : profile->GetProperties()->GetValues())
         {
-            if (property->GetName() == "textures")
+            if (JavaUtil::JStringToString(property->GetName()) == "textures")
             {
                 const std::string encoded = JavaUtil::JStringToString(property->GetValue());
                 const std::string decoded = Base64::Decode(encoded);

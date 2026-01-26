@@ -189,6 +189,15 @@
     <ClInclude Include="src\module\hypixel\all\ChatManager\ChatManager.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="src\wrapper\sdk\com\mojang\authlib\properties\Property\Property.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="src\wrapper\sdk\com\mojang\authlib\properties\PropertyMap\PropertyMap.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="src\util\Base64\Base64.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Base\Base.cpp">
@@ -324,6 +333,15 @@
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="src\module\hypixel\all\ChatManager\ChatManager.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\wrapper\sdk\com\mojang\authlib\properties\Property\Property.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\wrapper\sdk\com\mojang\authlib\properties\PropertyMap\PropertyMap.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\util\Base64\Base64.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>

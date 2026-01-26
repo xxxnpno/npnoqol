@@ -2,7 +2,7 @@
 
 #include "../../src/wrapper/sdk/net/minecraft/entity/EntityLivingBase/EntityLivingBase.h"
 
-#include "../../src/wrapper/sdk/com/authlib/GameProfile/GameProfile.h"
+#include "../../src/wrapper/sdk/com/mojang/authlib/GameProfile/GameProfile.h"
 
 class EntityPlayer : public EntityLivingBase
 {

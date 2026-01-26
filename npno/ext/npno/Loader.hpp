@@ -34,11 +34,6 @@ namespace npno
                 base->Run();
             }
 
-            if (outputBuffer)
-            {
-                fclose(outputBuffer);
-            }
-
             FreeConsole();
             FreeLibraryAndExitThread(module, 0ul);
             return 0l;

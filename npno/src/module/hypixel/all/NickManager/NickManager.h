@@ -16,7 +16,8 @@ namespace hypixel
     private:
         auto Warn(const std::string& name, const std::string& realName) -> void;
 
-        auto SkinDenicker() const -> void;
+        auto SkinDenicker() -> void;
+
         auto ParseSkinData(const std::string& playerName, const std::string& skinHash, const std::string& profileName) -> void;
         auto IsNickHash(const std::string& hash) -> bool;
         

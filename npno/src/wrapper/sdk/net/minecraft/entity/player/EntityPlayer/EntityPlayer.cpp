@@ -42,5 +42,5 @@ std::string EntityPlayer::GetCustomNameTag() const
 
 std::unique_ptr<GameProfile> EntityPlayer::GetGameProfile() const
 {
-	return std::make_unique<GameProfile>(Jvm::env->NewGlobalRef(Jvm::env->GetObjectField(this->instance, getGameProfileMethodID)));
+	return std::make_unique<GameProfile>(Jvm::env->NewGlobalRef(Jvm::env->CallObjectMethod(this->instance, getGameProfileMethodID)));
 }

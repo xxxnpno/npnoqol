@@ -26,5 +26,5 @@ std::string GameProfile::GetName() const
 
 std::unique_ptr<PropertyMap> GameProfile::GetProperties() const
 {
-    return std::make_unique<PropertyMap>(Jvm::env->NewGlobalRef(Jvm::env->GetObjectField(this->instance, getProperties)));
+    return std::make_unique<PropertyMap>(Jvm::env->NewGlobalRef(Jvm::env->CallObjectMethod(this->instance, getPropertiesMethodID)));
 }

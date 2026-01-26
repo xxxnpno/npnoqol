@@ -44,6 +44,7 @@
     <ClInclude Include="src\module\ModuleManager\ModuleManager.h" />
     <ClInclude Include="src\module\Module\Module.h" />
     <ClInclude Include="src\util\api\HypixelAPI\HypixelAPI.h" />
+    <ClInclude Include="src\util\Base64\Base64.h" />
     <ClInclude Include="src\util\Chat\Chat.h" />
     <ClInclude Include="src\util\Config\Config.h" />
     <ClInclude Include="src\util\HypixelGamemode\HypixelGamemode.h" />
@@ -54,6 +55,8 @@
     <ClInclude Include="src\wrapper\JavaUtil\JavaUtil.h" />
     <ClInclude Include="src\wrapper\Jvm\Jvm.h" />
     <ClInclude Include="src\wrapper\sdk\com\mojang\authlib\GameProfile\GameProfile.h" />
+    <ClInclude Include="src\wrapper\sdk\com\mojang\authlib\properties\PropertyMap\PropertyMap.h" />
+    <ClInclude Include="src\wrapper\sdk\com\mojang\authlib\properties\Property\Property.h" />
     <ClInclude Include="src\wrapper\sdk\java\util\Collection\Collection.h" />
     <ClInclude Include="src\wrapper\sdk\java\util\List\List.h" />
     <ClInclude Include="src\wrapper\sdk\java\util\UUID\UUID.h" />
@@ -93,6 +96,7 @@
     <ClCompile Include="src\module\ModuleManager\ModuleManager.cpp" />
     <ClCompile Include="src\module\Module\Module.cpp" />
     <ClCompile Include="src\util\api\HypixelAPI\HypixelAPI.cpp" />
+    <ClCompile Include="src\util\Base64\Base64.cpp" />
     <ClCompile Include="src\util\Chat\Chat.cpp" />
     <ClCompile Include="src\util\Config\Config.cpp" />
     <ClCompile Include="src\util\HypixelRank\HypixelRank.cpp" />
@@ -101,6 +105,8 @@
     <ClCompile Include="src\wrapper\JavaUtil\JavaUtil.cpp" />
     <ClCompile Include="src\wrapper\Jvm\Jvm.cpp" />
     <ClCompile Include="src\wrapper\sdk\com\mojang\authlib\GameProfile\GameProfile.cpp" />
+    <ClCompile Include="src\wrapper\sdk\com\mojang\authlib\properties\PropertyMap\PropertyMap.cpp" />
+    <ClCompile Include="src\wrapper\sdk\com\mojang\authlib\properties\Property\Property.cpp" />
     <ClCompile Include="src\wrapper\sdk\java\util\Collection\Collection.cpp" />
     <ClCompile Include="src\wrapper\sdk\java\util\List\List.cpp" />
     <ClCompile Include="src\wrapper\sdk\java\util\UUID\UUID.cpp" />

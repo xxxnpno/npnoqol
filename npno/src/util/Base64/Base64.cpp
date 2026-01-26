@@ -3,12 +3,13 @@
 #include <vector>
 #include <stdexcept>
 
-static bool Base64::IsBase64(unsigned char c) 
+bool Base64::IsBase64(unsigned char c) 
 {
     return (isalnum(c) || (c == '+') || (c == '/'));
 }
 
-std::string Base64::Decode(const std::string& encoded_string) {
+std::string Base64::Decode(const std::string& encoded_string) 
+{
     int in_len = static_cast<int>(encoded_string.size());
     int i = 0;
     int j = 0;
