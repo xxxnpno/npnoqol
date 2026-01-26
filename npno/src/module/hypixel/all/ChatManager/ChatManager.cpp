@@ -4,9 +4,7 @@ hypixel::ChatManager::ChatManager()
     : HypixelStatsModule{ true, HypixelGamemode::Gamemode::ALL }
 {
     this->AddBlacklistedLines({
-        "game starts in",
-        "so coins are doubled and the Random kit is maxed!",
-        "Sending you to ",
+        "Sending you to",
         "Slow down! You can only use /tip"
     });
 }
