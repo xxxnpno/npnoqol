@@ -152,7 +152,7 @@ auto hypixel::HypixelStatsModule::UpdateNameTags() -> void
 
 auto hypixel::HypixelStatsModule::IsBot(const std::unique_ptr<EntityPlayer>& player) -> bool
 {
-    return player->GetUniqueID()->Version() == 2;
+    return static_cast<I32>(player->GetUniqueID()->Version()) == 2;
 }
 
 auto hypixel::HypixelStatsModule::LoadMissingPlayers() -> void
