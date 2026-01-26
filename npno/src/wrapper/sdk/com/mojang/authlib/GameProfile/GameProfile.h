@@ -18,6 +18,8 @@ public:
 	[[nodiscard]] std::unique_ptr<PropertyMap> GetProperties() const;
 
 private:
+	inline static std::once_flag oflag{};
+
 	inline static jmethodID getNameMethodID{ nullptr };
 	inline static jmethodID getPropertiesMethodID{ nullptr };
 };
