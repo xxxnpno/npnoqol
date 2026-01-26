@@ -6,6 +6,7 @@ hypixel::BlitzSurvivalGames::BlitzSurvivalGames()
         HypixelGamemode::Gamemode::BLITZSURVIVALGAMES,
         "Winner - "
     }
+    , nextColorIndex{ 0 }
 {
     this->mode = Mode::LOBBY;
 }
@@ -292,8 +293,6 @@ auto hypixel::BlitzSurvivalGames::GetTeamIndex(const std::string& playerName) co
 
 auto hypixel::BlitzSurvivalGames::AssignTeamColors() -> void
 {
-    teamColors.clear();
-
     const std::vector<MinecraftCode::Code> baseColors =
     {
         MinecraftCode::Code::DARK_AQUA,
@@ -313,18 +312,20 @@ auto hypixel::BlitzSurvivalGames::AssignTeamColors() -> void
         MinecraftCode::Code::WHITE
     };
 
-    U32 i = 0;
     for (const auto& [teamName, _] : sortedTeams)
     {
-        std::string color = MinecraftCode::codeToString.at(baseColors[i % baseColors.size()]);
-
-        if (i >= baseColors.size())
+        if (teamColors.find(teamName) == teamColors.end())
         {
-            color = MinecraftCode::codeToString.at(MinecraftCode::Code::BOLD) + color;
-        }
+            std::string color = MinecraftCode::codeToString.at(baseColors[nextColorIndex % baseColors.size()]);
 
-        teamColors[teamName] = color;
-        ++i;
+            if (nextColorIndex >= baseColors.size())
+            {
+                color = MinecraftCode::codeToString.at(MinecraftCode::Code::BOLD) + color;
+            }
+
+            teamColors[teamName] = color;
+            ++nextColorIndex;
+        }
     }
 }
 

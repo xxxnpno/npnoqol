@@ -8,7 +8,7 @@
 class HypixelGamemode final
 {
 public:
-    enum class Gamemode : int8_t
+    enum class Gamemode : I8
     {
         ALL,
         LOBBY,
