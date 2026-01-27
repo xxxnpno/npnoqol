@@ -6,18 +6,18 @@ bool Jvm::Init()
 {
     jsize count;
     if (JNI_GetCreatedJavaVMs(&vm, 1, &count) != JNI_OK || !count) return false;
-    jint result = vm->GetEnv(reinterpret_cast<void**>(&env), JNI_VERSION_1_8);
+    const jint result = vm->GetEnv(reinterpret_cast<void**>(&env), JNI_VERSION_1_8);
 
     if (result == JNI_EDETACHED)
     {
-        result = vm->AttachCurrentThread(reinterpret_cast<void**>(&env), nullptr);
+        vm->AttachCurrentThread(reinterpret_cast<void**>(&env), nullptr);
     }
 
     if (vm->GetEnv(reinterpret_cast<void**>(&jvmti), JVMTI_VERSION_1_2) != JNI_OK) return false;
 
-    std::println("[INFO] JavaVM address: {}", static_cast<void*>(vm)); 
-    std::println("[INFO] JNIEnv address: {}", static_cast<void*>(env)); 
-    std::println("[INFO] jvmtiEnv address: {}", static_cast<void*>(jvmti));
+    std::println("[INFO] JavaVM address: {}", static_cast<const void*>(vm));
+    std::println("[INFO] JNIEnv address: {}", static_cast<const void*>(env));
+    std::println("[INFO] jvmtiEnv address: {}", static_cast<const void*>(jvmti));
 
     GetLoadedClasses();
 
@@ -28,7 +28,11 @@ bool Jvm::Init()
 
 void Jvm::ShutDown()
 {
-
+    for (const auto& [name, clazz] : classes)
+    {
+        if (clazz) env->DeleteGlobalRef(clazz);
+    }
+    classes.clear();
 }
 
 jclass Jvm::GetClass(const std::string& name)
@@ -43,30 +47,42 @@ jclass Jvm::GetClass(const std::string& name)
 
 void Jvm::GetLoadedClasses()
 {
-    const jmethodID getNameID = env->GetMethodID(env->FindClass("java/lang/Class"), "getName", "()Ljava/lang/String;");
+    const jclass classClass = env->FindClass("java/lang/Class");
+    const jmethodID getNameID = env->GetMethodID(classClass, "getName", "()Ljava/lang/String;");
 
     jclass* classesPtr;
     jint amount;
 
-    jvmti->GetLoadedClasses(&amount, &classesPtr);
+    if (jvmti->GetLoadedClasses(&amount, &classesPtr) != JVMTI_ERROR_NONE)
+    {
+        env->DeleteLocalRef(classClass);
+        return;
+    }
 
     for (jint i = 0; i < amount; ++i)
     {
-        const jstring name = static_cast<jstring>(env->CallObjectMethod(classesPtr[i], getNameID));
+        const jclass currentClass = classesPtr[i];
+        const jstring name = static_cast<jstring>(env->CallObjectMethod(currentClass, getNameID));
+
         if (name)
         {
-            const char* classNameCStr = env->GetStringUTFChars(name, 0);
+            const char* const classNameCStr = env->GetStringUTFChars(name, nullptr);
             if (classNameCStr)
             {
                 std::string className(classNameCStr);
-
                 std::replace(className.begin(), className.end(), '.', '/');
 
-                classes.emplace(std::make_pair(className, classesPtr[i]));
+                classes.emplace(std::move(className), static_cast<jclass>(env->NewGlobalRef(currentClass)));
+
                 env->ReleaseStringUTFChars(name, classNameCStr);
             }
+            env->DeleteLocalRef(name);
         }
+        env->DeleteLocalRef(currentClass);
     }
+
+    jvmti->Deallocate(reinterpret_cast<unsigned char*>(classesPtr));
+    env->DeleteLocalRef(classClass);
 
     std::println("[INFO] Loaded {} classes", classes.size());
 }

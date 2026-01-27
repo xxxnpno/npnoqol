@@ -34,12 +34,18 @@ std::vector<std::unique_ptr<EntityPlayer>> World::GetPlayerEntities() const
 {
     std::vector<std::unique_ptr<EntityPlayer>> playerList;
 
-    std::unique_ptr<List> playerEntities = std::make_unique<List>(Jvm::env->GetObjectField(this->instance, playerEntitiesFieldID));
+    const jobject playerEntitiesLocal = Jvm::env->GetObjectField(this->instance, playerEntitiesFieldID);
 
-    for (jint i = 0; i < playerEntities->Size(); ++i)
+    const std::unique_ptr<List> playerEntities = std::make_unique<List>(playerEntitiesLocal);
+
+    const jint size = playerEntities->Size();
+    for (jint i = 0; i < size; ++i)
     {
-        playerList.emplace_back(std::make_unique<EntityPlayer>(playerEntities->Get(i)));
+        const jobject playerLocal = playerEntities->Get(i);
+        playerList.emplace_back(std::make_unique<EntityPlayer>(playerLocal));
+        Jvm::env->DeleteLocalRef(playerLocal);
     }
 
+    Jvm::env->DeleteLocalRef(playerEntitiesLocal);
     return playerList;
 }

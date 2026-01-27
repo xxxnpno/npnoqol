@@ -18,10 +18,11 @@ std::string JavaUtil::FixString(const std::string& string)
 std::string JavaUtil::JStringToString(const jstring javaString)
 {
     if (!javaString) return "";
-    
-    const char* chars = Jvm::env->GetStringUTFChars(javaString, nullptr);
-    std::string result(chars);
 
+    const char* const chars = Jvm::env->GetStringUTFChars(javaString, nullptr);
+    if (!chars) return "";
+
+    const std::string result(chars);
     Jvm::env->ReleaseStringUTFChars(javaString, chars);
 
     return result;

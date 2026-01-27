@@ -10,7 +10,7 @@ Base::Base()
 {
     if (running)
     {
-        this->flagManager = std::make_unique<FlagManager>();
+        //this->flagManager = std::make_unique<FlagManager>();
         this->moduleManager = std::make_unique<ModuleManager>();
 		this->commandManager = std::make_unique<CommandManager>();
     }
@@ -25,7 +25,7 @@ void Base::Run()
 {
     while (this->running)
     {
-        this->flagManager->Update();
+        //this->flagManager->Update();
         this->moduleManager->Update();
 		this->commandManager->Update();
 

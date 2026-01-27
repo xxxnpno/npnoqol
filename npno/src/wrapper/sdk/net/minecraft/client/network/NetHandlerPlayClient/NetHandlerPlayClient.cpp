@@ -14,7 +14,7 @@ void NetHandlerPlayClient::Init()
 {
     std::call_once(oflag, [this] 
         {
-        getPlayerInfoMapMethodID = Jvm::env->GetMethodID(this->javaClass, "getPlayerInfoMap", "()Ljava/util/Collection;");
+            getPlayerInfoMapMethodID = Jvm::env->GetMethodID(this->javaClass, "getPlayerInfoMap", "()Ljava/util/Collection;");
         });
 }
 
@@ -22,16 +22,20 @@ std::vector<std::unique_ptr<NetworkPlayerInfo>> NetHandlerPlayClient::GetPlayerI
 {
     std::vector<std::unique_ptr<NetworkPlayerInfo>> playerList;
 
-    std::unique_ptr<Collection> getPlayerInfoMap = std::make_unique<Collection>(Jvm::env->CallObjectMethod(this->instance, getPlayerInfoMapMethodID));
+    const jobject collectionLocal = Jvm::env->CallObjectMethod(this->instance, getPlayerInfoMapMethodID);
 
-    const jobjectArray array = getPlayerInfoMap->ToArray();
+    const std::unique_ptr<Collection> getTeams = std::make_unique<Collection>(collectionLocal);
+    const jobjectArray arrayLocal = static_cast<jobjectArray>(getTeams->ToArray());
 
-    for (jint i = 0; i < getPlayerInfoMap->Size(); ++i)
+    for (jint i = 0; i < getTeams->Size(); ++i)
     {
-        playerList.push_back(std::make_unique<NetworkPlayerInfo>(Jvm::env->NewGlobalRef(Jvm::env->GetObjectArrayElement(array, i))));
+        const jobject elementLocal = Jvm::env->GetObjectArrayElement(arrayLocal, i);
+        playerList.push_back(std::make_unique<NetworkPlayerInfo>(elementLocal));
+        Jvm::env->DeleteLocalRef(elementLocal);
     }
 
-    Jvm::env->DeleteGlobalRef(array);
+    Jvm::env->DeleteLocalRef(arrayLocal);
+    Jvm::env->DeleteLocalRef(collectionLocal);
 
     return playerList;
 }

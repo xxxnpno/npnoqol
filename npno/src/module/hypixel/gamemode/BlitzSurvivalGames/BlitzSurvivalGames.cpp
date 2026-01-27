@@ -18,8 +18,6 @@ auto hypixel::BlitzSurvivalGames::Update() -> void
 
     if (this->mode == Mode::LOBBY) return;
 
-    this->UpdateChat();
-
     this->LoadMissingPlayers();
 
     this->AssignTeamNumbers();
@@ -27,6 +25,8 @@ auto hypixel::BlitzSurvivalGames::Update() -> void
 
     this->UpdateTabList();
     this->UpdateNameTags();
+
+    this->UpdateChat();
 }
 
 auto hypixel::BlitzSurvivalGames::LoadPlayersData(const std::vector<std::string>& playerNames) -> void
@@ -126,6 +126,11 @@ auto hypixel::BlitzSurvivalGames::UpdateChat() const -> void
     bool refresh = false;
     for (I32 i{ 0 }; i < 10; ++i)
     {
+        if (!chatLines[i]->GetInstance())
+        {
+            continue;
+        }
+
         const std::string text = chatLines[i]->GetLineString()->GetFormattedText();
 
         if (text.find("§k") != std::string::npos and !text.contains(":"))

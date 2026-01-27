@@ -38,19 +38,24 @@ std::string ScorePlayerTeam::GetNameSuffix() const
     return JavaUtil::JStringToString(static_cast<jstring>(Jvm::env->CallObjectMethod(this->instance, getNameSuffixMethodID)));
 }
 
-std::vector<std::string> ScorePlayerTeam::GetMembershipCollection() const 
+std::vector<std::string> ScorePlayerTeam::GetMembershipCollection() const
 {
     std::vector<std::string> members;
 
-    std::unique_ptr<Collection> membershipCollection = std::make_unique<Collection>(Jvm::env->CallObjectMethod(this->instance, getMembershipCollectionMethodID));
-    const jobjectArray array = membershipCollection->ToArray();
+    const jobject collectionLocal = Jvm::env->CallObjectMethod(this->instance, getMembershipCollectionMethodID);
 
-    for (jint i = 0; i < membershipCollection->Size(); ++i)
+    const std::unique_ptr<Collection> membershipCollection = std::make_unique<Collection>(collectionLocal);
+    const jobjectArray arrayLocal = static_cast<jobjectArray>(membershipCollection->ToArray());
+
+    for (jint i = 0; i < Jvm::env->GetArrayLength(arrayLocal); ++i)
     {
-        members.push_back(JavaUtil::JStringToString(static_cast<jstring>(Jvm::env->NewGlobalRef(Jvm::env->GetObjectArrayElement(array, i)))));
+        const jstring elementLocal = static_cast<jstring>(Jvm::env->GetObjectArrayElement(arrayLocal, i));
+        members.push_back(JavaUtil::JStringToString(elementLocal));
+        Jvm::env->DeleteLocalRef(elementLocal);
     }
 
-    Jvm::env->DeleteGlobalRef(array);
+    Jvm::env->DeleteLocalRef(arrayLocal);
+    Jvm::env->DeleteLocalRef(collectionLocal);
 
     return members;
 }

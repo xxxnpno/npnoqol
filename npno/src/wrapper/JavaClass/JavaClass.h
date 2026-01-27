@@ -11,7 +11,7 @@
 class JavaClass
 {
 public:
-    JavaClass(const char* name, const jobject instance);
+    JavaClass(const char* const name, const jobject instance);
 
     virtual ~JavaClass();
 

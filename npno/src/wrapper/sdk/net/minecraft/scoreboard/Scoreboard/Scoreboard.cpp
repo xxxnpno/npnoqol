@@ -56,16 +56,20 @@ std::vector<std::unique_ptr<ScorePlayerTeam>> Scoreboard::GetTeams() const
 {
     std::vector<std::unique_ptr<ScorePlayerTeam>> teamList;
 
-    std::unique_ptr<Collection> getTeams = std::make_unique<Collection>(Jvm::env->CallObjectMethod(this->instance, getTeamsMethodID));
+    const jobject collectionLocal = Jvm::env->CallObjectMethod(this->instance, getTeamsMethodID);
 
-    const jobjectArray array = getTeams->ToArray();
+    const std::unique_ptr<Collection> getTeams = std::make_unique<Collection>(collectionLocal);
+    const jobjectArray arrayLocal = static_cast<jobjectArray>(getTeams->ToArray());
 
     for (jint i = 0; i < getTeams->Size(); ++i)
     {
-        teamList.push_back(std::make_unique<ScorePlayerTeam>(Jvm::env->NewGlobalRef(Jvm::env->GetObjectArrayElement(array, i))));
+        const jobject elementLocal = Jvm::env->GetObjectArrayElement(arrayLocal, i);
+        teamList.push_back(std::make_unique<ScorePlayerTeam>(elementLocal));
+        Jvm::env->DeleteLocalRef(elementLocal);
     }
 
-    Jvm::env->DeleteGlobalRef(array);
+    Jvm::env->DeleteLocalRef(arrayLocal);
+    Jvm::env->DeleteLocalRef(collectionLocal);
 
     return teamList;
 }

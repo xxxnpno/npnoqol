@@ -25,13 +25,18 @@ std::vector<std::unique_ptr<ChatLine>> GuiNewChat::GetChatLines() const
 {
 	std::vector<std::unique_ptr<ChatLine>> chat;
 
-	std::unique_ptr<List> chatLines = std::make_unique<List>(Jvm::env->GetObjectField(this->instance, chatLinesFieldID));
+	const jobject chatLineLocal = Jvm::env->GetObjectField(this->instance, chatLinesFieldID);
+
+	const std::unique_ptr<List> chatLines = std::make_unique<List>(chatLineLocal);
 
 	for (jint i = 0; i < chatLines->Size(); ++i)
 	{
-		chat.emplace_back(std::make_unique<ChatLine>(chatLines->Get(i)));
+		const jobject lineLocal = chatLines->Get(i);
+		chat.emplace_back(std::make_unique<ChatLine>(lineLocal));
+		Jvm::env->DeleteLocalRef(lineLocal);
 	}
 
+	Jvm::env->DeleteLocalRef(chatLineLocal);
 	return chat;
 }
 

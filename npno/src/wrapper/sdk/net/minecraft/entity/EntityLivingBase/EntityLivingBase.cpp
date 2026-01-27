@@ -46,15 +46,20 @@ std::vector<std::unique_ptr<PotionEffect>> EntityLivingBase::GetActivePotionEffe
 {
 	std::vector<std::unique_ptr<PotionEffect>> potionList;
 
-	std::unique_ptr<Collection> getActivePotionEffects = std::make_unique<Collection>(Jvm::env->CallObjectMethod(this->instance, getActivePotionEffectsMethodID));
-	const jobjectArray array = getActivePotionEffects->ToArray();
+	const jobject collectionLocal = Jvm::env->CallObjectMethod(this->instance, getActivePotionEffectsMethodID);
 
-	for (jint i = 0; i < getActivePotionEffects->Size(); ++i)
+	const std::unique_ptr<Collection> collection = std::make_unique<Collection>(collectionLocal);
+	const jobjectArray arrayLocal = static_cast<jobjectArray>(collection->ToArray());
+
+	for (jint i = 0; i < collection->Size(); ++i)
 	{
-		potionList.push_back(std::make_unique<PotionEffect>(Jvm::env->NewGlobalRef(Jvm::env->GetObjectArrayElement(array, i))));
+		const jobject elementLocal = Jvm::env->GetObjectArrayElement(arrayLocal, i);
+		potionList.push_back(std::make_unique<PotionEffect>(elementLocal));
+		Jvm::env->DeleteLocalRef(elementLocal);
 	}
 
-	Jvm::env->DeleteGlobalRef(array);
+	Jvm::env->DeleteLocalRef(arrayLocal);
+	Jvm::env->DeleteLocalRef(collectionLocal);
 
 	return potionList;
 }

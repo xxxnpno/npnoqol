@@ -2,11 +2,15 @@
 
 #include <print>
 
-JavaClass::JavaClass(const char* name, const jobject instance)
-    : javaClass{ static_cast<jclass>(Jvm::env->NewGlobalRef(Jvm::GetClass(name))) }
+JavaClass::JavaClass(const char* const name, const jobject instance)
+    : javaClass{ nullptr }
     , instance{ instance ? Jvm::env->NewGlobalRef(instance) : nullptr }
 {
-    
+    const jclass tempClass = Jvm::GetClass(name);
+    if (tempClass)
+    {
+        this->javaClass = static_cast<jclass>(Jvm::env->NewGlobalRef(tempClass));
+    }
 }
 
 JavaClass::~JavaClass()

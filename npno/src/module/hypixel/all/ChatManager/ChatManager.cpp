@@ -6,7 +6,8 @@ hypixel::ChatManager::ChatManager()
     this->AddBlacklistedLines({
         "Sending you to",
         "Slow down! You can only use /tip",
-        "You are sending commands too fast! Please slow dowm."
+        "You are sending commands too fast! Please slow dowm.",
+        "You tipped"
     });
 }
 
