@@ -18,10 +18,16 @@ World::~World() = default;
 
 void World::Init()
 {
-    std::call_once(this->oflag, [this]
+    std::call_once(oflag, [this]
         {
+            worldInfoFieldID = Jvm::env->GetFieldID(this->javaClass, "worldInfo", "Lnet/minecraft/world/storage/WorldInfo;")
             playerEntitiesFieldID = Jvm::env->GetFieldID(this->javaClass, "playerEntities", "Ljava/util/List;");
         });
+}
+
+std::unique_ptr<WorldInfo> World::GetWorldInfo() const
+{
+    return std::make_unique<WorldInfo>(Jvm::env->NewGlobalRef(Jvm::env->GetObjectField(this->instance, worldInfoFieldID)));
 }
 
 std::vector<std::unique_ptr<EntityPlayer>> World::GetPlayerEntities() const
