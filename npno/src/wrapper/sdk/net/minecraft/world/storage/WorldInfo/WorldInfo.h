@@ -14,7 +14,7 @@ public:
 	virtual void Init() override;
 
     [[nodiscard]] I64 GetRandomSeed() const;
-    [[nodiscars]] I64 GetWorldTime() const;
+    [[nodiscard]] I64 GetWorldTime() const;
 
     [[nodiscard]] std::string GetWorldName() const;
 
