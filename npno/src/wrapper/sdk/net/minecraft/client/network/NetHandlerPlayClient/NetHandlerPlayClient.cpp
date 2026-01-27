@@ -12,7 +12,7 @@ NetHandlerPlayClient::~NetHandlerPlayClient() = default;
 
 void NetHandlerPlayClient::Init()
 {
-    std::call_once(this->oflag, [this] 
+    std::call_once(oflag, [this] 
         {
         getPlayerInfoMapMethodID = Jvm::env->GetMethodID(this->javaClass, "getPlayerInfoMap", "()Ljava/util/Collection;");
         });

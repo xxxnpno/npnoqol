@@ -11,8 +11,13 @@ public:
 
     virtual void Init() override;
 
-    [[nodiscard]] virtual jint Version() const final;
+    [[nodiscard]] jint Version() const;
+
+    [[nodiscard]] jstring ToString() const;  
 
 private:
+    inline static std::once_flag oflag{};
+
     inline static jmethodID versionMethodID{ nullptr };
+    inline static jmethodID toStringMethodID{ nullptr };
 };

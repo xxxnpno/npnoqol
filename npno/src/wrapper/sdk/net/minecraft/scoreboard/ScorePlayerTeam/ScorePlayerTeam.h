@@ -21,6 +21,8 @@ public:
 	void SetNameSuffix(const std::string& suffix) const;
 
 private:
+	inline static std::once_flag oflag{};
+
 	inline static jmethodID getNamePrefixMethodID{ nullptr };
 	inline static jmethodID getNameSuffixMethodID{ nullptr };
 	inline static jmethodID getTeamNameMethodID{ nullptr };

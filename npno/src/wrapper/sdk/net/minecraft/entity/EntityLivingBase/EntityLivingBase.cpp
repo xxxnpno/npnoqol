@@ -18,7 +18,7 @@ EntityLivingBase::~EntityLivingBase() = default;
 
 void EntityLivingBase::Init()
 {
-	std::call_once(this->entityLivingBaseOFlag, [this]
+	std::call_once(oflag, [this]
 		{
 			getHealthMethodID = Jvm::env->GetMethodID(this->javaClass, "getHealth", "()F");
 			getMaxHealthMethodID = Jvm::env->GetMethodID(this->javaClass, "getMaxHealth", "()F");

@@ -16,7 +16,7 @@ IChatComponent::~IChatComponent() = default;
 
 void IChatComponent::Init()
 {
-    std::call_once(this->oflag, [this]
+    std::call_once(oflag, [this]
         {
             getFormattedTextMethodID = Jvm::env->GetMethodID(this->javaClass, "getFormattedText", "()Ljava/lang/String;");
             getUnformattedTextMethodID = Jvm::env->GetMethodID(this->javaClass, "getUnformattedText", "()Ljava/lang/String;");

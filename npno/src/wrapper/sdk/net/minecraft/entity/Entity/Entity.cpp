@@ -16,7 +16,7 @@ Entity::~Entity() = default;
 
 void Entity::Init()
 {
-	std::call_once(this->oflag, [this]
+	std::call_once(oflag, [this]
 		{
 			isInvisibleMethodID = Jvm::env->GetMethodID(this->javaClass, "isInvisible", "()Z");
 			getUniqueIDMethodID = Jvm::env->GetMethodID(this->javaClass, "getUniqueID", "()Ljava/util/UUID;");

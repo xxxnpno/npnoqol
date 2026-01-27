@@ -12,7 +12,7 @@ GuiNewChat::~GuiNewChat() = default;
 
 void GuiNewChat::Init()
 {
-	std::call_once(this->oflag, [this]
+	std::call_once(oflag, [this]
 		{
 			chatLinesFieldID = Jvm::env->GetFieldID(this->javaClass, "chatLines", "Ljava/util/List;");
 

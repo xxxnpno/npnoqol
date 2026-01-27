@@ -17,6 +17,8 @@ public:
 	[[nodiscard]] std::string GetEffectName() const;
 
 private:
+	inline static std::once_flag oflag{};
+
 	inline static jmethodID getDurationMethodID{ nullptr };
 	inline static jmethodID getAmplifierMethodID{ nullptr };
 	inline static jmethodID getEffectNameMethodID{ nullptr };

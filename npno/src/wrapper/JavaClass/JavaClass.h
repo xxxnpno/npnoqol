@@ -20,8 +20,6 @@ public:
     [[nodiscard]] jobject GetInstance() const;
 
 protected:
-    std::once_flag oflag;
-
     jclass javaClass;
     jobject instance;
 };

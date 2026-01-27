@@ -10,7 +10,7 @@ PotionEffect::~PotionEffect() = default;
 
 void PotionEffect::Init()
 {
-    std::call_once(this->oflag, [this]
+    std::call_once(oflag, [this]
         {
             getDurationMethodID = Jvm::env->GetMethodID(this->javaClass, "getDuration", "()I");
             getAmplifierMethodID = Jvm::env->GetMethodID(this->javaClass, "getAmplifier", "()I");

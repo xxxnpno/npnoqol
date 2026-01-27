@@ -10,7 +10,7 @@ Score::~Score() = default;
 
 void Score::Init()
 {
-	std::call_once(this->oflag, [this]
+	std::call_once(oflag, [this]
 		{
 			getScorePointsMethodID = Jvm::env->GetMethodID(this->javaClass, "getScorePoints", "()I");
 			getPlayerNameMethodID = Jvm::env->GetMethodID(this->javaClass, "getPlayerName", "()Ljava/lang/String;");

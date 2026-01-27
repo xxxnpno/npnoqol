@@ -10,7 +10,7 @@ NetworkPlayerInfo::~NetworkPlayerInfo() = default;
 
 void NetworkPlayerInfo::Init() 
 {
-    std::call_once(this->oflag, [this] 
+    std::call_once(oflag, [this] 
         {
         getGameProfileMethodID = Jvm::env->GetMethodID(this->javaClass, "getGameProfile", "()Lcom/mojang/authlib/GameProfile;");
         getDisplayNameMethodID = Jvm::env->GetMethodID(this->javaClass, "getDisplayName", "()Lnet/minecraft/util/IChatComponent;");

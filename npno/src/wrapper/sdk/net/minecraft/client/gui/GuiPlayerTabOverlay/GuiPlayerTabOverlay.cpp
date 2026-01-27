@@ -10,7 +10,7 @@ GuiPlayerTabOverlay::~GuiPlayerTabOverlay() = default;
 
 void GuiPlayerTabOverlay::Init() 
 {
-    std::call_once(this->oflag, [this] 
+    std::call_once(oflag, [this] 
         {
         getPlayerNameMethodID = Jvm::env->GetMethodID(this->javaClass,"getPlayerName","(Lnet/minecraft/client/network/NetworkPlayerInfo;)Ljava/lang/String;");
         });

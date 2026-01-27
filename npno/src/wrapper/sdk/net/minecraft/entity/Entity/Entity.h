@@ -24,6 +24,8 @@ public:
 	virtual void AddChatMessage(const std::unique_ptr<IChatComponent>& chatComponent) const final;
 
 private:
+	inline static std::once_flag oflag{};
+
 	inline static jmethodID isInvisibleMethodID{ nullptr };
 	inline static jmethodID getUniqueIDMethodID{ nullptr };
 	inline static jmethodID getNameMethodID{ nullptr };

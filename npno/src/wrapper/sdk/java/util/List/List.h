@@ -14,7 +14,7 @@ public:
 	[[nodiscard]] jobject Get(const I32 index) const;
 
 private:
-	inline static std::once_flag listOFlag;
+	inline static std::once_flag oflag{};
 
 	inline static jmethodID getMethodID{ nullptr };
 };

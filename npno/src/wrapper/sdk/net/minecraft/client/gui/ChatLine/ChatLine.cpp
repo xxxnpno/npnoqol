@@ -10,7 +10,7 @@ ChatLine::~ChatLine() = default;
 
 void ChatLine::Init()
 {
-    std::call_once(this->oflag, [this]
+    std::call_once(oflag, [this]
         {
 			chatLineIDFieldID = Jvm::env->GetFieldID(this->javaClass, "chatLineID", "I");
             lineStringFieldID = Jvm::env->GetFieldID(this->javaClass, "lineString", "Lnet/minecraft/util/IChatComponent;");

@@ -18,7 +18,7 @@ ChatComponentText::~ChatComponentText() = default;
 
 void ChatComponentText::Init()
 {
-    std::call_once(this->chatComponentTextOFlag, [this]
+    std::call_once(oflag, [this]
         {
             constructorMethodID = Jvm::env->GetMethodID(this->javaClass, "<init>", "(Ljava/lang/String;)V");
         });

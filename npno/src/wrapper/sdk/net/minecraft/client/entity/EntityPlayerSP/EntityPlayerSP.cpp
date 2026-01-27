@@ -12,7 +12,7 @@ EntityPlayerSP::~EntityPlayerSP() = default;
 
 void EntityPlayerSP::Init() 
 {
-    std::call_once(this->entityPlayerSPOFlag, [this] 
+    std::call_once(oflag, [this] 
         {
         sendQueueFieldID = Jvm::env->GetFieldID(this->javaClass, "sendQueue", "Lnet/minecraft/client/network/NetHandlerPlayClient;");
 

@@ -1,16 +1,19 @@
 #pragma once
 
 #include "../../Module/Module.h"
-#include "../../../util/HypixelGamemode/HypixelGamemode.h"
+
+#include "../../../util/Base64/Base64.h"
 #include "../../../util/HypixelRank/HypixelRank.h"
 #include "../../../util/api/HypixelAPI/HypixelAPI.h"
 #include "../../../util/MinecraftCode/MinecraftCode.h"
+#include "../../../util/HypixelGamemode/HypixelGamemode.h"
 
 #include <cctype>
 #include <cmath>
 #include <string>
 #include <random>
 #include <vector>
+#include <iterator>
 #include <format>
 #include <utility>
 #include <algorithm>

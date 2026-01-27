@@ -16,6 +16,8 @@ class HypixelAPI final
 public:
 	struct Nick
 	{
+		std::string realName = "";
+		
 		bool warned;
 	};
 	

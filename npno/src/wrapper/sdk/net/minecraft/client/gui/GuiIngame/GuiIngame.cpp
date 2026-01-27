@@ -10,7 +10,7 @@ GuiIngame::~GuiIngame() = default;
 
 void GuiIngame::Init()
 {
-	std::call_once(this->oflag, [this]
+	std::call_once(oflag, [this]
 		{
 			persistantChatGUIFieldID = Jvm::env->GetFieldID(this->javaClass, "persistantChatGUI", "Lnet/minecraft/client/gui/GuiNewChat;");
             overlayPlayerListFieldID = Jvm::env->GetFieldID(this->javaClass, "overlayPlayerList", "Lnet/minecraft/client/gui/GuiPlayerTabOverlay;");

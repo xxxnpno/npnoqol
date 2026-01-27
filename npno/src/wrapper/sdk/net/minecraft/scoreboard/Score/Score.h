@@ -16,6 +16,8 @@ public:
 	[[nodiscard]] std::string GetPlayerName() const;
 
 private:
+	inline static std::once_flag oflag{};
+
 	inline static jmethodID getScorePointsMethodID{ nullptr };
 	inline static jmethodID getPlayerNameMethodID{ nullptr };
 };

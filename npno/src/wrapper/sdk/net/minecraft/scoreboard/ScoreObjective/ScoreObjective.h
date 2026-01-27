@@ -17,6 +17,8 @@ public:
 	void SetDisplayName(const std::string& name) const;
 
 private:
+	inline static std::once_flag oflag{};
+
 	inline static jmethodID getNameMethodID{ nullptr };
 	inline static jmethodID getDisplayNameMethodID{ nullptr };
 	inline static jmethodID setDisplayNameMethodID{ nullptr };
