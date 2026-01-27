@@ -20,7 +20,7 @@ void World::Init()
 {
     std::call_once(oflag, [this]
         {
-            worldInfoFieldID = Jvm::env->GetFieldID(this->javaClass, "worldInfo", "Lnet/minecraft/world/storage/WorldInfo;")
+            worldInfoFieldID = Jvm::env->GetFieldID(this->javaClass, "worldInfo", "Lnet/minecraft/world/storage/WorldInfo;");
             playerEntitiesFieldID = Jvm::env->GetFieldID(this->javaClass, "playerEntities", "Ljava/util/List;");
         });
 }
