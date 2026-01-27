@@ -19,6 +19,7 @@ void EntityPlayer::Init()
 	std::call_once(oflag, [this]
 		{
 			isSpectatorMethodID = Jvm::env->GetMethodID(this->javaClass, "isSpectator", "()Z");
+			isUsingItemMethodID = Jvm::env->GetMethodID(this->javaClass, "isBlocking", "()Z");
 			canAttackPlayerMethodID = Jvm::env->GetMethodID(this->javaClass, "canAttackPlayer", "(Lnet/minecraft/entity/player/EntityPlayer;)Z");
 			getCustomNameTagMethodID = Jvm::env->GetMethodID(this->javaClass, "getCustomNameTag", "()Ljava/lang/String;");
 			getGameProfileMethodID = Jvm::env->GetMethodID(this->javaClass, "getGameProfile", "()Lcom/mojang/authlib/GameProfile;");
@@ -28,6 +29,11 @@ void EntityPlayer::Init()
 bool EntityPlayer::IsSpectator() const
 {
 	return Jvm::env->CallBooleanMethod(this->instance, isSpectatorMethodID);
+}
+
+bool EntityPlayer::IsUsingItem() const
+{
+	return Jvm::env->CallBooleanMethod(this->instance, isUsingItemMethodID);
 }
 
 bool EntityPlayer::CanAttackPlayer(const std::unique_ptr<EntityPlayer>& target) const

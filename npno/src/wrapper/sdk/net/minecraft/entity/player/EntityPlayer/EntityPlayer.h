@@ -15,6 +15,7 @@ public:
 	virtual void Init() override;
 
 	[[nodiscard]] virtual bool IsSpectator() const final;
+	[[nodiscard]] virtual bool IsUsingItem() const final;
 
 	[[nodiscard]] virtual bool CanAttackPlayer(const std::unique_ptr<EntityPlayer>& target) const final;
 
@@ -26,6 +27,7 @@ private:
 	inline static std::once_flag oflag{};
 
 	inline static jmethodID isSpectatorMethodID{ nullptr };
+	inline static jmethodID isUsingItemMethodID{ nullptr };
 	inline static jmethodID canAttackPlayerMethodID{ nullptr };
 	inline static jmethodID getCustomNameTagMethodID{ nullptr };
 	inline static jmethodID getGameProfileMethodID{ nullptr };

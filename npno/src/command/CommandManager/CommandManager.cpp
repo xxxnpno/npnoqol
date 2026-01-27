@@ -20,5 +20,5 @@ auto CommandManager::Update() const -> void
 template<typename C>
 auto CommandManager::RegisterCommand() -> void
 {
-	commands.emplace_back(std::make_unique<C>());
+	this->commands.emplace_back(std::make_unique<C>());
 }
