@@ -34,6 +34,8 @@
     <ClInclude Include="src\command\CommandManager\CommandManager.h" />
     <ClInclude Include="src\command\Command\Command.h" />
     <ClInclude Include="src\command\SetHypixelAPIKeyCommand\SetHypixelAPIKeyCommand.h" />
+    <ClInclude Include="src\flag\FlagManager\FlagManager.h" />
+    <ClInclude Include="src\flag\Flag\Flag.h" />
     <ClInclude Include="src\module\hypixel\all\AutoGG\AutoGG.h" />
     <ClInclude Include="src\module\hypixel\all\ChatManager\ChatManager.h" />
     <ClInclude Include="src\module\hypixel\all\GamemodeManager\GamemodeManager.h" />
@@ -79,6 +81,7 @@
     <ClInclude Include="src\wrapper\sdk\net\minecraft\scoreboard\Score\Score.h" />
     <ClInclude Include="src\wrapper\sdk\net\minecraft\util\ChatComponentText\ChatComponentText.h" />
     <ClInclude Include="src\wrapper\sdk\net\minecraft\util\IChatComponent\IChatComponent.h" />
+    <ClInclude Include="src\wrapper\sdk\net\minecraft\world\storage\WorldInfo\WorldInfo.h" />
     <ClInclude Include="src\wrapper\sdk\net\minecraft\world\World\World.h" />
   </ItemGroup>
   <ItemGroup>
@@ -86,6 +89,8 @@
     <ClCompile Include="src\command\CommandManager\CommandManager.cpp" />
     <ClCompile Include="src\command\Command\Command.cpp" />
     <ClCompile Include="src\command\SetHypixelAPIKeyCommand\SetHypixelAPIKeyCommand.cpp" />
+    <ClCompile Include="src\flag\FlagManager\FlagManager.cpp" />
+    <ClCompile Include="src\flag\Flag\Flag.cpp" />
     <ClCompile Include="src\module\hypixel\all\AutoGG\AutoGG.cpp" />
     <ClCompile Include="src\module\hypixel\all\ChatManager\ChatManager.cpp" />
     <ClCompile Include="src\module\hypixel\all\GamemodeManager\GamemodeManager.cpp" />
@@ -129,6 +134,7 @@
     <ClCompile Include="src\wrapper\sdk\net\minecraft\scoreboard\Score\Score.cpp" />
     <ClCompile Include="src\wrapper\sdk\net\minecraft\util\ChatComponentText\ChatComponentText.cpp" />
     <ClCompile Include="src\wrapper\sdk\net\minecraft\util\IChatComponent\IChatComponent.cpp" />
+    <ClCompile Include="src\wrapper\sdk\net\minecraft\world\storage\WorldInfo\WorldInfo.cpp" />
     <ClCompile Include="src\wrapper\sdk\net\minecraft\world\World\World.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

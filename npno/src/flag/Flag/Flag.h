@@ -1,9 +1,10 @@
-#pragma once 
+#pragma once
 
 #include "../../src/wrapper/sdk/net/minecraft/client/Minecraft/Minecraft.h"
 
 #include <chrono>
 #include <memory>
+#include <vector>
 
 #include <npno/Loader.hpp>
 
@@ -18,7 +19,6 @@ public:
 
     static auto GetPlayers() -> void;
 
-protected:
     struct Player
     {
         std::string name;
@@ -73,7 +73,10 @@ protected:
         std::chrono::time_point<std::chrono::system_clock> timeSinceBowing;
     };
 
-    const std::vector<std::unique_ptr<EntityPlayer>> playerEntities;
+    static auto GetLastTickPlayers() -> std::vector<Player>;
+
+protected:
+    inline static std::vector<Player> playersLastTick;
 
     inline static std::unique_ptr<Minecraft> mc{ nullptr };
 

@@ -44,7 +44,7 @@ namespace hypixel
 
         mutable std::unordered_map<std::string, I32> teamNumbers;
         mutable std::unordered_map<std::string, std::string> teamColors;
-        mutable U32 nextColorIndex;
+        mutable U32 nextColorIndex{ 0 };
 
         Mode mode;
     };

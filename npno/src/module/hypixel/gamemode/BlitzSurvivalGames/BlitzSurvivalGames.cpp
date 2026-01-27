@@ -6,7 +6,6 @@ hypixel::BlitzSurvivalGames::BlitzSurvivalGames()
         HypixelGamemode::Gamemode::BLITZSURVIVALGAMES,
         "1st - "
     }
-    , nextColorIndex{ 0 }
 {
     this->mode = Mode::LOBBY;
 }
@@ -23,11 +22,11 @@ auto hypixel::BlitzSurvivalGames::Update() -> void
 
     this->LoadMissingPlayers();
 
-    this->UpdateTabList();
-    this->UpdateNameTags();
-
     this->AssignTeamNumbers();
     this->AssignTeamColors();
+
+    this->UpdateTabList();
+    this->UpdateNameTags();
 }
 
 auto hypixel::BlitzSurvivalGames::LoadPlayersData(const std::vector<std::string>& playerNames) -> void
@@ -69,6 +68,11 @@ auto hypixel::BlitzSurvivalGames::LoadPlayersData(const std::vector<std::string>
             playerData.suffix = std::format("{:.1f}", static_cast<float>(kills) / max(1, deaths));
             playerData.cacheTime = std::chrono::steady_clock::now();
             playerData.retryCount = 0;
+
+            if (playerData.rank.empty())
+            {
+                std::println("[WARNING] {} has an empty rank", playerName);
+            }
 
             this->playerCache[playerName] = playerData;
         }

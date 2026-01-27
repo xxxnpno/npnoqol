@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../flag/FlagManager/FlagManagers.h"
+#include "../flag/FlagManager/FlagManager.h"
 #include "../module/ModuleManager/ModuleManager.h"
 #include "../command/CommandManager/CommandManager.h"
 

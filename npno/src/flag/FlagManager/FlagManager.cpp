@@ -11,7 +11,7 @@ auto FlagManager::Update() const -> void
 {    
     for (const std::unique_ptr<Flag>& flag : this->flags)
 	{   
-        if (flag->playersLastTick.empty())
+        if (flag->GetLastTickPlayers().empty())
         {
             break;
         }

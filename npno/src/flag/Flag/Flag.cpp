@@ -1,5 +1,7 @@
 #include "Flag.h"
 
+#include <algorithm>
+
 Flag::Flag(const std::string& name)
     : name{ name }
 {
@@ -19,29 +21,29 @@ auto Flag::GetPlayers() -> void
         playersLastTick.clear();
         return;
     }
-    
+
     const std::chrono::time_point<std::chrono::system_clock> now = std::chrono::system_clock::now();
     const std::vector<std::unique_ptr<EntityPlayer>>& playerEntities = mc->GetTheWorld()->GetPlayerEntities();
 
     playersLastTick.erase(std::remove_if(playersLastTick.begin(), playersLastTick.end(),
-            [&playerEntities](const Player& p)
-            {
-                return std::none_of(playerEntities.begin(), playerEntities.end(),
-                    [&p](const std::unique_ptr<EntityPlayer>& player)
-                    {
-                        return player->GetName() == p.name;
-                    }
-                );
-            }
-        ),
+        [&playerEntities](const Player& p)
+        {
+            return std::none_of(playerEntities.begin(), playerEntities.end(),
+                [&p](const std::unique_ptr<EntityPlayer>& player)
+                {
+                    return player->GetName() == p.name;
+                }
+            );
+        }
+    ),
         playersLastTick.end()
     );
 
     for (const std::unique_ptr<EntityPlayer>& player : playerEntities)
     {
         auto it = std::find_if(playersLastTick.begin(), playersLastTick.end(),
-            [&player](const Player& p) 
-            { 
+            [&player](const Player& p)
+            {
                 return p.name == player->GetName();
             }
         );
@@ -71,48 +73,48 @@ auto Flag::GetPlayers() -> void
         if (it == playersLastTick.end())
         {
             Player p{};
-            
+
             p.name = name;
-            
+
             p.position.x = posX;
             p.position.y = posY;
             p.position.z = posZ;
-            
+
             p.velocity.x = velocityX;
             p.velocity.y = velocityY;
             p.velocity.z = velocityZ;
-            
+
             p.yaw = rotationYaw;
             p.pitch = rotationPitch;
-            
+
             p.isOnGround = isOnGround;
             p.onGroundTime = isOnGround ? now : std::chrono::time_point<std::chrono::system_clock>{};
             p.timeSinceOnGround = !isOnGround ? now : std::chrono::time_point<std::chrono::system_clock>{};
-            
+
             p.isSprinting = isSprinting;
             p.sprintingTime = isSprinting ? now : std::chrono::time_point<std::chrono::system_clock>{};
             p.timeSinceSprinted = !isSprinting ? now : std::chrono::time_point<std::chrono::system_clock>{};
-            
+
             p.isSneaking = isSneaking;
             p.sneakingTime = isSneaking ? now : std::chrono::time_point<std::chrono::system_clock>{};
             p.timeSinceSneaking = !isSneaking ? now : std::chrono::time_point<std::chrono::system_clock>{};
-            
+
             p.isSwingingSword = isSwingingSword;
             p.swingingSwordTime = isSwingingSword ? now : std::chrono::time_point<std::chrono::system_clock>{};
             p.timeSinceSwingingSword = !isSwingingSword ? now : std::chrono::time_point<std::chrono::system_clock>{};
-            
+
             p.isBlockingSword = isBlockingSword;
             p.blockingSwordTime = isBlockingSword ? now : std::chrono::time_point<std::chrono::system_clock>{};
             p.timeSinceBlockingSword = !isBlockingSword ? now : std::chrono::time_point<std::chrono::system_clock>{};
-            
+
             p.isEating = isEating;
             p.isEatingTime = isEating ? now : std::chrono::time_point<std::chrono::system_clock>{};
             p.timeSinceEating = !isEating ? now : std::chrono::time_point<std::chrono::system_clock>{};
-            
+
             p.isRiding = isRiding;
             p.isRidingTime = isRiding ? now : std::chrono::time_point<std::chrono::system_clock>{};
             p.timeSinceRiding = !isRiding ? now : std::chrono::time_point<std::chrono::system_clock>{};
-            
+
             p.isBowing = isBowing;
             p.isBowingTime = isBowing ? now : std::chrono::time_point<std::chrono::system_clock>{};
             p.timeSinceBowing = !isBowing ? now : std::chrono::time_point<std::chrono::system_clock>{};
@@ -122,18 +124,18 @@ auto Flag::GetPlayers() -> void
         else
         {
             it->name = name;
-            
+
             it->position.x = posX;
             it->position.y = posY;
             it->position.z = posZ;
-            
+
             it->velocity.x = velocityX;
             it->velocity.y = velocityY;
             it->velocity.z = velocityZ;
-            
+
             it->yaw = rotationYaw;
             it->pitch = rotationPitch;
-            
+
             if (it->isOnGround != isOnGround)
             {
                 if (isOnGround)
@@ -146,7 +148,7 @@ auto Flag::GetPlayers() -> void
                 }
             }
             it->isOnGround = isOnGround;
-            
+
             if (it->isSprinting != isSprinting)
             {
                 if (isSprinting)
@@ -159,7 +161,7 @@ auto Flag::GetPlayers() -> void
                 }
             }
             it->isSprinting = isSprinting;
-            
+
             if (it->isSneaking != isSneaking)
             {
                 if (isSneaking)
@@ -172,7 +174,7 @@ auto Flag::GetPlayers() -> void
                 }
             }
             it->isSneaking = isSneaking;
-            
+
             if (it->isSwingingSword != isSwingingSword)
             {
                 if (isSwingingSword)
@@ -185,7 +187,7 @@ auto Flag::GetPlayers() -> void
                 }
             }
             it->isSwingingSword = isSwingingSword;
-            
+
             if (it->isBlockingSword != isBlockingSword)
             {
                 if (isBlockingSword)
@@ -198,7 +200,7 @@ auto Flag::GetPlayers() -> void
                 }
             }
             it->isBlockingSword = isBlockingSword;
-            
+
             if (it->isEating != isEating)
             {
                 if (isEating)
@@ -211,7 +213,7 @@ auto Flag::GetPlayers() -> void
                 }
             }
             it->isEating = isEating;
-            
+
             if (it->isRiding != isRiding)
             {
                 if (isRiding)
@@ -224,7 +226,7 @@ auto Flag::GetPlayers() -> void
                 }
             }
             it->isRiding = isRiding;
-            
+
             if (it->isBowing != isBowing)
             {
                 if (isBowing)
@@ -239,4 +241,9 @@ auto Flag::GetPlayers() -> void
             it->isBowing = isBowing;
         }
     }
+}
+
+auto Flag::GetLastTickPlayers() -> std::vector<Player>
+{
+    return playersLastTick;
 }
