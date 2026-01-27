@@ -12,7 +12,7 @@ Command::Command(const std::string name, const std::string usage)
     }
 {
 	static std::once_flag oflag;
-	std::call_once(oflag, [this]
+	std::call_once(oflag, []
 		{
 			mc = std::make_unique<Minecraft>();
 		});
