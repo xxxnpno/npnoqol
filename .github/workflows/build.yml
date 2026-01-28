@@ -1,0 +1,43 @@
+name: MSBuild Custom
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+env:
+  SOLUTION_FILE_PATH: npno.slnx
+  BUILD_CONFIGURATION: Release
+  BUILD_PLATFORM: x64
+  VCPKG_ROOT: ${{ github.workspace }}\vcpkg
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Bootstrap vcpkg
+        shell: powershell
+        run: |
+          if (-Not (Test-Path $Env:VCPKG_ROOT)) {
+              git clone https://github.com/microsoft/vcpkg.git $Env:VCPKG_ROOT
+          }
+          & "$Env:VCPKG_ROOT\bootstrap-vcpkg.bat"
+
+      - name: Install vcpkg dependencies
+        shell: powershell
+        run: |
+          & "$Env:VCPKG_ROOT\vcpkg" install curl:x64-windows
+
+      - name: Compile solution with MSVC
+        shell: powershell
+        run: |
+          $VsDevCmdPath = "C:\Program Files\Microsoft Visual Studio\2026\Preview\Common7\Tools\VsDevCmd.bat"
+          if (-Not (Test-Path $VsDevCmdPath)) { throw "VS 2026 Developer Command Prompt not found" }
+          & "$VsDevCmdPath" -arch=x64
+          msbuild "${{ env.SOLUTION_FILE_PATH }}" /m /p:Configuration=${{ env.BUILD_CONFIGURATION }} /p:Platform=${{ env.BUILD_PLATFORM }} /p:VcpkgRoot=${{ env.VCPKG_ROOT }}
